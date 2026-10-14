@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HBM 产业链 · 产业链情报研究中心</title><link rel="stylesheet" href="assets.css"><script src="theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><span class="pill">HBM v0.1</span><button class="btn" onclick="toggleTheme()">◐</button></div></header>
+<nav class="sec" id="nav"><div class="wrap" style="padding:0 6px"><a href="#judg">判断</a><a href="#data">数据</a><a href="#neck">瓶颈</a><a href="#hist">历史</a><a href="#lead">领先指标</a><a href="#pred">预测台账</a><a href="#map">资本与公司</a><a href="#src">来源</a></div></nav>
+<main class="wrap">
+<section id="judg" style="padding-top:28px">
+<div class="kicker">HBM 小链 · 2026-10-14 更新</div>
+<h1>HBM 的天花板不在键合机，<br>而在 DRAM 晶圆本身</h1>
+<p class="dek">同一片晶圆做成 HBM，位元只有普通 DRAM 的约 1/3。普通 DRAM 正在暴涨、利润率 70–80%，原厂每多做一片 HBM 就少赚一片 DRAM 的钱。2026 年 HBM 价格被年度合约锁低，<b>2027 年必须重新定价</b>；真正的风险在 2027 年下半年起新厂集中投产。</p>
+<div class="grid g4" style="margin-top:20px">
+<div class="card stat"><div class="n" id="hGap" style="color:var(--acc)">-19%</div><div class="l">2027 缺口/需求 <span class="tag t-est">估</span><br>区间 5–26%</div></div>
+<div class="card stat"><div class="n">76%</div><div class="l">SK 海力士 2Q26 营业利润率 <span class="tag t-src">源4</span></div></div>
+<div class="card stat"><div class="n">+170.9%</div><div class="l">韩国半导体出口 10/1–10 同比 <span class="tag t-src">源21</span></div></div>
+<div class="card stat"><div class="n">2–3 年</div><div class="l">头号瓶颈：DRAM 新厂/洁净室建设周期</div></div>
+</div>
+<h3>三个可证伪的核心争议</h3>
+<div class="grid g3">
+<div class="card"><b>Q1 2027 年过剩还是短缺？</b><p style="margin:.4em 0;font-size:15px">观点：短缺，价格大涨。</p><div class="note">证伪：2027 年 HBM 合约价同比未涨 ≥50%，或海力士/美光称 2027 产能未售完。</div></div>
+<div class="card"><b>Q2 三星、美光扩产会让 HBM 很快过剩吗？</b><p style="margin:.4em 0;font-size:15px">观点：2027 年不会，因为和普通 DRAM 抢同一批晶圆。</p><div class="note">证伪：2027 年 DRAM 价格先跌、晶圆转回 HBM，HBM 价格松动。</div></div>
+<div class="card"><b>Q3 这轮存储周期何时见顶？</b><p style="margin:.4em 0;font-size:15px">观点：最早 2027 年中后期，看新厂投产节奏。</p><div class="note">证伪：2027Q1 前韩国半导体出口同比仍 &gt;+100% 且加速 → 判断太早。</div></div>
+</div>
+<p class="note">标注规则：<span class="tag t-src">源N</span> = 附录第 N 条公开来源；<span class="tag t-est">估</span> = Kiko 自估，假设可在下方滑块中修改。</p>
+</section>
+
+<section id="data"><div class="kicker">01 · 数据</div><h2>供需平衡：自己拖动假设</h2>
+<p class="sub">需求 = 加速器出货 × 每颗 HBM 容量；供给 = 月投片 × 12 × 每片有效 GB × 稼动率。全部在浏览器里按模型实时重算。</p>
+<div class="grid g2"><div class="card">
+<div class="ctl">
+<label>2027 每片有效 GB <output id="o1"></output></label><input type="range" id="s1" min="450" max="750" step="25" value="600">
+<label>2027 稼动率 <output id="o2"></output></label><input type="range" id="s2" min="70" max="100" step="1" value="90">
+<label>2027 投片计划达成率 <output id="o3"></output></label><input type="range" id="s3" min="70" max="120" step="5" value="100">
+<label>2027 加速器出货（相对基准）<output id="o4"></output></label><input type="range" id="s4" min="70" max="130" step="5" value="100">
+</div><button class="btn" onclick="resetS()">恢复基准</button>
+<div style="margin-top:16px"><div class="note">2027 缺口（供-需）/需求</div><div class="big" id="gap"></div><div class="note" id="gapTxt"></div></div>
+</div><div class="card"><div id="cBal" class="chart"></div>
+<div class="note">基准：每片有效 GB 2025/26/27 = 600/650/600，稼动率 85/90/90% <span class="tag t-est">估</span>；投片来自 ETNews/Chosun/BigGo 等 <span class="tag t-src">源7,8</span>；出货部分来自 JPMorgan、券商转述 <span class="tag t-src">源14,15</span>。2023–24 供给无可靠公开数据，未建模。</div></div></div>
+
+<h3>需求由谁拉动</h3><div class="card"><div id="cMix" class="chart"></div><div class="note">按芯片厂商汇总，单位 EB。TPU 2026/27 年 370 万/500 万颗 <span class="tag t-src">源15</span>；Blackwell 2026 约 545 万颗 <span class="tag t-src">源14</span>；Rubin Ultra 384GB <span class="tag t-src">TrendForce</span>；其余拆分 <span class="tag t-est">估</span>。点击图例可隐藏。</div></div>
+
+<h3>利润池：钱堆在存储</h3><div class="grid g2">
+<div class="card"><div id="cMar" class="chart"></div><div class="note">SK 海力士营业利润率 <span class="tag t-src">源4</span>；美光 Non-GAAP 毛利率 <span class="tag t-src">源6</span>；台积电营业利润率（Yonhap）。注：利润主要来自普通 DRAM 涨价，1Q26 HBM 每片产值低于 DDR5 服务器内存 <span class="tag t-src">源1</span>。</div></div>
+<div class="card"><div id="cShare" class="chart"></div><div class="note">HBM 营收份额 2Q26，Counterpoint <span class="tag t-src">源11</span>（四舍五入合计 101%）。三星一个季度从 21% 跳到 33%。</div></div></div>
+
+<h3>价格档位（成本曲线框架）</h3><div class="card"><div id="cTier" class="chart" style="height:260px"></div>
+<div class="note">定性定位，非价格数据。普通 DRAM 已在"短缺暴涨"档（美光 FQ4 DRAM 价格环比涨十几个百分点 <span class="tag t-src">源6</span>）；HBM 被 2026 年度合约压在"维持价"以下，2027 年预期"数倍"上涨 <span class="tag t-src">源1</span>。HBM 的真实价格底 ≈ 同一片晶圆做 DRAM 的收益 × 约 3 <span class="tag t-src">源9</span>。</div></div>
+</section>
+
+<section id="neck"><div class="kicker">02 · 瓶颈</div><h2>谁真正卡住产量：按缓解难度排序</h2><p class="sub">条形长度 = 缓解所需月数（取区间上限，示意）。</p><div id="neckList" class="grid"></div>
+<p class="note">键合机是跟着扩产走的环节，不是卡脖子：韩美一单 442 亿韩元（约 15 台）<span class="tag t-src">源17</span>，ASMPT 也拿到海力士 HBM4 TCB 订单 <span class="tag t-src">源18</span>。</p></section>
+
+<section id="hist"><div class="kicker">03 · 历史</div><h2>DRAM 周期与 HBM 代际</h2><p class="sub">规律：利润率历史新高 + 同时大扩产 → 18–24 个月后过剩。现在像 2017 年底到 2018 年。</p>
+<div class="grid g2"><div class="card"><b>DRAM 周期与格局</b><div class="tl" style="margin-top:12px" id="tl1"></div></div>
+<div class="card"><b>HBM 代际：谁先过英伟达认证谁拿利润</b><div class="tl" style="margin-top:12px" id="tl2"></div></div></div></section>
+
+<section id="lead"><div class="kicker">04 · 领先指标</div><h2>先看哪个数据</h2><p class="sub">最好用的是韩国每 10 天公布的出口数据；同比增速掉头 = 周期见顶第一个信号。</p><div class="grid g3" id="leadList"></div>
+<p class="note">⚠ 尚未做领先-滞后回测：缺少干净的韩国 HS854232 分品类月度序列。计划用 2015–2026 月度存储出口与三星/海力士季度营收做交叉相关。</p></section>
+
+<section id="pred"><div class="kicker">05 · 预测台账</div><h2>写下来，到期打分</h2><p class="sub">状态在到期日后按公开数据更新。</p><div class="tbl"><table id="predT"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody></tbody></table></div></section>
+
+<section id="map"><div class="kicker">06 · 资本与公司图谱</div><h2>环节 → 公司 → 资本与订单</h2>
+<p class="sub">点节点看详情；每条边都附来源编号。业务归属来自公开报道，营收占比未逐一核实；无编号的"业务归属"边来自报告"验证用标的"表。</p>
+<div class="seg" id="fMk"><button class="on" data-m="all">全部</button><button data-m="A">A股</button><button data-m="KR">韩</button><button data-m="TW">台</button><button data-m="US">美/欧/日</button><button data-m="HK">港</button></div>
+<div class="grid g2" style="margin-top:12px;grid-template-columns:1fr"><div class="card" style="padding:6px"><div id="cNet" class="chart" style="height:560px"></div></div>
+<div class="card" id="nodeInfo"><b>点击图中任一节点</b><div class="note">显示代码、角色、份额与关联边及来源。</div></div></div>
+<h3>公司清单</h3><div class="tbl"><table id="coT"><thead><tr><th>公司</th><th>代码</th><th>环节</th><th>角色/份额</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="src"><div class="kicker">附录</div><h2>来源</h2><p class="sub">2026-10-14 均已用 curl 打开（HTTP 200）。未单独验证：Magica（Rubin 下调，搜索摘要）；DRAM 破产史为公认史实；台积电利润率来自 Yonhap 转述。</p><ol class="src" id="srcL"></ol>
+<h3>局限</h3><ul style="font-size:14px"><li>2027 缺口对"每片有效 GB"极敏感（5%–26%），该参数为自估。</li><li>出货拆分大量为自估；2023–24 供给未建模。</li><li>领先指标未回测；媒体口径（BigGo、The Economy、Magica）可靠度低于公司公告。</li><li>不构成投资建议。</li></ul>
+<p><a href="hbm/hbm_model.xlsx">下载模型 Excel</a> · <a href="hbm/hbm_chain.md">报告原文 (Markdown)</a></p></section>
+</main><footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="market.html">行情面板（旧版）</a></footer>
+<script src="hbm.js"></script></body></html>
