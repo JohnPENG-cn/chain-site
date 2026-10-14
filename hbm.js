@@ -4,7 +4,7 @@ function base(){const d=isDark();return{textStyle:{fontFamily:'-apple-system,Pin
 function C(id){if(charts[id])charts[id].dispose();charts[id]=echarts.init(document.getElementById(id),null,{renderer:'svg'});return charts[id]}
 const vend=c=>/Blackwell|Rubin|H100|H200|Hopper/.test(c)?'英伟达':/TPU/.test(c)?'谷歌TPU':/Trainium/.test(c)?'AWS':/AMD/.test(c)?'AMD':'其他/中国';
 const VC={'英伟达':'#76b900','谷歌TPU':'#4285f4','AWS':'#ff9900','AMD':'#ed1c24','其他/中国':'#9a9a9a'};
-function calc(){const g=+s1.value,u=+s2.value/100,w=+s3.value/100,k=+s4.value/100;const r={};
+function calc(){const g=+$('#s1').value,u=+$('#s2').value/100,w=+$('#s3').value/100,k=+$('#s4').value/100;const r={};
  for(const y of[2025,2026,2027]){let d=M.demand.filter(x=>x.y==y).reduce((a,x)=>a+x.units*x.gb,0)/1000;
   let wf=Object.values(M.supply[y]).reduce((a,b)=>a+b,0),G=M.gbw[y],U=M.ut[y];
   if(y==2027){d*=k;wf*=w;G=g;U=u}r[y]={d,s:wf*12*G*U/1e6}}return r}
@@ -57,11 +57,11 @@ function drawNet(){const dk=isDark(),cols=['#d9534f','#ff9900','#5b8def','#26a69
  .concat(LINKS.filter(l=>names.has(l[0])&&(l[1]=='—'||names.has(l[1]))&&l[1]!='—').map(l=>({source:l[0],target:l[1],rel:l[2],src:l[3],lineStyle:{width:2.5,color:{cap:'#8a5cf6',ord:'#ff9900',sup:'#2e8b57'}[l[4]],curveness:.2},label:{show:innerWidth>700,formatter:l[2].slice(0,14),fontSize:10,color:V('--mut')}})));
  const c=C('cNet');c.setOption({backgroundColor:'transparent',tooltip:{confine:true,formatter:p=>p.dataType=='edge'?`${p.data.source} → ${p.data.target}<br>${p.data.rel}<br>来源：${p.data.src}`:p.data.co?`${p.name} ${p.data.co[1]}<br>${p.data.co[4]}`:p.name},
  legend:{data:SEG,top:0,textStyle:{color:V('--fg'),fontSize:11},itemWidth:10,itemHeight:10},
- series:[{type:'graph',layout:'force',roam:true,draggable:true,top:60,force:{repulsion:innerWidth<700?110:200,edgeLength:[40,110],gravity:.12},categories:SEG.map((s,i)=>({name:s,itemStyle:{color:cols[i]}})),
+ series:[{type:'graph',layout:'force',roam:true,draggable:true,top:60,force:{repulsion:innerWidth<700?70:200,edgeLength:innerWidth<700?[30,80]:[40,110],gravity:innerWidth<700?.25:.12},categories:SEG.map((s,i)=>({name:s,itemStyle:{color:cols[i]}})),
  label:{color:V('--fg'),fontSize:11,position:'right'},edgeSymbol:['none','arrow'],edgeSymbolSize:6,data:nodes,links}]});
  c.off('click');c.on('click',p=>{if(p.dataType!='node')return;const n=p.name,co=CO.find(x=>x[0]==n);
   const rel=LINKS.filter(l=>l[0]==n||l[1]==n);$('#nodeInfo').innerHTML=`<b>${n}</b> ${co?`<span class="pill">${co[1]}</span><div class="note">${SEG[co[3]]} · ${co[4]}</div>`:'<div class="note">环节</div>'}`+
-  (rel.length?'<table style="margin-top:8px">'+rel.map(l=>`<tr><td>${l[0]} → ${l[1]=='—'?'':l[1]}</td><td>${l[2]}</td><td>${/^\d/.test(l[3])?l[3].split(',').map(s=>`<a href="#s${s}">源${s}</a>`).join(' '):l[3]}</td></tr>`).join('')+'</table>':'')})}
+  (rel.length?'<table style="margin-top:8px">'+rel.map(l=>`<tr><td>${l[0]} → ${l[1]=='—'?'':l[1]}</td><td>${l[2]}</td><td>${/^\d/.test(l[3])?l[3].split(',').map(s=>`<a href="#src${s}">源${s}</a>`).join(' '):l[3]}</td></tr>`).join('')+'</table>':'')})}
 function render(){drawBal();drawMix();drawMar();drawShare();drawTier();drawNet()}
 window.redraw=render;
 fetch('data/hbm.json').then(r=>r.json()).then(j=>{M=j;
@@ -69,7 +69,7 @@ fetch('data/hbm.json').then(r=>r.json()).then(j=>{M=j;
  $('#leadList').innerHTML=LEAD.map(l=>`<div class="card"><b>${l[0]}</b><div class="note">${l[1]} · ${l[2]}</div><p style="margin:.5em 0 0;font-size:15px">${l[3]} ${l[4]!='—'?`<span class="tag t-src">源${l[4]}</span>`:''}</p></div>`).join('');
  const now=new Date('2026-10-14');$('#predT tbody').innerHTML=PRED.map(p=>{const d=Math.round((new Date(p[2])-new Date())/864e5);return`<tr><td>${p[0]}</td><td>${p[1]}</td><td style="white-space:nowrap">${p[2]}<div class="note">${d>0?d+' 天后':'已到期'}</div></td><td>${p[3]}</td><td><span class="pill" style="color:var(--warn)">${d>0?'待验证':'待打分'}</span></td></tr>`}).join('');
  $('#coT tbody').innerHTML=CO.filter(c=>c[3]<7).map(c=>`<tr><td>${c[0]}</td><td style="white-space:nowrap">${c[1]}</td><td>${SEG[c[3]]}</td><td>${c[4]}</td></tr>`).join('');
- $('#srcL').innerHTML=M.sources.map(s=>`<li id="s${s.id}" value="${s.id}">${s.t} <a href="${s.u}" target="_blank" rel="noopener">${s.u}</a></li>`).join('');
+ $('#srcL').innerHTML=M.sources.map(s=>`<li id="src${s.id}" value="${s.id}">${s.t} <a href="${s.u}" target="_blank" rel="noopener">${s.u}</a></li>`).join('');
  ['s1','s2','s3','s4'].forEach(i=>document.getElementById(i).addEventListener('input',drawBal));
  document.querySelectorAll('#fMk button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#fMk button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mk=b.dataset.m;drawNet()});
  render()});
