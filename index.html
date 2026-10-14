@@ -7,7 +7,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,"PingFang SC",sans-serif;padding-bottom:40px}
 header{padding:14px 16px 6px;padding-top:max(14px,env(safe-area-inset-top))}h1{font-size:19px;margin:0;letter-spacing:.5px}.sub{color:var(--mut);font-size:12px}
 nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--ln);overflow-x:auto}
-nav button,.seg button{border:1px solid var(--ln);background:var(--card);color:var(--fg);border-radius:16px;padding:5px 12px;font-size:13px;white-space:nowrap}
+nav button,.seg button{border:1px solid var(--ln);background:var(--card);color:var(--fg);border-radius:16px;padding:5px 10px;font-size:13px;white-space:nowrap}
 nav button.on,.seg button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 main{padding:10px 12px}.seg{display:flex;gap:6px;margin:4px 0 10px}
 .lvl{font-size:12px;color:var(--mut);margin:12px 2px 6px;font-weight:600;letter-spacing:2px}.lvl:after{content:" ↓"}
@@ -22,41 +22,70 @@ table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:ta
 #sheet{position:fixed;inset:0;background:#0007;display:none;z-index:9;align-items:flex-end}#sheet>div{background:var(--bg);width:100%;max-height:85vh;overflow:auto;border-radius:14px 14px 0 0;padding:14px}
 .chart{height:220px}.sm{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sm .chart{height:130px}
 footer{color:var(--mut);font-size:11px;padding:12px 16px}
+.sum{background:var(--card);border:1px solid var(--ln);border-left:4px solid var(--ac);border-radius:10px;padding:12px;margin-bottom:10px}.sum .l{font-size:15px;font-weight:600;line-height:1.55}
+.src{font-size:11px;color:var(--mut);margin-top:4px}.na{color:var(--mut);font-size:12px;border:1px dashed var(--ln);border-radius:8px;padding:8px;margin:6px 0}
+.pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:9px;font-weight:600}.p改善{background:#d6303a1f;color:var(--up)}.p恶化{background:#1a9a5a1f;color:var(--dn)}.p中性{background:var(--ln);color:var(--mut)}
+.flag{font-size:12px;font-weight:600}.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kv>div{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:9px}
+h3{font-size:14px;margin:14px 2px 6px}
 </style></head><body>
 <header><h1>产业链行情情报站 <span class="sub">DEMO</span></h1><div class="sub" id="dt"></div></header>
-<nav><button data-t="map" class="on">产业链图谱</button><button data-t="heat">热力图</button><button data-t="ind">关键指标</button><button data-t="news">新闻公告流</button></nav>
+<nav><button data-t="sum" class="on">总览</button><button data-t="l1">①量价</button><button data-t="l2">②供需</button><button data-t="l3">③利润</button><button data-t="l4">④事件</button><button data-t="l5">⑤定价</button></nav>
 <main id="m"></main>
 <div id="sheet" onclick="if(event.target===this)this.style.display='none'"><div id="sh"></div></div>
-<footer>数据：Tushare 日线/每日指标/个股资金流，AKShare（新浪期货、财联社电报、东方财富个股新闻）。节点涨跌为代表股等权平均；主力净流入=大单+特大单净买入。新闻按关键词自动打标，利好/利空为简单规则，仅供参考。本站为个人研究演示，不构成投资建议。</footer>
+<footer>框架：四层认知阶梯（看价格→看机制→想利润→验事件），最后才对照市场是否已定价。规则信号由程序按数据生成，不含主观编造。数据：MOPS、DRAMeXchange、巨潮资讯、Tushare 日线/每日指标/个股资金流，AKShare（新浪期货、财联社电报、东方财富个股新闻）。节点涨跌为代表股等权平均；主力净流入=大单+特大单净买入。新闻按关键词自动打标，利好/利空为简单规则，仅供参考。本站为个人研究演示，不构成投资建议。</footer>
 <script>
-let C,N,I,tab='map',chain='AI算力';const $=s=>document.querySelector(s);
+let C,N,I,L,tab='sum',chain='AI算力';const $=s=>document.querySelector(s);
 const f=(v,s='%')=>v==null?'—':`<span class="${v>0?'up':v<0?'dn':''}">${v>0?'+':''}${v.toFixed(2)}${s}</span>`;
 const col=v=>v==null?'#888':v>0?`rgba(214,48,58,${Math.min(1,.25+v/6)})`:`rgba(26,154,90,${Math.min(1,.25-v/6)})`;
 const dark=matchMedia('(prefers-color-scheme:dark)').matches;
-Promise.all(['chains','news','indicators'].map(n=>fetch(`data/${n}.json?`+Date.now()).then(r=>r.json()))).then(([a,b,c])=>{C=a;N=b;I=c;
+Promise.all(['chains','news','indicators','layers'].map(n=>fetch(`data/${n}.json?`+Date.now()).then(r=>r.json()))).then(([a,b,c,d4])=>{C=a;N=b;I=c;L=d4;
  const d=C.date;$('#dt').textContent=`数据日期 ${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6)} 收盘 · 2 条链 · ${N.items.length} 条新闻`;render()});
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));render()});
 function seg(){return `<div class="seg">${Object.keys(C.chains).map(c=>`<button class="${c===chain?'on':''}" onclick="chain='${c}';render()">${c}</button>`).join('')}</div>`}
-function render(){const m=$('#m');echarts.getInstanceByDom&&document.querySelectorAll('.chart').forEach(e=>echarts.getInstanceByDom(e)?.dispose());
- if(tab==='map'){let h=seg(),nodes=C.chains[chain];
-  ['上游','中游','下游'].forEach(l=>{const ns=nodes.filter(n=>n.level===l);if(!ns.length)return;h+=`<div class="lvl">${l}</div><div class="grid">`+
-   ns.map(n=>`<div class="node" style="border-left-color:${col(n.d1)}" onclick="detail('${n.node}')"><b>${n.node}</b><div class="big">${f(n.d1)}</div>
-   <div class="row"><span>5日 ${f(n.d5)}</span><span>20日 ${f(n.d20)}</span></div><div class="row"><span>主力 ${f(n.mf,'亿')}</span><span>新闻 ${n.news}</span></div></div>`).join('')+'</div>'});
-  m.innerHTML=h+'<div class="sub" style="margin-top:8px">点节点看代表股与相关新闻</div>'}
- if(tab==='heat'){m.innerHTML=seg()+'<div class="card"><div id="tm" style="height:560px"></div></div><div class="sub">面积=总市值，颜色=当日涨跌</div>';
-  const data=C.chains[chain].map(n=>({name:n.node,children:n.stocks.map(s=>({name:s.name,value:s.mv||1,d1:s.d1,itemStyle:{color:col(s.d1)}}))}));
-  echarts.init($('#tm')).setOption({series:[{type:'treemap',data,roam:false,nodeClick:false,breadcrumb:{show:false},width:'100%',height:'100%',
-   upperLabel:{show:true,height:20,color:dark?'#eee':'#333',fontWeight:'bold'},itemStyle:{borderColor:dark?'#121315':'#f6f5f1',borderWidth:1,gapWidth:1},
-   levels:[{itemStyle:{borderWidth:3,gapWidth:3,borderColor:dark?'#121315':'#f6f5f1'}},{}],
-   label:{formatter:p=>`${p.name}\n${p.data.d1>0?'+':''}${p.data.d1?.toFixed(2)}%`,color:'#fff',fontSize:11}}]})}
- if(tab==='ind'){m.innerHTML=`<div class="card"><b>沪铜主连 CU0</b> <span class="sub">新浪期货 · 近120日 · 最新 ${I.cu0.at(-1)[0]} ${(+I.cu0.at(-1)[1]).toLocaleString()} 元/吨</span><div class="chart" id="cu"></div></div>
-  <div class="card"><b>链条 ETF 代理</b> <span class="sub">收盘价，5月以来</span><div class="sm">${Object.keys(I.etf).map((k,i)=>`<div><div class="sub">${k} ${pct(I.etf[k])}</div><div class="chart" id="e${i}"></div></div>`).join('')}</div></div>
-  <div class="card sub">台积电月营收（MOPS）：本版未接入，待下一版解析后补上。HBM/DRAM 现货价、LME 与库存同样待补。</div>`;
-  line('cu',I.cu0.map(x=>x[0]),I.cu0.map(x=>+x[1]),true);Object.values(I.etf).forEach((v,i)=>line('e'+i,v.map(x=>x[0]),v.map(x=>x[1])))}
- if(tab==='news'){window.nf=window.nf||'全部';const opts=['全部','AI算力','铜','利好','利空'];
-  const it=N.items.filter(x=>x.tags.length&&(nf==='全部'||x.tone===nf||x.tags.some(t=>t[0]===nf)));
-  m.innerHTML=`<div class="seg">${opts.map(o=>`<button class="${o===nf?'on':''}" onclick="nf='${o}';render()">${o}</button>`).join('')}</div><div class="card">${it.slice(0,120).map(nh).join('')||'暂无'}</div>
-  <div class="sub">仅显示已匹配到链/节点的条目（${it.length}条）。点标题跳原文。</div>`}}
+const S=(t,d)=>`<div class="src">来源：${t}${d?' · '+d:''}</div>`;
+const NA=t=>`<div class="na">未接入：${t}</div>`;
+const nodesOf=ch=>Object.entries(L.nodes).filter(([k])=>k.startsWith(ch+'|')).map(([k,v])=>({node:k.split('|')[1],...v}));
+const q2=e=>e?`${e.slice(0,4)}Q${Math.ceil(+e.slice(4,6)/3)}`:'—';
+function lineMulti(id,series,opt={}){const el=document.getElementById(id);if(!el)return;echarts.init(el).setOption({grid:{left:44,right:opt.r2?44:8,top:series.length>4?52:26,bottom:22},tooltip:{trigger:'axis'},legend:{top:0,textStyle:{color:'#888',fontSize:10},itemHeight:6},
+ xAxis:{type:'category',data:series[0].x,axisLabel:{color:'#888',fontSize:9}},yAxis:[{type:'value',scale:true,axisLabel:{color:'#888',fontSize:9},splitLine:{lineStyle:{color:dark?'#2c2d31':'#eee'}}},{type:'value',scale:true,show:!!opt.r2,axisLabel:{color:'#888',fontSize:9},splitLine:{show:false}}],
+ series:series.map((s,i)=>({name:s.n,type:s.t||'line',yAxisIndex:s.r?1:0,data:s.y,showSymbol:false,barMaxWidth:12}))})}
+function render(){const m=$('#m');document.querySelectorAll('.chart,[id^=tm]').forEach(e=>echarts.getInstanceByDom(e)?.dispose());let h=seg();const ns=nodesOf(chain),dd=C.date;
+ const D=`${dd.slice(0,4)}-${dd.slice(4,6)}-${dd.slice(6)}`;
+ if(tab==='sum'){const s=L.summary[chain];h+=`<div class="sum"><div class="sub">${chain} · 一句话判断（规则生成）</div><div class="l">${s.line}</div><div style="margin-top:6px">关键数据：<b>${s.key}</b></div>${S('信号=②③层财务 + ①层量价（见各层）；股价=Tushare 20日涨跌',D)}</div>`;
+  h+='<h3>各节点：产业信号 vs 股价</h3><div class="grid">'+ns.map(n=>`<div class="node" style="border-left-color:${n.signal==='改善'?'var(--up)':n.signal==='恶化'?'var(--dn)':'var(--mut)'}" onclick="detail('${n.node}')"><b>${n.node}</b> <span class="pill p${n.signal}">${n.signal}</span>
+   <div class="row"><span>20日股价</span><span>${f(n.d20)}</span></div><div class="flag" style="margin-top:4px">${n.flag}</div></div>`).join('')+'</div><div class="sub" style="margin-top:6px">点节点看代表股、财务与新闻</div>';m.innerHTML=h;return}
+ if(tab==='l1'){if(chain==='AI算力'){const T=L.tw,ks=Object.keys(T.data);
+   h+=`<h3>台湾供应链月营收（同比 %）</h3><div class="kv">${ks.map(k=>{const v=T.data[k].at(-1);return v?`<div><div class="sub">${T.names[k]} ${v[0]}</div><div class="big">${f(v[3])}</div><div class="sub">${v[1].toLocaleString()} 亿新台币 · 环比 ${f(v[2])}</div></div>`:''}).join('')}</div>
+   <div class="card"><div class="chart" id="tw1" style="height:240px"></div>${S(`<a href="${T.url}">${T.src}</a>`,'最新 '+T.data['2330'].at(-1)[0])}</div>`;
+   const dr=L.dram;h+='<h3>存储现货价</h3>'+(dr?`<div class="card"><table><tr><th>品项</th><th>均价 $</th><th>日变动</th></tr>${Object.entries(dr.spot).map(([k,v])=>`<tr><td>${k}</td><td>${v[0]}</td><td>${v[1]}</td></tr>`).join('')}</table>${S(`<a href="${dr.url}">${dr.src}</a>`,Object.keys(dr.hist).length+' 天累积历史（从今天开始每日留存，暂无同比）')}</div>`:NA('DRAMeXchange'))+NA('HBM 合约价（无免费公开序列；模型假设见②层）');
+  }else{const cu=L.cu.data.slice(-260),lm=L.lme?L.lme.data.slice(-260):null,iv=L.cu_inv;
+   h+=`<div class="kv"><div><div class="sub">沪铜主连 ${cu.at(-1)[0]}</div><div class="big">${(+cu.at(-1)[1]).toLocaleString()}</div><div class="sub">同比 ${f(L.cu_yoy)} · 30日 ${f(L.cu_mom)}</div></div>
+   <div><div class="sub">LME 3M铜 ${lm?lm.at(-1)[0]:''}</div><div class="big">${lm?(+lm.at(-1)[1]).toLocaleString():'—'}</div><div class="sub">美元/吨</div></div></div>
+   <div class="card"><div class="chart" id="cu1" style="height:230px"></div>${S(L.cu.src+' / '+(L.lme?L.lme.src:'LME 未接入'),cu.at(-1)[0])}</div>
+   <h3>交易所库存</h3>${iv?`<div class="card"><div class="chart" id="inv1"></div>${S(iv.src+'（单日跳变请以上期所周报核对）',iv.data.at(-1)[0])}</div>`:NA('沪铜库存')}${NA('LME 库存')}${NA('铜精矿 TC/RC（无稳定免费源）')}`}
+  m.innerHTML=h;
+  if(chain==='AI算力'){const T=L.tw.data,x=T['2330'].map(v=>v[0]);lineMulti('tw1',Object.keys(T).map(k=>({n:L.tw.names[k],x,y:x.map(d=>(T[k].find(v=>v[0]===d)||[])[3]??null)})))}
+  else{const cu=L.cu.data.slice(-260);lineMulti('cu1',[{n:'沪铜 元/吨',x:cu.map(v=>v[0]),y:cu.map(v=>+v[1])},...(L.lme?[{n:'LME 美元/吨',r:1,x:[],y:cu.map(v=>{const r=L.lme.data.find(z=>z[0]===v[0]);return r?+r[1]:null})}]:[])],{r2:1});
+   if(L.cu_inv){const iv=L.cu_inv.data;lineMulti('inv1',[{n:'库存(吨)',t:'bar',x:iv.map(v=>v[0]),y:iv.map(v=>v[1])}])}}return}
+ if(tab==='l2'){h+=`<h3>库存周期与订单（节点中位数，最新报告期同比）</h3><div class="card"><table><tr><th>节点</th><th>存货周转天数Δ</th><th>合同负债同比</th><th>报告期</th></tr>${ns.map(n=>`<tr><td>${n.node}</td><td>${n.inv_chg==null?'—':(n.inv_chg>0?'+':'')+n.inv_chg.toFixed(0)+'天'}</td><td>${f(n.cl_yoy)}</td><td>${q2(n.report)}</td></tr>`).join('')}</table>
+  ${S('Tushare fina_indicator(invturn_days) / balancesheet(contract_liab+adv_receipts)，代表股中位数','季报')}<div class="sub">读法：周转天数下降+合同负债上升=去库+订单前置（景气上行）。</div></div>`+NA('资本开支 capex、产能利用率、交期（下一版）');
+  if(chain==='AI算力')h+=`<h3>GB300 产能瓶颈（模型假设，非官方）</h3><div class="card"><table>${L.model.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="sub">${r[2]}</td></tr>`).join('')}</table>${S(L.model.src)}</div>`;m.innerHTML=h;return}
+ if(tab==='l3'){h+=`<h3>毛利率趋势（节点中位数，近8季）</h3><div class="card"><div class="chart" id="gm1" style="height:280px"></div>${S('Tushare fina_indicator grossprofit_margin，单位 %','最新 '+q2(ns[0].report))}</div>
+  <div class="card"><table><tr><th>节点</th><th>最新毛利率</th><th>同比Δpct</th><th>定价权</th></tr>${ns.map(n=>`<tr><td>${n.node}</td><td>${n.gm.length?n.gm.at(-1)[1].toFixed(1)+'%':'—'}</td><td>${f(n.gm_chg,'')}</td><td>${n.gm_chg>2?'增强':n.gm_chg<-1?'削弱':'持平'}</td></tr>`).join('')}</table><div class="sub">累计口径毛利率（年初至今），同比=对比去年同期。</div></div>`;m.innerHTML=h;
+  const x=[...new Set(ns.flatMap(n=>n.gm.map(g=>g[0])))].sort().slice(-8);lineMulti('gm1',ns.map(n=>({n:n.node,x:x.map(q2),y:x.map(e=>(n.gm.find(g=>g[0]===e)||[])[1]??null)})));return}
+ if(tab==='l4'){const ev=L.events.filter(e=>e[2]===chain||e[2]==='两链');const an=L.ann.items.filter(a=>a.tags.some(t=>t[0]===chain));
+  h+=`<h3>催化剂日历</h3><div class="card"><table>${ev.map(e=>`<tr><td style="white-space:nowrap">${e[0].slice(5)}</td><td style="text-align:left">${e[1]}</td><td class="sub">${e[3]}</td></tr>`).join('')}</table>${S('MOPS/SHFE 规则日期；财报日为预计','生成 '+L.gen)}</div>`;
+  if(chain==='AI算力')h+=`<h3>可证伪点（我们若错，会在这里看到）</h3><div class="card">${L.falsify.rows.map(r=>`<div class="news"><b>${r[1]}</b><div class="meta">${r[0]} · 基准 ${r[2]} · 证伪阈值：${r[3]}</div></div>`).join('')}${S(L.falsify.src)}</div>`;
+  h+=`<h3>节点股公告（扩产/订单/涨价…）</h3><div class="card">${an.slice(0,15).map(a=>`<div class="news"><a href="${a.url}" target="_blank">${a.name}：${a.title}</a><div class="meta"><span class="tg">${a.tags.find(t=>t[0]===chain)[1]}</span><span class="tg">${a.kw}</span> ${a.time}</div></div>`).join('')||'<div class="sub">近60日无匹配公告</div>'}${S(L.ann.src)}</div>`;m.innerHTML=h;return}
+ if(tab==='l5'){window.sub5=window.sub5||'对照';h+=`<div class="seg">${['对照','热力图','新闻'].map(o=>`<button class="${o===sub5?'on':''}" onclick="sub5='${o}';render()">${o}</button>`).join('')}</div>`;
+  if(sub5==='对照'){h+=`<div class="card"><table><tr><th>节点</th><th>产业</th><th>20日</th><th>主力亿</th><th>判断</th></tr>${ns.map(n=>`<tr onclick="detail('${n.node}')"><td>${n.node}</td><td><span class="pill p${n.signal}">${n.signal}</span></td><td>${f(n.d20,'')}</td><td>${f(n.mf,'')}</td><td style="font-size:11px">${n.flag}</td></tr>`).join('')}</table>
+   ${S('产业=①②③层规则打分（≥2改善，≤-1恶化）；股价/资金=Tushare',D)}<div class="sub">规则：改善且20日涨幅&lt;3% → 产业变好但股价未动；未改善且20日涨幅&gt;10% → 股价跑在基本面前。</div></div>`;m.innerHTML=h;return}
+  if(sub5==='热力图'){const nd=C.chains[chain];window.TOT=nd.flatMap(n=>n.stocks).reduce((a,s)=>a+(s.mv||1),0);h+=`<div class="card"><div id="tm" style="height:520px"></div>${S('Tushare daily_basic 总市值 / daily 涨跌（小方块不标字，点节点卡片看全部个股）',D)}</div>`;m.innerHTML=h;
+   echarts.init($('#tm')).setOption({series:[{type:'treemap',data:nd.map(n=>({name:`${n.node} ${n.d1>0?'+':''}${n.d1}%`,children:n.stocks.map(s=>({name:s.name,value:s.mv||1,d1:s.d1,itemStyle:{color:col(s.d1)}}))})),roam:false,nodeClick:false,breadcrumb:{show:false},width:'100%',height:'100%',
+    upperLabel:{show:true,height:18,fontSize:10,color:dark?'#eee':'#333',overflow:'truncate',ellipsis:''},itemStyle:{borderColor:dark?'#121315':'#f6f5f1',borderWidth:1,gapWidth:1},levels:[{itemStyle:{borderWidth:3,gapWidth:3,borderColor:dark?'#121315':'#f6f5f1'}},{}],
+    label:{formatter:p=>p.data.value<TOT*0.06?'':`${p.name}\n${p.data.d1>0?'+':''}${p.data.d1?.toFixed(1)}%`,color:'#fff',fontSize:10,overflow:'truncate',ellipsis:'',lineHeight:12}}]});return}
+  window.nf='全部';const it=N.items.filter(x=>x.tags.some(t=>t[0]===chain));h+=`<div class="card">${it.slice(0,80).map(nh).join('')||'暂无'}</div><div class="sub">仅显示标题命中节点关键词或个股名称的条目（${it.length}条）</div>`;m.innerHTML=h}}
+
 function pct(v){const a=v[0][1],b=v.at(-1)[1];return f((b/a-1)*100)}
 function nh(x){return `<div class="news"><a href="${x.url}" target="_blank" rel="noopener">${x.title}</a><div class="meta">${x.tags.slice(0,3).map(t=>`<span class="tg">${t[1]}</span>`).join('')}${x.tone!=='中性'?`<span class="tg t${x.tone}">${x.tone}</span>`:''} ${x.time.slice(5,16)} · ${x.src}${x.stock?' · '+x.stock:''}</div></div>`}
 function line(id,x,y,axis){echarts.init(document.getElementById(id)).setOption({grid:{l:axis?50:4,left:axis?52:4,right:6,top:8,bottom:axis?22:4},tooltip:{trigger:'axis'},
@@ -65,5 +94,5 @@ function line(id,x,y,axis){echarts.init(document.getElementById(id)).setOption({
 function detail(nd){const n=C.chains[chain].find(x=>x.node===nd);const nw=N.items.filter(x=>x.tags.some(t=>t[0]===chain&&t[1]===nd));
  $('#sh').innerHTML=`<b style="font-size:17px">${chain} · ${nd}</b> <span class="sub">${n.level}</span><table><tr><th>代表股</th><th>收盘</th><th>1日</th><th>5日</th><th>20日</th><th>主力亿</th></tr>
  ${n.stocks.map(s=>`<tr><td>${s.name}<div class="sub">${s.code}</div></td><td>${s.close}</td><td>${f(s.d1,'')}</td><td>${f(s.d5,'')}</td><td>${f(s.d20,'')}</td><td>${f(s.mf,'')}</td></tr>`).join('')}</table>
- <div class="lvl" style="letter-spacing:0">相关新闻 ${nw.length}</div>${nw.slice(0,30).map(nh).join('')||'<div class="sub">暂无</div>'}`;$('#sheet').style.display='flex'}
+ ${(()=>{const x=L.nodes[chain+'|'+nd];return x?`<div class="card" style="margin-top:8px"><span class="pill p${x.signal}">${x.signal}</span> 打分 ${x.score}：${x.why.join('；')}<div class="src">报告期 ${q2(x.report)} · Tushare/MOPS/新浪</div></div>`:''})()}<div class="lvl" style="letter-spacing:0">相关新闻 ${nw.length}</div>${nw.slice(0,30).map(nh).join('')||'<div class="sub">暂无</div>'}`;$('#sheet').style.display='flex'}
 </script></body></html>

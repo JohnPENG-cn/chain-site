@@ -1,3 +1,5 @@
-shot.py
+shot*.py
 *.png
 __pycache__/
+build.log
+render.js
