@@ -2,6 +2,8 @@
 结构：上半 = 结论层（金字塔：SCQA → 中心思想 → 3 条论点卡 → 每条论点的证据块 → 可能错在哪 → 预测台账）；
      下半 = 底稿（SOP 13 步，按 SOP 顺序全部展开）；只有来源、更新记录折叠。
 证据块 ↔ 底稿步骤的双向链接由模板根据 spec 自动生成，两页结构不会漂移。
+两本账（SOP v1.5）：spec 有 cn=dict(...) 时，结论层在全球论点后加平行的中国账本（#cn、#c1..），
+     中心思想下加 ledgers 对照条；底稿 CN_REQ 6 步必须各有 steps[i]['cn'] 中国块（#cn-<步骤>），缺了构建报错。
 用法：python3 tpl/page.py（build.sh 最后一步）。spec 在 <链>/page.py。"""
 import importlib.util, os, re, sys
 R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,6 +17,8 @@ STEPS = [('key', '0', '要害', '要害变量'), ('debate', '1', '争议', '核�
 SID = {s[0]: s for s in STEPS}
 MID = dict(zip([s[0] for s in STEPS], ['要害变量', '核心争议', '边界与工艺', '需求', '供给', '平衡与价格', '利润池', '瓶颈 TOC', '玩家与博弈', '历史', '领先指标', '预测台账', '图谱与接口']))   # 底稿目录用的中等长度名（手机两列放得下）
 CIRC = '①②③④'
+CNC = '❶❷❸❹'   # 中国账本论点用实心圈，和全球账本区分
+CN_REQ = ['demand', 'supply', 'balance', 'neck', 'play', 'map']   # SOP v1.5：有中国账本的链，这 6 步必须各有中国块
 
 
 def render(S):
@@ -22,6 +26,19 @@ def render(S):
     assert 3 <= len(args) <= 4, '关键论点必须 3 条（最多 4 条）'
     assert [s['id'] for s in S['steps']] == [s[0] for s in STEPS], '底稿必须按 SOP 13 步顺序给全'
     back = {s[0]: [] for s in STEPS}   # 步骤 → 支撑的证据块
+    cn = S.get('cn')
+    cback = {s[0]: [] for s in STEPS}  # 步骤 → 支撑的中国证据块
+    if cn:
+        stp = {s['id']: s for s in S['steps']}
+        miss = [x for x in CN_REQ if not stp[x].get('cn')]
+        assert not miss, f"{S['file']}: 有中国账本时底稿第 {'/'.join(SID[x][1] for x in miss)} 步缺中国块"
+        assert S.get('ledgers'), '有中国账本时必须在中心思想下给出"两本账"对照'
+        assert 2 <= len(cn['args']) <= 4
+        for i, a in enumerate(cn['args'], 1):
+            for j, e in enumerate(a['ev'], 1):
+                for st in e['steps']:
+                    assert stp[st].get('cn'), f'中国证据 {i}.{j} 指向的第 {SID[st][1]} 步没有中国块'
+                    cback[st].append((i, j))
     for i, a in enumerate(args, 1):
         for j, e in enumerate(a['ev'], 1):
             for st in e['steps']:
@@ -39,7 +56,10 @@ def render(S):
 <header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="{S['other'][0]}">{S['other'][1]}</a><span class="pill">{S['pill']}</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
 ''')
     # 两层导航
-    t1 = [('top', '结论')] + [(f'a{i}', f'{CIRC[i-1]} {a["tag"]}') for i, a in enumerate(args, 1)] + [('wrong', '可能错在哪'), ('pred', '预测台账')]
+    t1 = [('top', '结论')] + [(f'a{i}', f'{CIRC[i-1]} {a["tag"]}') for i, a in enumerate(args, 1)]
+    if cn:
+        t1 += [('cn', cn['nav'])] + [(f'c{i}', f'{CNC[i-1]} {a["tag"]}') for i, a in enumerate(cn['args'], 1)]
+    t1 += [('wrong', '可能错在哪'), ('pred', '预测台账')]
     t2 = [('base', '总览')] + [(s[0], f'{s[1]} {s[2]}') for s in STEPS] + [('src', '来源')]
     w('<nav class="sec two" id="nav" data-tier="c"><div class="wrap navw"><span class="tiers"><a href="#top" data-t="c" class="on">结论层</a><a href="#base" data-t="b">底稿 13 步</a></span>')
     w('<span class="links l-c">' + ''.join(f'<a href="#{i}">{t}</a>' for i, t in t1) + '</span>')
@@ -49,31 +69,46 @@ def render(S):
     for lab, txt in zip(('背景', '冲突', '问题'), S['scqa']):
         w(f'<div><b>{lab}</b><span>{txt}</span></div>')
     w(f'</div>\n<div class="kicker" style="margin-top:18px">回答 · 中心思想</div>\n<h1 class="gov" style="margin-top:.2em">{S["gov"]}</h1>\n<div class="kl">')
+    nolink = lambda t: re.sub(r'<a\b[^>]*>(.*?)</a>', r'\1', t)   # 卡片本身是链接，里面不能再嵌 <a>
     for i, a in enumerate(args, 1):
-        nolink = lambda t: re.sub(r'<a\b[^>]*>(.*?)</a>', r'\1', t)   # 卡片本身是链接，里面不能再嵌 <a>
         w(f'<a href="#a{i}"><span class="i">{CIRC[i-1]}</span><span>{nolink(a["claim"])}<span class="k">{nolink(a["key"])}</span></span></a>')
-    w(f'</div>\n<p class="note">{S["mece"]} 标注：<span class="tag t-src">源N</span> = 页末第 N 条公开来源；<span class="tag t-est">估</span> = Kiko 自估，可在底稿里用滑块改。'
+    w('</div>\n')
+    if S.get('ledgers'):   # 两本账对照：全球 vs 中国（出口管制/国产化重要的链必须有，SOP v1.5）
+        w('<div class="twoled">' + ''.join(f'<a href="#{h}" class="{c}"><span class="lb">{lb}</span><span>{nolink(t)}</span></a>' for h, c, lb, t in S['ledgers']) + '</div>\n')
+    w(f'<p class="note">{S["mece"]} 标注：<span class="tag t-src">源N</span> = 页末第 N 条公开来源；<span class="tag t-est">估</span> = Kiko 自估，可在底稿里用滑块改。'
       f'上半页是结论层（金字塔），下半页是<a href="#base">底稿</a>：按 <a href="https://github.com/JohnPENG-cn/chain-site/blob/main/SOP.md">SOP</a> 13 步的完整产业链分析；每个证据块都链到底稿对应步骤，底稿每一步也标了它支撑哪条论点。</p>\n</section>\n')
-    # ④ 论点节
-    for i, a in enumerate(args, 1):
+    # ④ 论点节（全球 a1..；中国 c1..，证据块链到底稿各步的中国块）
+    def argsec(i, a, pre, circ, evp, lab, link):
         steps_cov = sorted({SID[st][1] for e in a['ev'] for st in e['steps']}, key=int)
-        w(f'<section id="a{i}" data-nav="c"><div class="kicker">论点 {CIRC[i-1]} · {a["tag"]} · 依据底稿第 {"/".join(steps_cov)} 步</div>\n<h2 class="claim">{a["claim"]}</h2>\n')
+        w(f'<section id="{pre}{i}" data-nav="c"{" class=cnarg" if pre == "c" else ""}><div class="kicker">{lab} {circ[i-1]} · {a["tag"]} · 依据底稿第 {"/".join(steps_cov)} 步{"中国块" if pre == "c" else ""}</div>\n<h2 class="claim">{a["claim"]}</h2>\n')
         if a.get('sub'):
             w(f'<p class="sub">{a["sub"]}</p>\n')
         h = a['hero']
         w(f'<div class="card hero"><b>{h["t"]}</b><div id="m-{h["src"]}" data-mirror="{h["src"]}" class="chart" style="height:{h.get("h", 340)}px"></div>'
-          f'<div class="note">{h["note"]} <a href="#{h["step"]}">原图与假设在底稿第 {SID[h["step"]][1]} 步 ↓</a></div></div>\n<div class="evs">')
+          f'<div class="note">{h["note"]} <a href="#{link(h["step"])}">原图与假设在底稿第 {SID[h["step"]][1]} 步{"中国块" if pre == "c" else ""} ↓</a></div></div>\n<div class="evs">')
         for j, e in enumerate(a['ev'], 1):
-            lk = ' · '.join(f'<a href="#{st}">底稿 {SID[st][1]} {SID[st][3]} ↓</a>' for st in e['steps'])
-            w(f'<div class="evc" id="e{i}-{j}"><div class="ev">证据 {i}.{j}</div><b>{e["t"]}</b><p>{e["b"]}</p><div class="go">{lk}</div></div>')
+            lk = ' · '.join(f'<a href="#{link(st)}">底稿 {SID[st][1]} {SID[st][3]}{" · 中国" if pre == "c" else ""} ↓</a>' for st in e['steps'])
+            w(f'<div class="evc" id="{evp}{i}-{j}"><div class="ev">证据 {i}.{j}</div><b>{e["t"]}</b><p>{e["b"]}</p><div class="go">{lk}</div></div>')
         w('</div>\n</section>\n')
+    for i, a in enumerate(args, 1):
+        argsec(i, a, 'a', CIRC, 'e', '论点', lambda st: st)
+    if cn:   # 平行账本：中国视角的 SCQA + 中心思想 + 论点
+        w(f'<section id="cn" data-nav="c" class="cnsec"><div class="kicker">平行账本 · {cn["kicker"]}</div>\n<div class="scqa">')
+        for lab, txt in zip(('背景', '冲突', '问题'), cn['scqa']):
+            w(f'<div><b>{lab}</b><span>{txt}</span></div>')
+        w(f'</div>\n<div class="kicker" style="margin-top:18px">回答 · 中国账本的中心思想</div>\n<h2 class="gov">{cn["gov"]}</h2>\n<div class="kl cn">')
+        for i, a in enumerate(cn['args'], 1):
+            w(f'<a href="#c{i}"><span class="i">{CNC[i-1]}</span><span>{nolink(a["claim"])}<span class="k">{nolink(a["key"])}</span></span></a>')
+        w(f'</div>\n<p class="note">{cn["mece"]}</p>\n</section>\n')
+        for i, a in enumerate(cn['args'], 1):
+            argsec(i, a, 'c', CNC, 'ce', '中国论点', lambda st: 'cn-' + st)
     # ⑤ 可能错在哪  ⑥ 预测台账
     w(f'<section id="wrong" data-nav="c"><div class="kicker">我们可能错在哪 · 底稿第 1/11 步</div>\n<h2>每条论点都写好了"什么情况算我错"</h2>\n{S["wrong"]}\n</section>\n')
     w(f'<section id="pred" data-nav="c"><div class="kicker">预测台账 · 底稿第 11 步</div><h2>写下来，到期打分</h2>\n{S["pred"]}\n</section>\n')
     # 底稿
     w(f'<section id="base" data-nav="b" class="basehd"><div class="kicker">底稿 · SOP 13 步完整产业链分析</div><h2>{S["base_title"]}</h2><p class="sub">{S["base_sub"]}</p><ol class="stepix">')
     for s in STEPS:
-        sup = ''.join(CIRC[i-1] for i in sorted({i for i, _ in back[s[0]]}))
+        sup = ''.join(CIRC[i-1] for i in sorted({i for i, _ in back[s[0]]})) + (' <i class="cnm">中</i>' if cn and any(x['id'] == s[0] and x.get('cn') for x in S['steps']) else '')
         w(f'<li><a href="#{s[0]}"><span class="n">{s[1]}</span>{MID[s[0]]}<span class="s">{sup}</span></a></li>')
     w('</ol></section>\n')
     for st, (sid, n, short, ttl) in zip(S['steps'], STEPS):
@@ -85,7 +120,12 @@ def render(S):
         w(f'<section id="{sid}" data-nav="b" class="step"><div class="kicker">底稿 {n} · {ttl}</div>\n<h2>{st["h"]}</h2>{chips}\n')
         if st.get('sub'):
             w(f'<p class="sub">{st["sub"]}</p>\n')
-        w(st['body'].strip() + '\n</section>\n')
+        w(st['body'].strip() + '\n')
+        if st.get('cn'):   # 中国块：同一步的中国账本，和全球内容并排放在同一步里
+            c = st['cn']
+            ch = ''.join(f'<a href="#ce{i}-{j}">支撑中国论点{CNC[i-1]} · 证据 {i}.{j} ↑</a>' for i, j in cback[sid])
+            w(f'<div class="cnb" id="cn-{sid}"><div class="cnh"><span class="lb">中国账本</span><b>{c["h"]}</b></div>' + (f'<div class="sup">{ch}</div>' if ch else '') + c['body'].strip() + '</div>\n')
+        w('</section>\n')
     # 只有来源、更新记录折叠
     w(f'<section id="apx" data-nav="b" class="apxsec"><div class="kicker">附录</div>\n'
       f'<details class="apx" id="apxSrc"><summary>来源与局限 <small>{S["src_small"]}</small></summary><div class="body" id="src">{S["src"]}</div></details>\n'
@@ -120,5 +160,5 @@ if __name__ == '__main__':
         # 首页卡片 = 同一句中心思想
         idx, n = re.subn(rf'(<!--card:{chain}-->).*?(<!--/card-->)', lambda m: m.group(1) + S['card'] + m.group(2), idx, flags=re.S)
         assert n == 1, f'index.html 缺 card:{chain} 标记'
-        print(f'{S["file"]}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿')
+        print(f'{S["file"]}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿' + (f'；中国账本 {len(S["cn"]["args"])} 条论点、{sum(len(a["ev"]) for a in S["cn"]["args"])} 个证据块、{sum(1 for x in S["steps"] if x.get("cn"))} 个中国块' if S.get('cn') else ''))
     open(os.path.join(R0, 'index.html'), 'w', encoding='utf-8').write(idx)

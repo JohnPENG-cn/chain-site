@@ -5,7 +5,7 @@ TOC.calc=(J,H,T,s={})=>{const k=x=>s[x]??1,m=J.model,P=T.param,Q=[],W=P.ramp,yrs
  const rows=y=>m.demand.filter(x=>x.y==y),U=y=>rows(y).reduce((a,x)=>a+x.units,0);
  const coef={};yrs.forEach(y=>{const R=rows(y),u=U(y);coef[y]={u,ppw:u/R.reduce((a,x)=>a+x.units/x.ppw,0),gb:R.reduce((a,x)=>a+x.units*x.gb,0)/u,
   weq:R.reduce((a,x)=>a+x.units*(/CPU/.test(x.chip)?P.pw_cpu:/TPU|AWS|ASIC/.test(x.v)?P.pw_asic:1),0)/u,stk:P.stack_gb[y]}});
- const hq=H.cap.q,hi=hq.indexOf('1Q24'),ci=m.cap.q.indexOf('2024Q1'),mk=['SK hynix','Samsung','Micron','CXMT'];
+ const hq=H.cap.q,hi=hq.indexOf('1Q24'),ci=m.cap.q.indexOf('2024Q1'),mk=['SK hynix','Samsung','Micron'];
  const hk=i=>mk.reduce((a,n)=>a+(H.cap[n][hi+i]||0),0),h24=[0,1,2,3].reduce((a,i)=>a+hk(i),0);
  let B=P.tcb_b0;const out=[];
  for(let i=0;i<16;i++){const y=2024+Math.floor(i/4),qi=i%4,c=coef[y],w=W[qi];

@@ -9,7 +9,7 @@ function calc(){const g=+$('#s1').value,u=+$('#s2').value/100,w=+$('#s3').value/
   let wf=Object.values(M.supply[y]).reduce((a,b)=>a+b,0),G=M.gbw[y],U=M.ut[y];
   if(y==2027){d*=k;wf*=w;G=g;U=u}r[y]={d,s:wf*12*G*U/1e6}}return r}
 function drawBal(){const r=calc(),ys=[2023,2024,2025,2026,2027];for(const y of[2023,2024]){r[y]={d:M.demand.filter(x=>x.y==y).reduce((a,x)=>a+x.units*x.gb,0)/1000,s:M.hist_supply[y].s,h:1}}o1.value=s1.value;o2.value=s2.value+'%';o3.value=s3.value+'%';o4.value=s4.value+'%';
- const x=r[2027],gp=(x.s-x.d)/x.d;$('#gap').textContent=(gp>0?'+':'')+(gp*100).toFixed(0)+'%';$('#hGap').textContent=$('#gap').textContent;const g6=(r[2026].s-r[2026].d)/r[2026].d;$('#hGap26').textContent=(g6>0?'+':'')+(g6*100).toFixed(0)+'%';
+ const x=r[2027],gp=(x.s-x.d)/x.d;$('#gap').textContent=(Math.round(gp*100)>0?'+':'')+(Math.round(gp*100)||0)+'%';$('#hGap').textContent=$('#gap').textContent;const g6=(r[2026].s-r[2026].d)/r[2026].d;$('#hGap26').textContent=(Math.round(g6*100)>0?'+':'')+(Math.round(g6*100)||0)+'%';
  $('#gapTxt').textContent=`需求 ${x.d.toFixed(2)} EB · 供给 ${x.s.toFixed(2)} EB → ${gp<-0.1?'明显短缺':gp<0?'略紧':'供给充足'}`;
  const c=C('cBal');c.setOption({...base(),legend:{top:0,textStyle:{color:V('--fg')}},xAxis:{data:ys.map(String)},yAxis:{name:'EB',splitLine:{lineStyle:{color:V('--line')}}},
  tooltip:{trigger:'axis',confine:true,formatter:p=>{const y=p[0].name,o=r[y];return`${y}${o.h?'（历史估算）':''}<br>需求 ${o.d.toFixed(2)} EB<br>供给 ${o.s.toFixed(2)} EB<br>缺口 ${((o.s-o.d)/o.d*100).toFixed(1)}%`}},
@@ -31,7 +31,7 @@ function drawTier(){const c=C('cTier'),t=['① 现金成本','② 维持老产�
  series:[{type:'bar',data:[1,2,3,4.4],barWidth:'70%',itemStyle:{color:p=>['#cfd8dc','#b0bec5','#90a4ae','#d9534f'][p.dataIndex],borderRadius:[4,4,0,0]},silent:true},
  {type:'scatter',symbolSize:16,data:[{value:[3,4.7],name:'DDR5 $24/GB'},{value:[1,1.7],name:'HBM 2026 $12–18/GB'},{value:[2,3.4],name:'HBM 2027E ~$36/GB'}],itemStyle:{color:V('--fg')},
  label:{show:true,position:'top',color:V('--fg'),fontSize:12,formatter:p=>p.name}}]})}
-function drawCap(){const c=C('cCap'),K=M.cap,ks=['SK hynix','Samsung','Micron','CXMT'],cl={'SK hynix':'#d9534f','Samsung':'#1428a0','Micron':'#ff9900','CXMT':'#9a9a9a'},nm={'SK hynix':'SK海力士','Samsung':'三星','Micron':'美光','CXMT':'长鑫(有效)'};
+function drawCap(){const c=C('cCap'),K=M.cap,ks=['SK hynix','Samsung','Micron','CXMT'],cl={'SK hynix':'#d9534f','Samsung':'#1428a0','Micron':'#ff9900','CXMT':'#9a9a9a'},nm={'SK hynix':'SK海力士','Samsung':'三星','Micron':'美光','CXMT':'长鑫(旧估·不计入)'};
  c.setOption({...base(),legend:{top:0,textStyle:{color:V('--fg')}},grid:{left:44,right:12,top:innerWidth<700?70:44,bottom:30},xAxis:{data:K.q,axisLabel:{interval:3}},yAxis:{name:'千片/月',splitLine:{lineStyle:{color:V('--line')}}},
  tooltip:{trigger:'axis',confine:true,formatter:p=>{const i=p[0].dataIndex;let t=K.q[i]+' <span style="opacity:.6">('+K.kind[i]+')</span><br>',sum=0;p.forEach(x=>{t+=x.marker+x.seriesName+' '+x.value+'K<br>';sum+=x.value});return t+'合计 '+sum.toFixed(0)+'K'}},
  series:ks.map(k=>({name:nm[k],type:'line',stack:'c',areaStyle:{opacity:.35},showSymbol:false,data:K[k],color:cl[k],lineStyle:{width:1.5}})).concat([{type:'line',data:K.q.map((q,i)=>K.kind[i]=='锚点'?ks.reduce((a,k)=>a+K[k][i],0):null),symbolSize:8,lineStyle:{opacity:0},itemStyle:{color:V('--fg')},name:'锚点',tooltip:{show:false},label:{show:true,position:'top',fontSize:10,color:V('--fg'),formatter:p=>p.value?Math.round(p.value)+'K':''}}])})}
@@ -58,7 +58,7 @@ const LEAD=[['韩国 1–10/1–20 日出口','每 10 天 / 每月 1 日','与�
 const PRED=[['P1','10 月全月韩国半导体出口同比 > +150%','2026-11-01','产业通商部月报'],['P2','美光 FQ1 2027 营收 ≥ 600 亿美元（指引 615±15）','2026-12-20','美光财报'],['P3','SK 海力士 4Q26 财报会称 2027 HBM 基本售罄/签约完成','2027-01-31','财报会纪要'],['P4','2027 年 HBM 混合均价同比 ≥ +50%','2027-06-30','TrendForce'],['P5','2027 年底前混合键合不进入 HBM 大规模量产','2027-12-31','原厂/设备商公告'],['P6','韩国半导体出口同比在 2027-03 前首次跌破 +100%（见顶信号）','2027-04-01','月度出口数据'],['P7','2026 年全年 HBM 产量 ≥ 40 亿 GB（v0.4 模型 4.4 EB；旧模型 2.9 EB——检验这次上修）','2027-03-31','TrendForce / 券商 2026 年回看']];
 // network
 const SEG=['HBM原厂','键合/封装设备','base die/CoWoS','测试/检测','材料','国产封测/设备','下游加速器','资本方'];
-const CO=[['SK海力士','000660.KS','KR',0,'HBM 份额 50%（2Q26）[源11]',30],['三星电子','005930.KS','KR',0,'HBM 份额 33%；自家 4nm base die [源8,11]',26],['美光','MU','US',0,'HBM 份额 18%；年底 10 万片/月 [源7,11]',22],['长鑫 CXMT','未上市','A',0,'良率 25–30%，仅供国内 [源22]',14],
+const CO=[['SK海力士','000660.KS','KR',0,'HBM 份额 50%（2Q26）[源11]',30],['三星电子','005930.KS','KR',0,'HBM 份额 33%；自家 4nm base die [源8,11]',26],['美光','MU','US',0,'HBM 份额 18%；年底 10 万片/月 [源7,11]',22],['长鑫科技 CXMT','688825.SH','A',0,'2026-07-27 上市 [源85]；HBM3 良率约 25%、HBM3E 小批量，仅供国内（计入中国账本）[源80,79]',14],
 ['韩美半导体','042700.KS','KR',1,'TCB 主力供应商',16],['ASMPT','0522.HK','HK',1,'TCB',14],['Besi','BESI.AS','US',1,'混合键合',12],['快克智能','603203.SH','A',1,'TCB 0→1',10],['拓荆科技','688072.SH','A',1,'键合/薄膜设备',10],
 ['台积电','2330.TW','TW',2,'base die、CoWoS',24],['创意','3443.TW','TW',2,'ASIC/base die 设计',11],['弘塑','3131.TWO','TW',2,'先进封装湿制程',10],['辛耘','3583.TWO','TW',2,'先进封装设备',10],
 ['爱德万','6857.T','US',3,'存储测试机',12],['赛腾股份','603283.SH','A',3,'检测',10],

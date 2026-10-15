@@ -90,3 +90,20 @@ ol.stepix a:hover{text-decoration:none;border-color:var(--acc)}ol.stepix .n{font
 .step .sup span{border-color:var(--line);color:var(--mut)}.step .sup a:hover{text-decoration:none;background:color-mix(in srgb,var(--acc) 8%,transparent)}
 section.apxsec{border-bottom:0}
 @media(max-width:700px){#cw-procT thead,#cw-varT thead{display:none}#cw-procT tr,#cw-varT tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}#cw-procT td,#cw-varT td{display:block;border:0;padding:2px 0}#cw-procT td:nth-child(2),#cw-varT td:nth-child(2){color:var(--mut);font-size:13px}}
+/* ===== v1.5 两本账：全球 vs 中国（中国账本用琥珀色区分） ===== */
+:root{--cn:#a86400}@media(prefers-color-scheme:dark){:root{--cn:#f0b35a}}html[data-t=light]{--cn:#a86400}html[data-t=dark]{--cn:#f0b35a}
+.twoled{display:grid;gap:8px;margin:12px 0 8px}@media(min-width:760px){.twoled{grid-template-columns:1fr 1fr}}
+.twoled a{display:block;color:var(--fg);background:var(--card);border:1px solid var(--line);border-top:3px solid var(--acc);border-radius:10px;padding:10px 14px;font-size:14px;line-height:1.6}
+.twoled a:hover{text-decoration:none;border-color:var(--acc)}.twoled a.cnl{border-top-color:var(--cn)}.twoled a.cnl:hover{border-color:var(--cn)}
+.twoled .lb{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--acc);margin-bottom:2px}.twoled .cnl .lb{color:var(--cn)}
+.cnsec,.cnarg{border-top:3px solid var(--cn)}.cnsec .kicker,.cnarg .kicker{color:var(--cn)}
+.kl.cn a{border-left-color:var(--cn)}.kl.cn a:hover{border-color:var(--cn)}.kl.cn .i{color:var(--cn)}
+.cnarg .evc .ev{color:var(--cn)}
+.cnb{margin:18px 0 4px;border:1px solid color-mix(in srgb,var(--cn) 45%,var(--line));border-left:4px solid var(--cn);border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--cn) 4%,var(--bg));scroll-margin-top:110px}
+.cnb:target{box-shadow:0 0 0 2px var(--cn) inset}
+.cnh{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;margin-bottom:8px}.cnh b{font-size:16px}
+.cnb .lb,.cnm{font-size:11px;font-weight:700;letter-spacing:.08em;color:#fff;background:var(--cn);border-radius:4px;padding:1px 6px;font-style:normal}
+html[data-t=dark] .cnb .lb,html[data-t=dark] .cnm{color:#1a1a1a}@media(prefers-color-scheme:dark){html:not([data-t=light]) .cnb .lb,html:not([data-t=light]) .cnm{color:#1a1a1a}}
+.cnb .sup a{border-color:color-mix(in srgb,var(--cn) 50%,transparent)!important;color:var(--cn)!important}
+.cnb .card{background:var(--card)}
+.kl a{align-content:start}

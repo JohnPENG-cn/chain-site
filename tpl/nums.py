@@ -16,3 +16,10 @@ CS27, CD27 = R['2027']['s'], R['2027']['d']
 assert abs(hdem(2027) - R['2027']['hbm']) < 0.02, 'HBM 页需求与 CoWoS 页出货所需 HBM 不一致'
 if __name__ == '__main__':
     print(dict(HC=HC, CC=CC, CGAP=CGAP, CGAPU=CGAPU, HGAP=HGAP, CS27=CS27, CD27=CD27, h27=round(hsup(2027), 2), d27=round(hdem(2027), 2), cw_hbm27=R['2027']['hbm']))
+# ---- 中国账本（v0.5）：国产加速卡能用上的裸 HBM，见 hbm/build.py cnbal()
+CN = {r['y']: r for r in H['cn']['bal']}
+CC26, CC27 = round(CN[2026]['cov'] * 100), round(CN[2027]['cov'] * 100)          # 可用 ÷ 不缺货需求
+CL26, CL27 = round(CN[2026]['covl'] * 100), round(CN[2027]['covl'] * 100)        # 可用 ÷ 机构出货口径（下限）
+CA26, CA27 = CN[2026]['a'], CN[2027]['a']                                          # 可用 EB
+CD26, CD27X = CN[2026]['d'], CN[2027]['d']
+CK26, CK27 = CN[2026]['cards'], CN[2027]['cards']                                  # 可用 HBM 能配的卡（百万张）

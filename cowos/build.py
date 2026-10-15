@@ -244,8 +244,9 @@ for i,t,u in [(41,'电子新闻 ETNews 2025-07-30：韩美半导体 TC 键合机
  (42,'亚洲经济 2024-07-05：韩美半导体年产 264 台（月 22 台）TC 键合机','https://www.asiae.co.kr/en/article/2024070519155971905'),
  (43,'The Elec 2025-03-14：SK 海力士 2025 年计划采购约 80 台 TC 键合机，每条 HBM 线 2 台','https://www.thelec.net/news/articleView.html?idxno=5189')]:
   if i not in ids:S.append({'id':i,'t':t,'u':u})
-if not any(c[1]=='v0.3' for c in cl):cl.insert(0,['2026-10-15','v0.3',f'跟随 HBM 页 v0.4 重新校准：HBM 供给上修约五成，2027 年 HBM 满足率约 61% → {HC}%；结论由"短板是 HBM"改为"最紧是 ABF 载板（估），HBM 与 CoWoS 都只略紧"。CoWoS 与 HBM 满足率改为同一口径（可见出货）比较。构建合并为 cowos/build.py（重跑不丢来源 41–43）。'])
+if not any(c[1]=='v0.3' for c in cl):cl.insert(0,['2026-10-15','v0.3',f'跟随 HBM 页 v0.4 重新校准：HBM 供给上修约五成，2027 年 HBM 满足率约 61% → 93%；结论由"短板是 HBM"改为"最紧是 ABF 载板（估），HBM 与 CoWoS 都只略紧"。CoWoS 与 HBM 满足率改为同一口径（可见出货）比较。构建合并为 cowos/build.py（重跑不丢来源 41–43）。'])
 if not any(c[1]=='v0.3 · 版式' for c in cl):cl.insert(0,['2026-10-15','v0.3 · 版式','页面改为与 HBM 页同一模板：上半结论层（SCQA、中心思想、3 条论点：量 / 利润 / 时点，证据卡、可能错在哪、预测台账），下半底稿按 SOP 13 步全部展开；证据卡与底稿步骤双向链接；约束迁移预测 T 系列移入预测台账。<b>数字未改</b>；修正 data/cowos.json 版本号（曾被旧扩展代码写回 v0.2）。'])
+if not any(c[1]=='v0.3.1' for c in cl):cl.insert(0,['2026-10-15','v0.3.1',f'跟随 HBM 页 v0.5：长鑫产能移到 HBM 页的中国账本（只能卖给中国，KGI 出货表里也没有国产卡），不再计入全球 HBM 供给；2027 年 HBM 满足率约 93% → {HC}%，CoWoS 结论不变。'])
 json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
 # ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）
 T=json.load(open(P('data','toc.json')))

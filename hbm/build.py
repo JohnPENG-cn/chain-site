@@ -33,13 +33,32 @@ cap['anchors']=[
 M['cap']=cap
 def qavg(k,y): i=Q.index(f'1Q{y%100}');return sum(cap[k][i:i+4])/4
 MK=['SK hynix','Samsung','Micron','CXMT']
+MKG=MK[:3]   # v0.5：全球账本只计三家。长鑫只能卖给中国、全球需求表（KGI 出货）里也没有国产卡，长鑫计入中国账本（M['cn']），两本账不重复
 # ---------- 供给：年均月投片（= 季末产能 4 季平均，与约束页口径一致）× 12 × 每片有效 GB × 稼动率
-M['supply']={str(y):{k:round(qavg(k,y),1) for k in MK} for y in (2025,2026,2027)}
+M['supply']={str(y):{k:round(qavg(k,y),1) for k in MKG} for y in (2025,2026,2027)}
 M['gbw']={'2025':750,'2026':880,'2027':880}   # 校准：iM 证券 2026-06（源65）2025 年产量 26.3 亿 GB、2026 年 44.4 亿 GB
 M['ut']={'2025':.85,'2026':.9,'2027':.9}
 def sup(y): return sum(M['supply'][str(y)].values())*12*M['gbw'][str(y)]*M['ut'][str(y)]/1e6
 M['calib']={'note':'每片有效 GB 不是原厂披露值，而是用券商汇总的产量反推：2025 年 iM 证券称业界产量 26.3 亿 GB、2026 年预计 44.4 亿 GB [源65]；用 UBS 年末产能 [源63]插值得到的年均投片去除，得到 2025 年约 750、2026 年约 880 GB/片（稼动率 85%/90%，估）。2027 年 HBM4/4E die 更大、16 层良率更低 [源1]，先按与 2026 年持平处理。旧版 600/650/600 是\"让 2026 年供需接近平衡\"倒推的，加上产能锚点偏低，2026 年供给少算了约三分之一（2.9 对 4.4 EB）。',
  'check':[['2025 产量','%.2f'%sup(2025),'2.63','iM 证券 2026-06（源65）'],['2026 产量','%.2f'%sup(2026),'4.44','iM 证券 2026-06（源65）'],['2026 需求','%.2f'%(sum(r['units']*r['gb'] for r in M['demand'] if r['y']==2026)/1000),'4.23（iM）/ >3.75（TrendForce 2025-05）','iM 证券（源65）/ TrendForce（源37）'],['2027 供给增速','%+.0f%%'%((sup(2027)/sup(2026)-1)*100),'+45–50%','KGI（源55）']]}
+# ---------- 中国账本（v0.5）：国产加速卡能用上的裸 HBM。需求 vs 可用 = 期初库存 + 合法进口 + 灰色渠道 + 长鑫 + 武汉新芯。hbm_cn.js 用同一公式（滑块重算）
+def cnbal(m,o={}):
+    g=o.get('g',m['g']);w27=o.get('w27',m['cxw']['2027']);g27=o.get('g27',m['cxg']['2027']);gr=o.get('gray')
+    cxw=dict(m['cxw'],**{'2027':w27});cxg=dict(m['cxg'],**{'2027':g27});inv=0;out=[]
+    for y in (2024,2025,2026,2027):
+        k=str(y)
+        if k in m['act']: u,gb=m['act'][k];ul=u
+        else:
+            n=y-2025;u=m['mkt25']*(1+g)**n-m['lpddr'][k];gb=m['gb'][k];ul=m['low26']*(1+m['low_g'])**(n-1)-m['lpddr'][k]
+        d=u*gb/1000;dl=ul*gb/1000
+        cx=(cxw[str(y-1)]+cxw[k])/2*12*cxg.get(k,0)/1e6 if y>2024 else 0
+        gy=m['gray'][k] if gr is None or y<2026 else gr
+        f=dict(inv=inv,imp=m['imp'].get(k,0),gray=gy,cx=cx,xmc=cx*m['xmc'])
+        a=sum(f.values());used=min(d,a)
+        out.append(dict(y=y,u=round(u,3),gb=gb,d=round(d,4),dl=round(dl,4),**{x:round(v,4) for x,v in f.items()},a=round(a,4),cov=round(a/d,3),covl=round(a/dl,3),cards=round(a/gb*1000,3)))
+        inv=a-used
+    return out
+M['cn']['bal']=cnbal(M['cn']['model'])
 # ---------- 2023/24 历史供给（估）
 hs={}
 for y,g,u in[(2023,350,.85),(2024,450,.80)]:
@@ -56,9 +75,11 @@ M['mu_gm']={cq(k):v for k,v in json.load(open(P('hbm_data','raw','mu_gm.json')))
 ids={s['id'] for s in M['sources']}
 assert len(ids)==len(M['sources']),'来源编号重复'
 assert all(s.get('u','').startswith('http') for s in M['sources']),'来源缺链接'
-txt=json.dumps(C,ensure_ascii=False)+open(P('hbm.js')).read()+open(P('hbm.html')).read()
+txt=json.dumps(C,ensure_ascii=False)+''.join(open(P(f)).read() for f in ('hbm.js','hbm_cn.js','hbm.html','hbm/page.py'))
 miss=sorted({int(n) for g in re.findall(r'源([\d,，]+)',txt) for n in re.split('[,，]',g) if n} - ids)
 assert not miss,f'引用了不存在的来源：{miss}'
+_d27=sum(r['units']*r['gb'] for r in M['demand'] if r['y']==2027)/1000
+X['falsify']=[dict(x,j=x['j'].replace('{HGAP}',str(round((_d27-sup(2027))/_d27*100)))) for x in X['falsify']]   # 文字里的缺口跟模型走
 M=dict(sorted(M.items()))
 json.dump(M,open(P('data','hbm.json'),'w'),ensure_ascii=False,separators=(',',':'))
 json.dump(X,open(P('data','hbm_x.json'),'w'),ensure_ascii=False,indent=0)
@@ -82,9 +103,13 @@ try:
     for i,y in enumerate([2025,2026,2027],start=2):
         wbal.append([y,f'=SUMIF(需求!A2:A{n},A{i},需求!F2:F{n})/1000',f'=SUMIF(供给!A2:A{r-1},A{i},供给!F2:F{r-1})/1000',f'=(C{i}-B{i})/B{i}'])
     wc=wb.create_sheet('校准');wc.append(['项目','本模型','外部口径','来源']);[wc.append(x) for x in M['calib']['check']]
+    wn=wb.create_sheet('中国账本');wn.append(['中国账本：国产加速卡能用上的裸 HBM（EB）。'+M['cn']['model']['note']]);wn.append(['年份','需求卡数(M)','每卡GB','不缺货需求','机构出货口径需求','期初库存','合法进口','灰色渠道','长鑫','武汉新芯','可用合计','覆盖率','覆盖率(出货口径)']);[setattr(c,'font',b) for c in wn[2]]
+    for r0 in M['cn']['bal']: wn.append([r0['y'],r0['u'],r0['gb'],r0['d'],r0['dl'],r0['inv'],r0['imp'],r0['gray'],r0['cx'],r0['xmc'],r0['a'],r0['cov'],r0['covl']])
+    wn.append(['假设见网页底稿第 3/4/5 步中国块；全部为估或机构口径，非官方数据。'])
     wsrc=wb.create_sheet('来源');wsrc.append(['编号','说明','链接']);[wsrc.append([s['id'],s['t'],s['u']]) for s in M['sources']]
     wb.save(P('hbm','hbm_model.xlsx'))
 except ImportError: print('openpyxl 未安装，跳过 Excel')
 for y in (2025,2026,2027):
     d=sum(r['units']*r['gb'] for r in M['demand'] if r['y']==y)/1000;s=sup(y);print(y,'需求 %.2f 供给 %.2f 缺口 %+.0f%%'%(d,s,(s-d)/d*100))
+for r0 in M['cn']['bal']: print('中国',r0['y'],'需求 %.3f（下限 %.3f）可用 %.3f 覆盖 %.0f%%（%.0f%%）'%(r0['d'],r0['dl'],r0['a'],r0['cov']*100,r0['covl']*100))
 print('ok · 来源',len(ids))
