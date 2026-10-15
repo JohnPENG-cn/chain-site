@@ -55,9 +55,9 @@ LOGIC = dict(
 
 SPEC = dict(
  logic=LOGIC,
- file='hbm.html', title='HBM 产业链', pill='HBM v0.5.1', other=('cowos.html', 'CoWoS ⇄'),
+ file='hbm.html', title='HBM 产业链', pill='HBM v0.5.2', other=('cowos.html', 'CoWoS ⇄'),
  scripts=['toc.js', 'hbm.js', 'hbm_x.js', 'hbm_cn.js'],
- kicker='HBM 小链 · v0.5.1 · 更新 <span id="upd">2026-10-15</span> · 下游接 <a href="cowos.html">CoWoS 小链</a>',
+ kicker='HBM 小链 · v0.5.2 · 更新 <span id="upd">2026-10-15</span> · 下游接 <a href="cowos.html">CoWoS 小链</a>',
  card=f'全球账本：2027 年 HBM 只是略紧（缺约 {HGAP}%），涨价靠的是 DDR5 抢晶圆；周期顶部看 2027 年下半年。中国账本：2026 年国产 AI 芯片能用上的 HBM 只够需求约 {CC26}%，严重短缺{E}',
  scqa=[
   'AI 加速器每颗要 192–432GB HBM（B300/Rubin 288GB、MI450 432GB）。HBM 和普通 DRAM 用同一批晶圆，三家原厂（海力士、三星、美光）决定给 HBM 分多少。',
