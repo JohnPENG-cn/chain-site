@@ -44,3 +44,27 @@ ol.src li{margin-bottom:6px;font-size:14px;word-break:break-all}
 table.fal td:nth-child(2)::before{content:"反方证据　";color:var(--mut);font-size:12px}table.fal td:nth-child(3)::before{content:"证伪条件　";color:var(--mut);font-size:12px}table.fal td:nth-child(4)::before{content:"观察指标　";color:var(--mut);font-size:12px}table.fal td:nth-child(5)::before{content:"当前读数　";color:var(--mut);font-size:12px}}
 @media(max-width:700px){table.fal2 thead{display:none}table.fal2 tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}table.fal2 td{display:block;border:0;padding:3px 0}
 table.fal2 td:nth-child(2)::before{content:"原始单位　";color:var(--mut);font-size:12px}table.fal2 td:nth-child(3)::before{content:"换算　";color:var(--mut);font-size:12px}table.fal2 td:nth-child(4)::before{content:"产能（百万颗/季）　";color:var(--mut);font-size:12px}table.fal2 td:nth-child(5)::before{content:"利用率　";color:var(--mut);font-size:12px}table.fal2 td:nth-child(6)::before{content:"余量　";color:var(--mut);font-size:12px}}
+/* ===== 金字塔页（SOP 页面规范 v1.3）：SCQA → 中心思想 → 3 条关键论点 → 证据 → 证伪/台账 → 折叠附录 ===== */
+.scqa{margin:16px 0 6px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.scqa>div{display:grid;grid-template-columns:44px 1fr;gap:8px;padding:10px 14px;border-top:1px solid var(--line);font-size:15px;line-height:1.65}
+.scqa>div:first-child{border-top:0}.scqa b{font-size:12px;color:var(--mut);letter-spacing:.06em;padding-top:2px;font-weight:600}
+.scqa .a{background:color-mix(in srgb,var(--acc) 7%,transparent)}.scqa .a b{color:var(--acc)}
+h1.gov{font-size:clamp(25px,5.2vw,38px);margin:.5em 0 .3em}
+.kl{display:grid;gap:10px;margin:14px 0 6px}
+.kl a{display:grid;grid-template-columns:28px 1fr;gap:8px;color:inherit;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.6;text-decoration:none}
+.kl a:hover{text-decoration:none;border-color:var(--acc)}.kl .i{font-weight:800;color:var(--acc);font-size:17px;line-height:1.5}
+.kl .k{display:block;font-size:12px;color:var(--mut);margin-top:6px}.kl .k b{color:var(--fg);font-size:15px;font-variant-numeric:tabular-nums}
+@media(min-width:900px){.kl{grid-template-columns:repeat(3,1fr)}.kl a{grid-template-columns:1fr}}
+h2.claim{font-size:clamp(19px,3.4vw,25px);line-height:1.45}
+.ev{font-size:12px;color:var(--mut);letter-spacing:.06em;margin:26px 0 6px;font-weight:600}.ev+h3{margin-top:0}
+details.apx{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:10px 0}
+details.apx>summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:700;display:flex;align-items:baseline;gap:10px}
+details.apx>summary::-webkit-details-marker{display:none}
+details.apx>summary small{font-weight:400;color:var(--mut);font-size:12px;flex:1}
+details.apx>summary::after{content:'+';color:var(--mut);font-weight:400;font-size:18px}details.apx[open]>summary::after{content:'−'}
+details.apx>.body{padding:0 16px 16px;overflow-x:auto}details.apx .card{background:var(--bg)}
+@media(max-width:700px){table.stack thead{display:none}table.stack tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}table.stack td{display:block;border:0;padding:2px 0;white-space:normal!important}}
+@media(max-width:700px){table.stack td:first-child{font-weight:700}table.stack .pill{white-space:nowrap}table.stack td[style*=nowrap]{display:inline-block;margin-right:12px}}
+.pill{white-space:nowrap}
+@media(max-width:700px){table.ledger tr{padding:12px 0}table.ledger td:first-child{float:left;margin-right:8px;color:var(--acc)}table.ledger td:nth-child(2){display:block;font-size:15px}
+table.ledger td:nth-child(n+3){display:inline-block;margin:6px 12px 0 0;font-size:12px;color:var(--mut);vertical-align:middle}table.ledger td:nth-child(3) .note{display:inline;margin-left:4px}table.ledger td:nth-child(2) .note{display:block}}

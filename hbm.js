@@ -2,24 +2,24 @@ let M,charts={};const $=s=>document.querySelector(s);
 const V=c=>getComputedStyle(document.documentElement).getPropertyValue(c).trim();
 function base(){const d=isDark();return{textStyle:{fontFamily:'-apple-system,PingFang SC,sans-serif',color:V('--fg')},backgroundColor:'transparent',tooltip:{trigger:'axis',confine:true},grid:{left:44,right:14,top:40,bottom:30}}}
 function C(id){if(charts[id])charts[id].dispose();charts[id]=echarts.init(document.getElementById(id),null,{renderer:'svg'});return charts[id]}
-const vend=c=>/Blackwell|Rubin|H100|H200|Hopper/.test(c)?'英伟达':/TPU/.test(c)?'谷歌TPU':/Trainium/.test(c)?'AWS':/AMD/.test(c)?'AMD':'其他/中国';
+const vend=x=>x.v||(/Blackwell|Rubin|H100|H200|Hopper/.test(x.chip)?'英伟达':/TPU/.test(x.chip)?'谷歌TPU':/Trainium/.test(x.chip)?'AWS':/AMD/.test(x.chip)?'AMD':'其他/中国');
 const VC={'英伟达':'#76b900','谷歌TPU':'#4285f4','AWS':'#ff9900','AMD':'#ed1c24','其他/中国':'#9a9a9a'};
 function calc(){const g=+$('#s1').value,u=+$('#s2').value/100,w=+$('#s3').value/100,k=+$('#s4').value/100;const r={};
  for(const y of[2025,2026,2027]){let d=M.demand.filter(x=>x.y==y).reduce((a,x)=>a+x.units*x.gb,0)/1000;
   let wf=Object.values(M.supply[y]).reduce((a,b)=>a+b,0),G=M.gbw[y],U=M.ut[y];
   if(y==2027){d*=k;wf*=w;G=g;U=u}r[y]={d,s:wf*12*G*U/1e6}}return r}
 function drawBal(){const r=calc(),ys=[2023,2024,2025,2026,2027];for(const y of[2023,2024]){r[y]={d:M.demand.filter(x=>x.y==y).reduce((a,x)=>a+x.units*x.gb,0)/1000,s:M.hist_supply[y].s,h:1}}o1.value=s1.value;o2.value=s2.value+'%';o3.value=s3.value+'%';o4.value=s4.value+'%';
- const x=r[2027],gp=(x.s-x.d)/x.d;$('#gap').textContent=(gp>0?'+':'')+(gp*100).toFixed(0)+'%';$('#hGap').textContent=$('#gap').textContent;
+ const x=r[2027],gp=(x.s-x.d)/x.d;$('#gap').textContent=(gp>0?'+':'')+(gp*100).toFixed(0)+'%';$('#hGap').textContent=$('#gap').textContent;const g6=(r[2026].s-r[2026].d)/r[2026].d;$('#hGap26').textContent=(g6>0?'+':'')+(g6*100).toFixed(0)+'%';
  $('#gapTxt').textContent=`需求 ${x.d.toFixed(2)} EB · 供给 ${x.s.toFixed(2)} EB → ${gp<-0.1?'明显短缺':gp<0?'略紧':'供给充足'}`;
  const c=C('cBal');c.setOption({...base(),legend:{top:0,textStyle:{color:V('--fg')}},xAxis:{data:ys.map(String)},yAxis:{name:'EB',splitLine:{lineStyle:{color:V('--line')}}},
  tooltip:{trigger:'axis',confine:true,formatter:p=>{const y=p[0].name,o=r[y];return`${y}${o.h?'（历史估算）':''}<br>需求 ${o.d.toFixed(2)} EB<br>供给 ${o.s.toFixed(2)} EB<br>缺口 ${((o.s-o.d)/o.d*100).toFixed(1)}%`}},
  series:[{name:'需求',type:'bar',data:ys.map(y=>({value:+r[y].d.toFixed(2),itemStyle:{opacity:r[y].h?.45:1}})),itemStyle:{color:'#d9534f',borderRadius:[4,4,0,0]}},{name:'供给',type:'bar',data:ys.map(y=>({value:+r[y].s.toFixed(2),itemStyle:{opacity:r[y].h?.45:1}})),itemStyle:{color:'#5b8def',borderRadius:[4,4,0,0]},
  label:{show:true,position:'top',color:V('--fg'),formatter:p=>{const o=r[p.name];return((o.s-o.d)/o.d*100).toFixed(0)+'%'}}}]})}
-function resetS(){s1.value=600;s2.value=90;s3.value=100;s4.value=100;drawBal()}
+function resetS(){s1.value=880;s2.value=90;s3.value=100;s4.value=100;drawBal()}
 function drawMix(){const ys=[2023,2024,2025,2026,2027],ks=Object.keys(VC);const c=C('cMix');
  c.setOption({...base(),legend:{top:0,textStyle:{color:V('--fg')}},grid:{left:44,right:14,top:56,bottom:30},xAxis:{data:ys.map(String)},yAxis:{name:'EB',splitLine:{lineStyle:{color:V('--line')}}},
  tooltip:{trigger:'axis',confine:true,formatter:p=>{const y=+p[0].name;let s=y+' 需求明细（自估为主）<br>';M.demand.filter(x=>x.y==y).forEach(x=>s+=`${x.chip}: ${x.units}M×${x.gb}GB<br><span style="opacity:.6;font-size:11px">${x.src}</span><br>`);return s}},
- series:ks.map(k=>({name:k,type:'bar',stack:'a',itemStyle:{color:VC[k]},data:ys.map(y=>+(M.demand.filter(x=>x.y==y&&vend(x.chip)==k).reduce((a,x)=>a+x.units*x.gb,0)/1000).toFixed(2))}))})}
+ series:ks.map(k=>({name:k,type:'bar',stack:'a',itemStyle:{color:VC[k]},data:ys.map(y=>+(M.demand.filter(x=>x.y==y&&vend(x)==k).reduce((a,x)=>a+x.units*x.gb,0)/1000).toFixed(2))}))})}
 function drawMar(){const c=C('cMar'),qs=[];for(let y=2015;y<=2026;y++)for(let q=1;q<=4;q++)qs.push(y+'Q'+q);const last=qs.indexOf('2026Q3');const X=qs.slice(0,last+1);
  c.setOption({...base(),legend:{top:0,textStyle:{color:V('--fg')}},grid:{left:40,right:12,top:56,bottom:30},xAxis:{type:'category',data:X,axisLabel:{interval:7,formatter:v=>v.slice(0,4)}},yAxis:{max:100,min:-40,axisLabel:{formatter:'{value}%'},splitLine:{lineStyle:{color:V('--line')}}},
  series:[{name:'美光 毛利率',type:'line',showSymbol:false,data:X.map(q=>M.mu_gm[q]??null),connectNulls:true,lineStyle:{width:2.5},color:'#ff9900',markPoint:{symbolSize:36,label:{fontSize:10},data:[{coord:['2018Q3',61],value:'61%'}]}},{name:'SK海力士 营业利润率',type:'line',showSymbol:false,data:X.map(q=>M.hx_om[q]??null),lineStyle:{width:2.5},color:'#d9534f'}]})}
@@ -54,8 +54,8 @@ function drawNeck(){$('#neckList').innerHTML=NECK.map((n,i)=>`<div class="card">
 const TL1=[['2008–09','寒冬，奇梦达破产'],['2012','尔必达破产（2013 年被美光收购）→ 三家寡头'],['2017–18','超级周期：利润率新高、同时扩产'],['2019','价格腰斩'],['2022–23','再度亏损（海力士 2023 年亏损）→ HBM 救场'],['2026','普通 DRAM 短缺暴涨，美光毛利率 87% [源6]'],['2027H2?','新厂集中投产 → 本轮见顶风险']];
 const TL2=[['2015','HBM（AMD Fiji）'],['2016–18','HBM2 / HBM2E'],['2022','HBM3（H100）：海力士翻身'],['2024','HBM3E（H200/B200）：三星掉队'],['2026','HBM4（Rubin）：三星追上，2Q26 份额 33% [源11]'],['2027','HBM4E：定制 base die，利润向最难环节迁移']];
 const tl=(a,cls)=>a.map(x=>`<div class="${cls}"><span class="y">${x[0]}</span>　${x[1]}</div>`).join('');
-const LEAD=[['韩国 1–10/1–20 日出口','每 10 天 / 每月 1 日','与营收同步（相关 0.97），比财报早 1–2 个月；同比见顶领先营收见顶约 9–10 个月（2 轮中 2 次，2024 年 1 次假信号）','9 月半导体 603 亿美元 +262.8%（存储 540.7 亿 +358.6%）；10/1–10 +170.9%','20,21,30'],['DRAM 合约/现货价、HBM 合约','周/月','领先原厂毛利 1–2 季','2027 HBM 合约"数倍上涨"预期','1,3'],['原厂财报：售罄、资本开支','季度','领先供给 2–3 年','美光：2027 年大部分已签约；RPO 约 1500 亿美元','6'],['设备订单（韩美、韩华、ASMPT、Besi）','公告','领先 HBM 产能 3–9 个月','4.5 代 TCB 持续下单','17,18'],['台湾月营收（台积电、创意、弘塑、辛耘）','月','CoWoS/base die 产能','待接入（下一条 CoWoS 小链做）','—'],['台积电 CoWoS 产能','季度','可装机 HBM 量','2027 年底 19–20 万片/月','12,13']];
-const PRED=[['P1','10 月全月韩国半导体出口同比 > +150%','2026-11-01','产业通商部月报'],['P2','美光 FQ1 2027 营收 ≥ 600 亿美元（指引 615±15）','2026-12-20','美光财报'],['P3','SK 海力士 4Q26 财报会称 2027 HBM 基本售罄/签约完成','2027-01-31','财报会纪要'],['P4','2027 年 HBM 混合均价同比 ≥ +50%','2027-06-30','TrendForce'],['P5','2027 年底前混合键合不进入 HBM 大规模量产','2027-12-31','原厂/设备商公告'],['P6','韩国半导体出口同比在 2027-03 前首次跌破 +100%（见顶信号）','2027-04-01','月度出口数据']];
+const LEAD=[['韩国 1–10/1–20 日出口','每 10 天 / 每月 1 日','与营收同步（相关 0.97），比财报早 1–2 个月；同比见顶领先营收见顶约 9–10 个月（2 轮中 2 次，2024 年 1 次假信号）','9 月半导体 603 亿美元 +262.8%（存储 540.7 亿 +358.6%）；10/1–10 +170.9%','20,21,30'],['DRAM 合约/现货价、HBM 合约','周/月','领先原厂毛利 1–2 季','2027 HBM 合约"数倍上涨"预期','1,3'],['原厂财报：售罄、资本开支','季度','领先供给 2–3 年','美光：2027 年大部分已签约；RPO 约 1500 亿美元','6'],['设备订单（韩美、韩华、ASMPT、Besi）','公告','领先 HBM 产能 3–9 个月','4.5 代 TCB 持续下单','17,18'],['台湾月营收（台积电、弘塑、辛耘、万润）','月','CoWoS/base die 产能','已接入 CoWoS 页（设备三家营收同比 +43%）','56'],['台积电 CoWoS 产能','季度','可装机 HBM 量','2027 年底 19–20 万片/月','12,13']];
+const PRED=[['P1','10 月全月韩国半导体出口同比 > +150%','2026-11-01','产业通商部月报'],['P2','美光 FQ1 2027 营收 ≥ 600 亿美元（指引 615±15）','2026-12-20','美光财报'],['P3','SK 海力士 4Q26 财报会称 2027 HBM 基本售罄/签约完成','2027-01-31','财报会纪要'],['P4','2027 年 HBM 混合均价同比 ≥ +50%','2027-06-30','TrendForce'],['P5','2027 年底前混合键合不进入 HBM 大规模量产','2027-12-31','原厂/设备商公告'],['P6','韩国半导体出口同比在 2027-03 前首次跌破 +100%（见顶信号）','2027-04-01','月度出口数据'],['P7','2026 年全年 HBM 产量 ≥ 40 亿 GB（v0.4 模型 4.4 EB；旧模型 2.9 EB——检验这次上修）','2027-03-31','TrendForce / 券商 2026 年回看']];
 // network
 const SEG=['HBM原厂','键合/封装设备','base die/CoWoS','测试/检测','材料','国产封测/设备','下游加速器','资本方'];
 const CO=[['SK海力士','000660.KS','KR',0,'HBM 份额 50%（2Q26）[源11]',30],['三星电子','005930.KS','KR',0,'HBM 份额 33%；自家 4nm base die [源8,11]',26],['美光','MU','US',0,'HBM 份额 18%；年底 10 万片/月 [源7,11]',22],['长鑫 CXMT','未上市','A',0,'良率 25–30%，仅供国内 [源22]',14],
@@ -102,7 +102,9 @@ const secs=[...document.querySelectorAll('main section')],na=[...document.queryS
 addEventListener('scroll',()=>{let k=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<140)k=i});na.forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+secs[k].id));const on=na.find(a=>a.classList.contains('on'));if(on)on.scrollIntoView({block:'nearest',inline:'center'})},{passive:true});
 
 function fillStatic(){const sr=x=>/^[\d,]+$/.test(x)?`<span class="tag t-src">源${x}</span>`:x=='—'?'':x;
- $('#upd').textContent=M.updated;$('#histNote').textContent=M.hist_note;
+ $('#upd').textContent=M.updated;$('#srcN').textContent=M.sources.length;
+ $('#calNote').innerHTML=CH.srcInline(M.calib.note);$('#calT tbody').innerHTML=M.calib.check.map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${CH.srcInline(r[3].replace(/（(源[\d,]+)）/g,' [$1]'))}</td></tr>`).join('');
+ fillIf();$('#histNote').textContent=M.hist_note;
  $('#capA').innerHTML=M.cap.anchors.map(a=>`<li><b>${a.p}</b>：${a.t} ${sr(String(a.src))}</li>`).join('');
  $('#procT tbody').innerHTML=M.process.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${sr(r[3])}</td></tr>`).join('');
  $('#pxF tbody').innerHTML=M.price_facts.map(r=>`<tr><td style="white-space:nowrap;font-size:12px">${r[0]}</td><td>${r[1]} ${sr(r[2])}</td></tr>`).join('');
@@ -111,3 +113,14 @@ function fillStatic(){const sr=x=>/^[\d,]+$/.test(x)?`<span class="tag t-src">�
  $('#tpT tbody').innerHTML=TP.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
  const e=M.bt.export.filter(x=>x.y3!=null),l=e[e.length-1];$('#btNow').innerHTML=`最新：${l.m} 3 个月同比 +${l.y3.toFixed(0)}%，还在加速，没有出现见顶。按历史规律，等它掉头后约 9 个月才轮到营收见顶，这也是预测 P6 的依据。拐点用 ±6 个月局部极值识别 <span class="tag t-est">估</span>。`;
  $('#logT tbody').innerHTML=M.changelog.map(r=>`<tr><td style="white-space:nowrap">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
+
+function fillIf(){const S=y=>Object.values(M.supply[y]).reduce((a,b)=>a+b,0)*12*M.gbw[y]*M.ut[y]/1e6,D=y=>M.demand.filter(x=>x.y==y).reduce((a,x)=>a+x.units*x.gb,0)/1000,f=v=>v.toFixed(2);
+ const R=[['HBM 可供量',`约 ${f(S(2026))} EB`,`约 ${f(S(2027))} EB`,'本页模型基准 <span class="tag t-est">估</span>；iM 证券 2026 年产量 4.44 EB <span class="tag t-src">源65</span>'],
+ ['出货所需 HBM',`约 ${f(D(2026))} EB`,`约 ${f(D(2027))} EB`,'KGI 出货 × 每封装 HBM（与 CoWoS 页同表）<span class="tag t-src">源55,56</span>'],
+ ['折合 36GB 颗数',`约 ${(S(2026)*1e9/36/1e6).toFixed(0)} 百万颗`,`约 ${(S(2027)*1e9/36/1e6).toFixed(0)} 百万颗`,'可供量 ÷ 36GB <span class="tag t-est">估</span>'],
+ ['单耗','B300：8 颗 × 36GB = 288GB','Rubin 288GB；Rubin Ultra 384GB','公开规格；2027 年部分厂商改用 8 层以省 HBM <span class="tag t-src">源36</span>'],
+ ['价格','HBM4 约 $16.7/GB','约 $36/GB（混合 ASP +121%）','<span class="tag t-src">源35,36</span>'],
+ ['约束公式','可出货加速器 = min(CoWoS × 每片颗数, HBM 可供量 ÷ 每封装 HBM, 键合机, 载板, 电力)','','见证据 1.6']];
+ $('#ifT').innerHTML=R.map(r=>r[2]?`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`:`<tr><td>${r[0]}</td><td colspan="2">${r[1]}</td><td>${r[3]}</td></tr>`).join('');
+ const g6=(S(2026)/D(2026)-1)*100,g7=(S(2027)/D(2027)*100);
+ $('#ifTxt').innerHTML=`2026 年出货需要 ${f(D(2026))} EB，本页供给 ${f(S(2026))} EB（${g6>0?'富余':'缺'} ${Math.abs(g6).toFixed(0)}%）；2027 年需要 ${f(D(2027))} EB，供给 ${f(S(2027))} EB，只够 ${g7.toFixed(0)}%。上一版供给只有 2.9 / 4.0 EB，是 CoWoS 页反向对账先发现对不上的。现在同一口径下 HBM 和 CoWoS 都只略紧、相差几个百分点；约束模型里 2027 年最紧的是 ABF 载板（估）。<a href="cowos.html#iface">去 CoWoS 页拖滑块 →</a>`}

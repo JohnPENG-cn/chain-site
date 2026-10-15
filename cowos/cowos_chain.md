@@ -1,7 +1,10 @@
-# CoWoS / 先进封装产业链研究 v0.2
+# CoWoS / 先进封装产业链研究 v0.3
+
+> v0.3（2026-10-15）：跟随 HBM 页 v0.4 改判。HBM 供给上修约五成后，2027 年 HBM 够出货所需约 93%（上一版约 61%），CoWoS 约 96%（同一口径：KGI 可见出货），两者都只略紧；约束模型里 2027 年最紧的是 ABF 载板（估）。核心判断由"卡住的是 HBM 和基板"改为 **"2027 年卡住 AI 芯片的，不再是 CoWoS，而是载板和 HBM"**。对账改为同一口径；构建合并为 `cowos/build.py`（全站 `./build.sh`）。下文 v0.2 正文中"HBM 只够约六成""HBM 页供给 4.0 EB"等数字已被取代。
+
 
 > Kiko 产业笔记 · 2026-10-15 · 网页版（可拖动假设）：https://johnpeng-cn.github.io/chain-site/cowos.html
-> 标注：【源N】= 文末第 N 条公开来源；【估】= 自估。模型代码 `cowos/model.py`，表格 `cowos/cowos_model.xlsx`。按《小链研究 SOP v1.1》(../SOP.md) 完成（含要害变量、关键玩家与博弈、反方证据）。
+> 标注：【源N】= 文末第 N 条公开来源；【估】= 自估。模型代码 `cowos/model.py` + `cowos/build.py`，表格 `cowos/cowos_model.xlsx`。按《小链研究 SOP v1.1》(../SOP.md) 完成（含要害变量、关键玩家与博弈、反方证据）。
 
 ## 0 核心判断
 

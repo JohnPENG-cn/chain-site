@@ -1,22 +1,32 @@
-import json
-M=json.load(open('/workspace/chain_site/cowos_data/model_out.json'))
-B=json.load(open('/workspace/chain_site/cowos_data/backtest.json'))
-CL=json.load(open('/workspace/chain_site/cowos_data/cl.json'))
-MG=json.load(open('/workspace/chain_site/cowos_data/margins.json'))
+"""CoWoS 链唯一构建脚本（v0.3 起，合并原 build_cowos.py + ext_v02.py + 只写进 JSON 的来源 41–43）。
+输入：cowos_data/model_out.json（cowos/model.py 生成）、backtest.json、cl.json、margins.json、data/hbm.json（HBM 页供给，跨链对账用）。
+输出：data/cowos.json，并刷新 data/toc.json 里依赖数字的文字。顺序：cowos/model.py → hbm/build.py → cowos/build.py（见 build.sh）。"""
+import json,os,subprocess
+R0=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));P=lambda *a:os.path.join(R0,*a)
+M=json.load(open(P('cowos_data','model_out.json')))
+B=json.load(open(P('cowos_data','backtest.json')))
+CL=json.load(open(P('cowos_data','cl.json')))
+MG=json.load(open(P('cowos_data','margins.json')))
 R=M['res']
+# ---- 跨链：HBM 页 v0.4 供给（与 TOC、cowos.js 同一公式）
+H=json.load(open(P('data','hbm.json')))
+hsup=lambda y:sum(H['supply'][str(y)].values())*12*H['gbw'][str(y)]*H['ut'][str(y)]/1e6
+HC=round(hsup(2027)/R['2027']['hbm']*100)          # 2027 HBM 满足率（可见出货口径）
+CC=round(R['2027']['s']/R['2027']['d']*100)        # 2027 CoWoS 满足率（同一口径）
+HS26,HS27=hsup(2026),hsup(2027)
 S=lambda *a:','.join(map(str,a))
 J={}
-J['meta']=dict(id='cowos',name='CoWoS 先进封装',version='v0.1',updated='2026-10-15',schema='chain/v1',
+J['meta']=dict(id='cowos',name='CoWoS 先进封装',version='v0.3',updated='2026-10-15',schema='chain/v1',
   unit='需求与产能用 12 寸 CoWoS 晶圆（片/月、片/年）；出货用颗（封装）；HBM 用 GB/EB。')
 J['judgment']=dict(
- title='2027 年卡住 AI 芯片的，<br>不再是 CoWoS，而是 HBM 和基板',
- dek='CoWoS 产能三年涨了 9 倍，2027 年还要再涨约七成，总量缺口收窄到个位数。但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，<b>片数涨得比颗数快得多</b>；而 HBM、ABF 基板的扩产速度只有 CoWoS 的一半左右。按两条小链对账，2027 年木桶的短板是 HBM。',
+ title='2027 年卡住 AI 芯片的，<br>不再是 CoWoS，而是载板和 HBM',
+ dek=f'CoWoS 产能三年涨了 9 倍，2027 年还要再涨约七成，总量缺口收窄到个位数。但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，<b>片数涨得比颗数快得多</b>；而 HBM、ABF 基板的扩产速度只有 CoWoS 的一半左右。HBM 页 v0.4 按券商产量重新校准后，HBM 供给比上一版高约五成：2027 年 HBM 够出货所需的约 {HC}%，CoWoS 约 {CC}%，两者都只略紧、差距在误差内；约束模型里最紧的是 ABF 载板（数据最弱，估）。',
  stats=[dict(id='cwHGap',n=f"{R['2027']['gap']:+.0f}%",l='2027 CoWoS 缺口/需求（可见出货口径）',tag='估'),
-        dict(id='cwHHbm',n='约 6 成',l='2027 HBM 可供量 ÷ CoWoS 出货所需 HBM',tag='估'),
+        dict(id='cwHHbm',n=f'约 {HC}%',l='2027 HBM 可供量 ÷ CoWoS 出货所需 HBM',tag='估'),
         dict(n='12 万→18.5 万',l='台积电 CoWoS 年末产能（片/月，2026→2027）',tag='源1'),
         dict(n='10–12 个月',l='弘塑设备交期；产能只够需求 1/3–1/4',tag='源27')])
 J['debates']=[
- dict(q='Q1 2027 年 CoWoS 还会是 AI 芯片的头号瓶颈吗？',view='不会。总量缺口约 4%–11%，真正更紧的是 HBM（只够约六成）和 ABF/T-glass 基板。',falsify='2027 年出现 HBM 或基板库存积压、而 CoWoS 订单仍排不进，或台积电 2027 年报仍称 CoWoS 是首要限制。'),
+ dict(q='Q1 2027 年 CoWoS 还会是 AI 芯片的头号瓶颈吗？',view=f'不会。总量缺口约 4%–11%；HBM 只够出货所需的约 {HC}%，和 CoWoS 差不多紧；约束模型里最紧的是 ABF/T-glass 基板（估）。',falsify='2027 年出现 HBM 或基板库存积压、而 CoWoS 订单仍排不进，或台积电 2027 年报仍称 CoWoS 是首要限制。'),
  dict(q='Q2 OSAT 和 EMIB-T 会分走台积电的利润吗？',view='分走的是"溢出量"，不是利润中心。台积电自家先进封装毛利已接近公司平均，日月光 ATM 毛利 27%，EMIB-T 基板良率才 45%。',falsify='2027 年日月光/Amkor 的 2.5D 产能占比超过 35%，或 EMIB-T 在 2027 年内拿到 10 万颗以上外部 AI 芯片量产。'),
  dict(q='Q3 设备股的这轮景气什么时候见顶？',view='还没见顶：设备三家 3 个月营收同比 9 月 +43% 还在加速，合约负债重新增长。历史上设备营收同比的拐点比台积电营收同比拐点早 1–13 个月（中位 4 个月）。',falsify='2027 年上半年设备三家营收同比掉头向下，而台积电 2027 年产能指引仍上修 → 指标失灵。')]
 J['variants']=[
@@ -57,8 +67,8 @@ J['profit']=dict(pool=pool,margins={k:MG[k] for k in ['2330','3711','3037','2449
  capex=[['台积电','2026 资本开支 600–640 亿美元，其中先进封装、测试、光罩等 10–20%','13'],['日月光投控','2026 资本开支 105 亿美元（年内第三次上调），设备约 56% 封装、40% 测试','16'],['Amkor','2026 资本开支 25–30 亿美元；亚利桑那厂 2028 年投产','18'],['LEAP 营收','日月光：2024 约 6 亿 → 2025 约 16 亿 → 2026 >35 亿美元 → 2027 再翻倍','16,17']],
  unit_cost=[['CoWoS-S 中介层','约 1 万美元/片','9'],['CoWoS-L 中介层','约 1.5 万美元/片','9'],['H100 封装成本','约 750 美元/颗','9,10'],['B200 封装成本','1,000–1,100 美元/颗','10']])
 J['neck']=[
- dict(name='HBM（跨链：见 HBM 页）',now='KGI：2027 年 HBM 供给 +45–50%，CoWoS +71%；按本页出货口径 2027 需 HBM 约 6.5 EB，HBM 页模型供给约 4.0 EB',months=36,verdict='2027 头号短板',src='1,33'),
- dict(name='ABF 载板 / T-glass 玻纤布',now='日东纺约占 T-glass 90%，福岛扩产到 2027 年才放量；载板短缺看到 2028 年；味之素 ABF 膜提价 30%；KGI：2027 年 ABF 只 +25–30%',months=24,verdict='第二短板',src='23,24,25,1'),
+ dict(name='ABF 载板 / T-glass 玻纤布',now='日东纺约占 T-glass 90%，福岛扩产到 2027 年才放量；载板短缺看到 2028 年；味之素 ABF 膜提价 30%；KGI：2027 年 ABF 只 +25–30%',months=24,verdict='2027 头号短板（估）',src='23,24,25,1'),
+ dict(name='HBM（跨链：见 HBM 页）',now=f'KGI：2027 年 HBM 供给 +45–50%，CoWoS +71%；按本页出货口径 2027 需 HBM 约 {R["2027"]["hbm"]:.1f} EB，HBM 页 v0.4 模型供给约 {HS27:.1f} EB（够 {HC}%）',months=36,verdict='与 CoWoS 并列偏紧',src='1,33'),
  dict(name='封装设备交付',now='弘塑交期 10–12 个月，2026 年出机 220–240 台、2027 年约 325 台，只够需求 1/3–1/4',months=12,verdict='决定扩产速度',src='27'),
  dict(name='测试机与测试产能',now='台积电 2Q26 法说会：测试机也短缺，资本开支在测试/封装间移动',months=9,verdict='容易被忽视',src='13'),
  dict(name='CoWoS-S / R 结构性缺口',now='KGI：S、R 型产能都缺，博通 2027 指引 50 万片只能排进 38–39 万；R 型被 Vera CPU 占满',months=12,verdict='总量够、型号不够',src='1'),
@@ -67,7 +77,7 @@ J['neck']=[
 J['history']=dict(
  tl1=[['2011–12','CoWoS 首个产品：赛灵思 Virtex-7 2000T（28nm）','19,35'],['2016','英伟达 GP100 用 CoWoS + HBM2；同年 InFO 量产（苹果 A10，公认史实）','19'],['2017–18','Intel EMIB 首批产品（Stratix 10、Kaby Lake-G，公认史实）','—'],['2019–20','中介层从 1× 到 2× 光罩以上；A100 用 CoWoS-S','19'],['2022','SoIC 首个量产（AMD 3D V-Cache，公认史实）','—'],['2024','CoWoS-L 量产（B200），突破硅中介层约 2,700mm² 上限','10'],['2026','5.5× 光罩；CoPoS 试产线建成；谷歌 TPU v9 选 EMIB-T','26,1'],['2027','9× 光罩 CoWoS-L；日月光 310mm 面板线 1Q27 投产','11,16'],['2028–29','CoPoS 起量（KGI：2029 年才有意义贡献）；玻璃基板','1,26']],
  tl2=[['2023','ChatGPT → H100 缺货，瓶颈就是 CoWoS 产能本身（年末约 1.3 万片/月）','1'],['2024','产能翻 2.6 倍到 3.4 万片；先进封装约占台积电营收 8%','1,14'],['2025','7.2 万片；先进封装占比略超 10%；日月光 LEAP 16 亿美元','1,14,17'],['2026','12 万片；"封装产能紧到限制客户成长"；设备交期 10–12 个月；载板毛利率翻倍','13,27,32'],['2027E','18.5–20 万片；CoWoS +71% 快于 ABF（+25–30%）和 HBM（+45–50%）→ 短板移到元件','1']],
- rule='每轮扩产后，瓶颈会移到扩得最慢的相邻环节，利润也跟着走（克里斯坦森"利润守恒"）：2023 年在 CoWoS 产线，2026 年开始移到设备交付和载板（欣兴毛利率一年翻倍），2027 年移到 HBM。')
+ rule='每轮扩产后，瓶颈会移到扩得最慢的相邻环节，利润也跟着走（克里斯坦森"利润守恒"）：2023 年在 CoWoS 产线，2026 年开始移到设备交付和载板（欣兴毛利率一年翻倍），2027 年移到载板和 HBM。')
 J['lead']=dict(
  cards=[
   ['设备三家月营收（弘塑、辛耘、万润）','每月 10 日前','同比拐点比台积电营收同比拐点早 1–13 个月（13 次中 11 次领先，中位 4 个月）；水平相关弱（r=0.36）','9 月 3 个月合计同比 +43%，还在加速','31'],
@@ -110,6 +120,7 @@ J['interface']=dict(rows=[
 J['limits']=['台积电不单独披露 CoWoS 产能、营收和毛利率。产能用券商口径（KGI 为基准，其他口径并列），季度值是年末锚点之间的线性插值。',
  '每片可封颗数（ppw）大多是自估，只有 H100≈28、B200≈16 两个公开锚点；它直接决定需求片数，是本模型最敏感的假设（滑块可调）。',
  '出货量用 KGI 的预测（已经考虑了供给限制），所以"可见出货口径"的缺口天然偏小；"客户需求口径"只加了 KGI 点名的三项差额（约 19 万片），不是完整的未受限需求。',
+ 'HBM 页 v0.4（2026-10-15）把 HBM 供给上修约五成（每片有效 GB 600–650 → 750–880，年末产能改用 UBS 口径），本页 2027 年 HBM 满足率随之从约 61% 变为约 '+str(HC)+'%，短板判断由"HBM"改为"载板（估）+ HBM 略紧"。',
  '2025–26 年模型显示总量略有富余（+5%～+7%），与"全年紧缺"的公开说法不完全一致，可能来自：爬坡期良率、S/L/R 型号错配、在制品时滞。误差约 ±10%。',
  '利润池里只有台积电先进封装毛利率是估的（"接近公司平均"）；其他公司毛利率是公司整体或业务线口径，不是 CoWoS 专项。',
  '多家券商数据来自转述（TechFlow、Longbridge、36Kr、Hilo、KuCoin），原报告未见；Digitimes 2026-07-10 有付费墙只看到标题；Reuters 页面拒绝我的抓取（401），LEAP 2025 年数据来自搜索摘要。',
@@ -153,5 +164,124 @@ J['sources']=[
  (35,'台积电新闻稿：赛灵思 28nm CoWoS 量产','https://pr.tsmc.com/english/news/1792')]
 J['sources']=[dict(id=a,t=b,u=c) for a,b,c in J['sources']]
 J['changelog']=[['2026-10-15','v0.1','首版：按 SOP 11 节完成。供需滑块模型（出货 × 每片颗数）、季度产能、封装面积通胀、利润池与毛利率迁移、瓶颈排序、历史、设备月营收与合约负债回测、7 条预测、公司图谱、与 HBM 的接口对账。']]
-json.dump(J,open('/workspace/chain_site/data/cowos.json','w'),ensure_ascii=False)
-print('ok',len(json.dumps(J,ensure_ascii=False)))
+
+
+# ===== v0.2 扩展：要害变量、玩家、证伪、需求上一层 =====
+j=J
+S=j['sources'];ids={s['id'] for s in S}
+new=[(36,'NVIDIA CFO Commentary Q2 FY2027（SEC 8-K 附件）：供应与产能承诺 1,190 亿 → 2,790 亿美元，主要为存储；库存 258 → 316 亿美元','https://www.sec.gov/Archives/edgar/data/1045810/000104581026000073/q2fy27cfocommentary.htm'),
+ (37,'Datacentres.com：四大云厂商 2026 年资本开支指引（7 月财报，引各公司电话会）','https://www.datacentres.com/guides/hyperscaler-capex-trends'),
+ (38,'CRN 2026-07：AWS/微软/谷歌云 Q2 2026 营收、增速、营业利润','https://www.crn.com/news/cloud/2026/aws-vs-microsoft-vs-google-cloud-earnings-q2-2026-face-off'),
+ (39,'Midgard Finance：云业务季度营收、积压订单（RPO）、资本开支、AWS 资产回报（取自各公司财报）','https://www.midgardfinance.com/research/cloud/'),
+ (40,'Reuters 2026-07-30：亚马逊上调资本开支，Jassy 称 2026、2027 年算力都不够（页面拒绝抓取，搜索摘要）','https://www.reuters.com/business/retail-consumer/amazon-beats-estimates-quarterly-cloud-revenue-growth-2026-07-30/')]
+for i,t,u in new:
+  if i not in ids:S.append({'id':i,'t':t,'u':u})
+# 需求上一层：季度资本开支（百万美元）与积压订单（十亿美元），源39
+Q=['2023Q1','2023Q2','2023Q3','2023Q4','2024Q1','2024Q2','2024Q3','2024Q4','2025Q1','2025Q2','2025Q3','2025Q4','2026Q1','2026Q2']
+j['driver']={'q':Q,
+ 'capex':{'亚马逊':[14207,11455,12479,14588,14925,17620,22620,27834,25019,32183,35095,39522,44203,54208],
+          '微软':[6607,8943,9917,9735,10952,13873,14923,15804,16745,17079,19394,29876,30876,35802],
+          '谷歌':[6289,6888,8055,11019,12012,13186,13061,14276,17197,22446,23953,27851,35674,44924]},
+ 'backlog':{'亚马逊':[122.0,132.1,133.0,155.7,157.7,156.6,164.0,177.0,189,195,200,244,364,496],
+            '微软':[196,224,212,222,235,269,259,298,315,368,392,625,627,678],
+            '谷歌云':[61.7,60.6,64.9,74.1,72.5,78.8,86.8,93.2,92.4,108.2,157.7,242.8,462.3,513.9]},
+ 'facts':[['2026 年资本开支指引（四大云厂商）','约 7,200–7,450 亿美元：亚马逊约 2,200、谷歌 1,950–2,050、微软约 1,750、Meta 1,300–1,450；年内每家都上调或维持','37'],
+  ['AI 回报：云业务 Q2 2026','AWS 营收 422 亿美元 +37%、营业利润 166 亿；谷歌云 248 亿 +82%、营业利润 88 亿（利润率 35.6%）；微软智能云 393 亿 +32%','38,39'],
+  ['积压订单（已签未确认）','三家合计约 1.69 万亿美元；亚马逊 Q1、Q2 各有约 1,000 亿来自 OpenAI、Anthropic','39'],
+  ['反方：AWS 资产回报在下降','AWS 过去 12 个月营业利润 ÷ 期末固定资产 = 21%，一年前 30%；新增固定资产已等于营收的 101%','39'],
+  ['英伟达数据中心营收','Q2 FY27 890 亿美元，同比 +117%；Q3 指引总营收 1,080 亿美元','36'],
+  ['亚马逊：算力仍不够','Jassy：即使 2,200 亿美元，2026 年仍不够满足需求，2027 年也会如此（Reuters 搜索摘要）','40']]}
+j['players']=[
+ {'who':'台积电','role':'供给方·定价者','incentive':'保护先进封装毛利率（已接近公司平均）[源15]，不想重演过剩；但大客户逼着扩产。',
+  'now':'连续上调 CoWoS 扩产计划：2026 年末 12 万 → 2027 年末 18.5–19 万片/月，2028 年再加 4–5 万；把溢出订单交给日月光、Amkor，自己留 CoWoS-L 大单 [源1]。CoPoS 2028 年起量 [源1]。',
+  'history':'2023–2026 年每年都比年初计划多扩（KGI 称"continues to revise up"）[源1]；扩产主要跟着英伟达的确定订单走，不做投机性产能。',
+  'signal':'法说会不再说"封装限制客户成长"[源13]，或年末产能目标第一次下调；资本开支中先进封装占比下降。'},
+ {'who':'英伟达','role':'最大买家','incentive':'把出货量最大化、锁住稀缺零部件，挤压竞争对手可用的产能。',
+  'now':'一个季度内把供应与产能承诺从 1,190 亿美元加到 2,790 亿美元，主要是存储 [源36]；为最大化出货下调 HBM 规格、提价 15% 转嫁成本；Vera CPU 60% 给台积电和日月光、其余给 Amkor（多家供应）[源1]。',
+  'history':'2023–24 年 CoWoS 紧缺时包下台积电大部分产能，并把 oS 后段外包给 OSAT（行业共识，未单独核实）；库存在新架构前上升（Q2 FY27 库存 258 → 316 亿美元，为 Vera Rubin 备货）[源36]。',
+  'signal':'供应承诺环比下降或出现取消；库存天数持续上升而营收增速放缓；继续下调每封装 HBM 容量（说明 HBM 比 CoWoS 紧）。'},
+ {'who':'谷歌 / 博通 / 联发科','role':'ASIC 阵营','incentive':'不被单一供应商卡脖子：设计伙伴、封装路线都要有第二来源。',
+  'now':'TPU v9（Humufish）采用 Intel EMIB-T，理由是美国本土化、9 倍光罩大尺寸和台积电产能不足；联发科做 I/O；明显贡献要到 2Q28 [源1]。博通 2027 年要 50 万片 CoWoS，只能排进 38–39 万 [源1]。',
+  'history':'TPU 长期只给博通设计；2026 年起对外部客户（Anthropic）出售或租赁 TPU [源1]。',
+  'signal':'EMIB-T 良率（基板良率约 45%，供应商目标 1Q27 到 60%）[源21]；谷歌是否把第二代产品也放到 EMIB。'},
+ {'who':'日月光 / Amkor','role':'第二供给方','incentive':'从"做 oS 后段"升级成"全流程 CoWoS 第二来源"，拿溢出订单和 CPU 订单。',
+  'now':'日月光全流程 CoWoS 2 万 → 4.5 万片/月（+125%），拿到约一半 Vera CPU 和大部分 Venice CPU；Amkor 1.5 万 → 2.5 万片/月 [源1]。LEAP 营收 2026 年超过 35 亿美元 [源16]。',
+  'history':'2023–24 年承接台积电外包的 oS 后段；扩产比台积电保守，靠客户确定订单。',
+  'signal':'日月光资本开支指引下调，或 LEAP 增速明显低于 CoWoS 总产能增速。'},
+ {'who':'Intel','role':'挑战者','incentive':'用 EMIB/Foveros 把代工业务带起来，吃美国本土化需求。',
+  'now':'为了让基板供应商优先配合，Intel 甚至"必须预付款"[源21]。',
+  'history':'EMIB 2017–18 年就量产，但一直以自家产品为主（公认史实）。',
+  'signal':'出现月产万颗以上的外部 AI 加速器订单（见预测 C6）。'},
+ {'who':'设备与材料商（弘塑、日东纺、味之素等）','role':'上游卡点','incentive':'扩得慢、延长交期、提价，而不是追着需求大扩产。',
+  'now':'弘塑交期 10–12 个月、订单排到 2030 年 [源27]；味之素 ABF 提价 30% [源25]；日东纺 T-glass 扩产 2027 年才放量 [源23]。',
+  'history':'上一轮周期被伤过：载板三家营收 3 个月同比在 2023-11 跌到 −36%（本站回测，源31），所以这次扩产克制。',
+  'signal':'载板厂/材料商宣布大幅扩产或降价；欣兴毛利率掉头（现在 24.8%）[源32]。'},
+ {'who':'云厂商（亚马逊、谷歌、微软、Meta）','role':'需求的上一层','incentive':'抢 AI 算力份额；只要云收入和积压订单还在涨，就不会减资本开支。',
+  'now':'2026 年资本开支指引合计约 7,200–7,450 亿美元，年内都上调过 [源37]；云业务 Q2 增速 32%–82% [源38]。',
+  'history':'2022–23 年云增速放缓时，亚马逊资本开支从季度 166 亿美元降到 115 亿美元（2022Q4 → 2023Q2）[源39]，这是上一次"需求上一层"收缩。',
+  'signal':'任何一家下调资本开支指引；云业务增速连续两季放缓；AWS 资产回报继续下降（已从 30% 降到 21%）[源39]。'}]
+j['falsify']=[
+ {'j':'J1 2027 年 CoWoS 不再是头号瓶颈','counter':'KGI 仍估台积电对"客户需求"缺口 15–20%，S/R 型都缺 [源1]；2025–26 年本模型显示总量富余，但市场普遍说紧，说明模型可能低估了需求。',
+  'falsify':'2027 年 CoWoS 订单仍大量排不进，同时 HBM 和基板没有出现缺货迹象。','ind':'券商对台积电 2027 年 CoWoS 缺口的口径；台积电法说会措辞','th':'2027 年中缺口口径 ≥ 25%，或台积电 2027 年末产能 < 16 万片/月','now':'15–20%（KGI）；年末 18.5–19 万 [源1]','st':'ok'},
+ {'j':'J2 2027 年 HBM 略紧于 CoWoS（不再是唯一短板）','counter':f'HBM 页 v0.4 已按券商产量上修供给：2026 年 {HS26:.1f} EB，高于本页按出货算的需求 {R["2026"]["hbm"]:.1f} EB；2027 年 HBM 够 {HC}%、CoWoS 够 {CC}%，差距在误差内，结论很容易翻转 [源33]。',
+  'falsify':'2027 年 HBM 合约价涨幅很小，或英伟达不降规格。','ind':'2027 年 HBM 混合均价；Rubin Ultra 每封装 HBM 容量','th':'均价同比 < +30%，或 Rubin Ultra ≥ 512GB','now':'TrendForce 预测 2027 年混合均价 +121%（HBM 页源36）；KGI 称英伟达在下调 HBM 规格 [源1]','st':'ok'},
+ {'j':'J3 利润往载板迁移','counter':'欣兴毛利率含非 ABF 业务；毛利率跳升可能部分来自一次性因素。','falsify':'载板毛利率回落，而台积电/OSAT 毛利率继续上升。','ind':'欣兴（3037）季度毛利率','th':'连续两季 < 20%','now':'2Q26 24.8%（一年前 13.1%）[源32]','st':'ok'},
+ {'j':'J4 需求上一层（云厂商资本开支）继续上修','counter':'AWS 资产回报已从 30% 降到 21%，新增固定资产等于营收的 101% [源39]；资本开支增长有一部分是存储涨价，不是更多算力 [源37]。',
+  'falsify':'云厂商 2027 年资本开支指引持平或下降。','ind':'四大云厂商 2027 年首次资本开支指引（2027 年 1–2 月财报）','th':'合计同比 < +10%，或任一家下降','now':'2026 年约 7,325 亿美元（中值）；谷歌、微软都说 2027 年继续增长 [源37]','st':'watch'},
+ {'j':'J5 封装周期还没见顶','counter':'设备三家营收同比已到 +43%，历史上这个位置之后几个月常见顶。','falsify':'设备三家营收同比见顶回落。','ind':'弘塑+辛耘+万润 3 个月营收同比（每月 10 日 MOPS）','th':'从峰值回落 ≥ 20 个百分点并连续 3 个月下行 → 按回测约 4 个月后台积电营收同比见顶','now':'2026-09 +43%，仍在上升 [源31]','st':'ok'}]
+j['tornado_note']='要害变量：① 每片可封颗数（面积通胀）——只有 H100、B200 两个公开锚点，其余是估；② HBM 可供量——两条链的结论都取决于它。研究时间主要花在这两个变量上。'
+if not any(p['id']=='C8' for p in j['predictions']):
+  j['predictions'].append({'id':'C8','text':'四大云厂商（亚马逊、谷歌、微软、Meta）首次给出的 2027 年资本开支指引合计 ≥ 8,500 亿美元（2026 年中值约 7,325 亿，+16%）','due':'2027-02-15','check':'各公司 4Q26 财报电话会','status':'pending'})
+j['meta']['version']='v0.2'
+cl=j['changelog']
+if not any(c[1]=='v0.2' for c in cl):cl.insert(0,['2026-10-15','v0.2','新增：要害变量龙卷风图、关键玩家与博弈、反方证据/证伪条件表、需求上一层（云厂商资本开支、积压订单、AI 回报），预测 C8。'])
+
+
+# ===== v0.3 =====
+S=J['sources'];ids={x['id'] for x in S}
+for i,t,u in [(41,'电子新闻 ETNews 2025-07-30：韩美半导体 TC 键合机月产能 35 台，2026 年扩到 45 台；HBM3E 12 层用 TC 键合机份额 90% 以上','https://www.etnews.com/20250730000336'),
+ (42,'亚洲经济 2024-07-05：韩美半导体年产 264 台（月 22 台）TC 键合机','https://www.asiae.co.kr/en/article/2024070519155971905'),
+ (43,'The Elec 2025-03-14：SK 海力士 2025 年计划采购约 80 台 TC 键合机，每条 HBM 线 2 台','https://www.thelec.net/news/articleView.html?idxno=5189')]:
+  if i not in ids:S.append({'id':i,'t':t,'u':u})
+if not any(c[1]=='v0.3' for c in cl):cl.insert(0,['2026-10-15','v0.3',f'跟随 HBM 页 v0.4 重新校准：HBM 供给上修约五成，2027 年 HBM 满足率约 61% → {HC}%；结论由"短板是 HBM"改为"最紧是 ABF 载板（估），HBM 与 CoWoS 都只略紧"。CoWoS 与 HBM 满足率改为同一口径（可见出货）比较。构建合并为 cowos/build.py（重跑不丢来源 41–43）。'])
+json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
+# ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）
+T=json.load(open(P('data','toc.json')))
+js=r"""const TOC=require(process.argv[1]+'/toc.js'),fs=require('fs'),r=p=>JSON.parse(fs.readFileSync(process.argv[1]+'/data/'+p));
+const J=r('cowos.json'),H=r('hbm.json'),T=r('toc.json'),o=TOC.calc(J,H,T,{}),o2=TOC.calc(J,H,T,{hbm:.8});
+console.log(JSON.stringify({raw:o.out.map(x=>[x.q,x.D,x.st.cw,x.st.hbm,x.st.tcb,x.st.sub,x.st.pw,x.min,x.bind,x.thru]),b:o.out.map(x=>[x.q,x.bind,Object.fromEntries(Object.entries(x.st).map(([k,v])=>[k,v/x.D-1]))]),b2:o2.out.map(x=>[x.q,x.bind]),coef:o.coef}))"""
+t=json.loads(subprocess.run(['node','-e',js,R0],capture_output=True,text=True,check=True).stdout)
+NM={'cw':'CoWoS','hbm':'HBM','tcb':'键合机','sub':'ABF 载板','pw':'电力','dem':'各环节都够'}
+def runs(b):
+    out=[]
+    for q,k in b:
+        if out and out[-1][2]==k: out[-1][1]=q
+        else: out.append([q,q,k])
+    return '；'.join((a if a==z else a+'–'+z[-2:] if a[:4]==z[:4] else a+'–'+z)+' '+NM[k] for a,z,k in out)
+seq=runs([(q,k) for q,k,_ in t['b']]);seq2=runs(t['b2'])
+last=t['b'][-1][2];h27=[x[2]['hbm'] for x in t['b'] if x[0].startswith('2027')];s27=[x[2]['sub'] for x in t['b'] if x[0].startswith('2027')]
+pw26=[x[2]['pw'] for x in t['b'] if x[0].startswith('2026')]
+c=t['coef'];g=lambda y:H['gbw'][str(y)]
+T['stages'][1]['conv']=f"× 3 × 每片有效 GB（{g(2025)}/{g(2026)}/{g(2027)}，按券商产量校准 HBM 页源65）× 稼动率 = GB，÷ 每封装 HBM（产品加权：2025 年 {c['2025']['gb']:.0f}、2026 年 {c['2026']['gb']:.0f}、2027 年 {c['2027']['gb']:.0f} GB）<span class=\"tag t-est\">估</span>"
+T['steps'][0][2]=f"模型（v0.4 校准后）：{seq}。HBM 可供量下调 20% 时：{seq2}。行为证据：英伟达下调 HBM 规格以多出货 {{kgi}}；供应承诺一季加到 2,790 亿美元、主要是存储 {{nv}}"
+T['steps'][4][2]=f"2027 年模型约束在 ABF 载板（相对需求 {min(s27)*100:+.0f}%，估，数据最弱），HBM 紧随其后（{min(h27)*100:+.0f}%）；电力余量从 2026 年约 {min(pw26)*100:+.0f}%～{max(pw26)*100:+.0f}% 降到 2027Q4 约 {t['b'][-1][2]['pw']*100:+.0f}%，2028 年可能轮到电力 <span class=\"tag t-est\">估</span>"
+for p in T['preds']:
+    if p['id']=='T1' and p['status']=='pending':
+        p['status']='void';p['note']='2026-10-15 作废：HBM 页 v0.4 上修 HBM 供给约五成后，模型里 2027 年约束不再是 HBM（改为载板，HBM 次之），以 T4 替代。原文保留。'
+if not any(p['id']=='T4' for p in T['preds']):
+    T['preds'].append({'id':'T4','text':'2027 年 HBM 位元产量同比 ≥ +35%（HBM 页 v0.4 模型 +37%）：2027-12-31 前 TrendForce 或主要券商给出的 2027 年 HBM 产量/出货增速 ≥ +35%；若 < +25%，说明 v0.4 上修过头、约束仍在 HBM','due':'2027-12-31','check':'TrendForce HBM 季报摘要；iM/UBS 等券商','status':'pending'})
+for f in T['falsify']:
+    if f['j'].startswith('T1'):
+        f.update({'j':'T1′ 2027 年约束不在 HBM（v0.4）','counter':f'HBM 只比需求低约 {-min(h27)*100:.0f}%，载板产能是估的；只要载板实际扩产比 KGI 的 +25–30% 快，约束就回到 HBM','falsify':'2027 年 HBM 原厂称需配额、无法满足客户，同时载板价格松动','ind':'HBM 原厂财报会措辞；欣兴毛利率；ABF 报价','th':'HBM 2027 年产量增速 < +25%（见 T4）','now':'iM 证券 2026 年产量 44.4 亿 GB（HBM 页源65）','st':'watch'})
+json.dump(T,open(P('data','toc.json'),'w'),ensure_ascii=False,indent=1)
+# ---- 两个 Excel 都附上同一张"TOC约束"表（以前是手工追加的，重跑会丢）
+import openpyxl
+from openpyxl.styles import Font
+for xf in [P('cowos','cowos_model.xlsx'),P('hbm','hbm_model.xlsx')]:
+    wb=openpyxl.load_workbook(xf)
+    if 'TOC约束' in wb.sheetnames: del wb['TOC约束']
+    ws=wb.create_sheet('TOC约束');ws.append(['单位：百万颗 AI 加速器封装/季；算法见 toc.js / data/toc.json；除 CoWoS、HBM 外各环节规模为估计（含校准）；由 cowos/build.py 生成'])
+    ws.append(['季度','需求','CoWoS','HBM','TC键合机','ABF载板','电力','最小环节','约束','通过量']);[setattr(c,'font',Font(bold=True)) for c in ws[2]]
+    for r in t['raw']: ws.append([r[0]]+[round(v,3) for v in r[1:7]]+[NM[r[7]],'需求（各环节都够）' if r[8]=='dem' else NM[r[8]],round(r[9],3)])
+    wb.save(xf)
+print('ok · 来源',len(S),'· HBM 满足率',HC,'CoWoS',CC,'\n',seq,'\n',seq2)

@@ -53,7 +53,7 @@ CH.tornado=(id,base,rows,o={})=>{const R=rows.map(r=>({...r,rg:Math.abs(r.hi-r.l
  const c=CH.C(id),mk=o.flip!=null?{silent:true,symbol:'none',data:[{xAxis:+(o.flip-base).toFixed(4)}],lineStyle:{color:CH.V('--acc'),type:'dashed',width:1.5},label:{formatter:o.flipLbl||'结论翻转',color:CH.V('--acc'),fontSize:10,position:'end'}}:null;
  c.setOption({...CH.base(),grid:{left:mob?112:150,right:mob?22:60,top:34,bottom:26},legend:{top:0,textStyle:{color:CH.V('--fg'),fontSize:11},data:['变量取低端','变量取高端']},
   tooltip:{trigger:'axis',axisPointer:{type:'shadow'},confine:true,formatter:p=>{const r=R[p[0].dataIndex];return`<b>${r.n}</b><br>基准：${f(base)}<br>${r.l1} → ${f(r.lo)}<br>${r.l2} → ${f(r.hi)}${r.src?'<br><span style="opacity:.7">区间依据：'+r.src+'</span>':''}`}},
-  xAxis:{type:'value',axisLabel:{formatter:v=>f(base+v)},...CH.ax()},yAxis:{type:'category',data:R.map(r=>r.n),axisLabel:{fontSize:mob?10:12,width:mob?104:140,overflow:'break'}},
+  xAxis:{type:'value',min:v=>v.min-(mob?0:(v.max-v.min)*.25),max:v=>v.max+(mob?0:(v.max-v.min)*.25),axisLabel:{formatter:v=>f(base+v),hideOverlap:true},...CH.ax()},yAxis:{type:'category',data:R.map(r=>r.n),axisLabel:{fontSize:mob?10:12,width:mob?104:140,overflow:'break'}},
   series:[{name:'变量取低端',type:'bar',barGap:'-100%',barWidth:'55%',data:R.map(r=>+(r.lo-base).toFixed(4)),itemStyle:{color:'#5b8def'},label:{show:!mob,position:'outside',formatter:p=>R[p.dataIndex].l1,fontSize:10,color:CH.V('--mut')},markLine:mk},
    {name:'变量取高端',type:'bar',barWidth:'55%',data:R.map(r=>+(r.hi-base).toFixed(4)),itemStyle:{color:'#d9534f'},label:{show:!mob,position:'outside',formatter:p=>R[p.dataIndex].l2,fontSize:10,color:CH.V('--mut')}}]})};
 /* 关键玩家与博弈：[{who, role, incentive, now, history, signal, src}] */

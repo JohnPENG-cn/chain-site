@@ -9,7 +9,10 @@ from openpyxl.styles import Font, PatternFill
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib import font_manager as fm
-fm.fontManager.addfont('/tmp/wenkai.ttf'); FN=fm.FontProperties(fname='/tmp/wenkai.ttf').get_name()
+import os; os.chdir(os.path.dirname(os.path.abspath(__file__)))
+FP=next((f for f in ['/tmp/wenkai.ttf','/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc','/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'] if os.path.exists(f)),None)
+if FP: fm.fontManager.addfont(FP); FN=fm.FontProperties(fname=FP).get_name()
+else: FN='sans-serif'
 plt.rcParams['font.family']=FN; plt.rcParams['axes.unicode_minus']=False
 # (year, vendor, product, units_M, ppw, hbm_GB_per_pkg, pkg, src_units)
 K='KGI Fig.10'

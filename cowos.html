@@ -3,18 +3,18 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
 <style>@media(max-width:700px){#cw-procT thead,#cw-varT thead{display:none}#cw-procT tr,#cw-varT tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}#cw-procT td,#cw-varT td{display:block;border:0;padding:2px 0}#cw-procT td:nth-child(2),#cw-varT td:nth-child(2){color:var(--mut);font-size:13px}}
 .xlink{display:flex;gap:10px;align-items:center;flex-wrap:wrap}</style></head><body>
-<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="hbm.html">HBM ⇄</a><span class="pill">CoWoS v0.2</span><button class="btn" onclick="toggleTheme()">◐</button></div></header>
+<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="hbm.html">HBM ⇄</a><span class="pill">CoWoS v0.3</span><button class="btn" onclick="toggleTheme()">◐</button></div></header>
 <nav class="sec" id="nav"><div class="wrap" style="padding:0 6px"><a href="#judg">判断</a><a href="#proc">工艺</a><a href="#data">供需</a><a href="#cost">利润池</a><a href="#neck">瓶颈</a><a href="#play">博弈</a><a href="#hist">历史</a><a href="#lead">领先指标</a><a href="#pred">预测台账</a><a href="#map">资本与公司</a><a href="#iface">接口</a><a href="#src">来源</a></div></nav>
 <main class="wrap">
 <section id="judg" style="padding-top:28px">
 <div class="kicker">CoWoS 小链 · 最近更新 <span id="cw-upd"></span> · <a href="#log">更新记录</a> · 上游接 <a href="hbm.html">HBM 小链</a></div>
-<h1 id="cw-title">2027 年卡住 AI 芯片的，<br>不再是 CoWoS，而是 HBM 和基板</h1>
-<p class="dek">CoWoS 产能三年涨了 9 倍，2027 年还要再涨约七成，总量缺口收窄到个位数。但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，<b>片数涨得比颗数快得多</b>；而 HBM、ABF 基板的扩产速度只有 CoWoS 的一半左右。两条小链一对账，2027 年木桶的短板是 HBM。</p>
+<h1 id="cw-title">2027 年卡住 AI 芯片的，<br>不再是 CoWoS，而是载板和 HBM</h1>
+<p class="dek" id="cw-dek">CoWoS 产能三年涨了 9 倍，2027 年还要再涨约七成，总量缺口收窄到个位数。但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，<b>片数涨得比颗数快得多</b>；而 HBM、ABF 基板的扩产速度只有 CoWoS 的一半左右。HBM 页 v0.4 按券商产量重新校准后，HBM 供给比上一版高约五成：2027 年 HBM 够出货所需的约 93%，CoWoS 约 96%，两者都只略紧、差距在误差内；约束模型里最紧的是 ABF 载板（数据最弱，估）。</p>
 <div class="grid g4" style="margin-top:20px" id="cw-stats"></div>
 <h3>要害变量：哪个假设能把结论翻过来</h3>
 <p class="note" id="cw-torNote"></p>
 <div class="grid g2"><div class="card"><b>2027 年 CoWoS 缺口对各假设的敏感度</b><div id="cw-cTorA" class="chart" style="height:300px"></div><div class="note">每一行：只把这个变量调到低端（蓝）/高端（红），其他不动，2027 年缺口变成多少。条越长越要害。虚线 = 缺口为 0。</div></div>
-<div class="card"><b>"短板是 HBM 而不是 CoWoS"这个结论有多稳</b><div id="cw-cTorB" class="chart" style="height:300px"></div><div class="note">指标 = CoWoS 满足率 − HBM 满足率（百分点），大于 0 表示 HBM 更紧。基准约 +29pp。单独动任何一个变量都翻不过来；英伟达把每封装 HBM 降规格 30% 时只剩约 +2.5pp，如果同时 HBM 可供量按 TrendForce 口径上修 25%，短板就换成 CoWoS。<b>每封装 HBM 容量和 HBM 可供量就是要盯死的两个变量</b>。<span class="tag t-est">估</span></div></div></div>
+<div class="card"><b>"HBM 比 CoWoS 更紧"这个结论有多稳</b><div id="cw-cTorB" class="chart" style="height:300px"></div><div class="note">指标 = CoWoS 满足率 − HBM 满足率（同一口径：KGI 可见出货，百分点），大于 0 表示 HBM 更紧。HBM 页 v0.4 上修供给后，基准只剩约 +3.5pp：HBM 可供量按 KGI 口径 ×1.08、台积电 2027 年末只有 155k、每片颗数 −20%、英伟达降规格，任何一项都会让短板换成 CoWoS。所以结论是<b>两者差不多紧</b>，不是"HBM 是短板"。<span class="tag t-est">估</span></div></div></div>
 <h3>三个可证伪的核心争议</h3><div class="grid g3" id="cw-deb"></div>
 <p class="note">标注规则：<span class="tag t-src">源N</span> = 附录第 N 条公开来源；<span class="tag t-est">估</span> = Kiko 自估，假设可在下方滑块中修改。</p>
 </section>
@@ -89,7 +89,7 @@
 <section id="iface"><div class="kicker">08 · 对外接口</div><h2>和 HBM 串起来：谁是木桶短板</h2>
 <p class="sub">本页直接读取 <a href="hbm.html#iface">HBM 小链</a>的供给模型，和本页"按出货算出的 HBM 需求"对账。拖动上方第 6 个滑块（每封装 HBM 容量），可以看英伟达"降规格"能缓解多少。</p>
 <div class="grid g2"><div class="card"><div id="cw-cIf" class="chart" style="height:300px"></div><div class="note" id="cw-ifTxt"></div></div>
-<div class="card"><b>反向对账发现</b><div class="note" style="font-size:13px">按 KGI 出货算，2026 年需要 HBM 约 3.8 EB，比 HBM 页模型供给（2.9 EB）高约 30%，但和 TrendForce 预测的 2026 年 HBM 出货（超过 300 亿 Gb，约 3.75 EB）<span class="tag t-src"><a href="#src34">源34</a></span>吻合。说明 HBM 页"每片有效 GB"假设可能偏保守，下一版要上修。即便按 TrendForce 口径上修 25%，2027 年 HBM 仍只够约 75%。</div></div></div>
+<div class="card"><b>反向对账（已在 HBM 页 v0.4 修正）</b><div class="note" style="font-size:13px">上一版发现：按 KGI 出货算，2026 年要 HBM 约 3.8 EB，比 HBM 页旧模型供给（2.9 EB）高约 30%。HBM 页 v0.4 改用券商产量校准（iM 证券：2025 年 26.3 亿 GB、2026 年 44.4 亿 GB）和 UBS 年末产能，2026 年供给约 4.4 EB，已高于出货所需；2027 年见左图。<span class="tag t-src"><a href="#src33">源33</a></span></div></div></div>
 <div class="tbl" style="margin-top:14px"><table><thead><tr><th>输出</th><th>2026</th><th>2027</th><th>说明</th></tr></thead><tbody id="cw-ifT-b"></tbody></table></div>
 <p class="card" style="margin-top:12px"><b>约束公式</b><br><span id="cw-formula"></span></p></section>
 
