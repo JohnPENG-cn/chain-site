@@ -3,3 +3,10 @@ shot*.py
 __pycache__/
 build.log
 render.js
+hbm_data/raw/*.pdf
+hbm_data/raw/*.txt
+hbm_data/raw/*.html
+hbm_data/raw/mu_facts.json
+method_survey.md
+product_survey.md
+*.bak
