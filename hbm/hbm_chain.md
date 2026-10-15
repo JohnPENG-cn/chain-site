@@ -25,7 +25,7 @@
 | 2026 | 0.425 | 0.155 | 0.061 | 0.000 | 0.010 | 0.032 | 0.0032 | 0.106 | 25% | 68% |
 | 2027 | 0.787 | 0.298 | 0.000 | 0.000 | 0.010 | 0.084 | 0.0084 | 0.103 | 13% | 34% |
 
-单位 EB。需求 = 卡数 × 每卡 GB：2024–25 年为实际（华为 50.7 万 / 80.5 万颗【源72】）；2026–27 年不缺货需求 = 2025 年中国加速卡总量约 400 万张【源81】× 1.25/年（估）− 不用 HBM 的卡（950PR 等，约 75 万 / 100 万【源74】），每卡 100 / 150GB（估）；机构出货口径 = KDC 2026 年国产 230 万张【源81】（2027 年按 +30% 外推，估）。长鑫 = 年均 HBM 投片（5K → 30K → 55K，SemiAnalysis【源73】）× 12 × 每片有效 GB 150/150/165（估）；武汉新芯 = 长鑫 × 1/10【源74】；灰色渠道由 Epoch 倒推【源74】。
+单位 EB。需求 = 卡数 × 每卡 GB：2024–25 年为实际（华为 50.7 万 / 80.5 万颗【源72】）；2026–27 年不缺货需求 = 2025 年中国加速卡总量约 400 万张【源81】× 1.25/年（估）− 不计入 HBM 账的卡（950PR 约 75 万【源92】、2027 年 950PR + 960PR 约 100 万，估），每卡 100 / 150GB（估）；机构出货口径 = KDC 2026 年国产 230 万张【源81】（2027 年按 +30% 外推，估）。长鑫 = 年均 HBM 投片（5K → 30K → 55K，SemiAnalysis【源73】）× 12 × 每片有效 GB 150/150/165（估）；武汉新芯 = 长鑫 × 1/10【源74】；灰色渠道由 Epoch 倒推【源74】。
 
 **数据弱点**：没有官方的中国 HBM 进口、产量、库存数据；囤货和灰色渠道全部是机构估算；长鑫 HBM 投片 3 万（SemiAnalysis）与 6 万片/月（韩媒【源88】）冲突；良率只有一家媒体和一家机构；"不缺货需求"是自估；A 股公司的 HBM 收入基本未披露。
 
@@ -50,6 +50,17 @@
 - 塑封材料：华海诚科（688535.SH）环氧/颗粒塑封料（HBM 专项未披露）——弱（业务线）【源50】
 - 需求侧（受损于缺货、受益于涨价）：寒武纪（688256.SH）690 报价上调 20–30%，但受 HBM 制约——中（媒体 + 机构）【源78,81】
 - 需求侧：海光信息（688041.SH）国产加速卡第二梯队（KDC 列入）——弱【源81】
+
+
+**v0.5.1 核实 950PR 内存（2026-10-15）**：华为演讲文字稿称 HiBL 1.0 是"自研低成本 HBM"【源75，官方】；昇腾官网 950PR 最大 128GB、1.6TB/s"高速片上内存"【源90，官方】，Atlas 350 卡 112GB HBM、1.4TB/s【源91，官方】；路透称基础版用传统 DDR、高配版用 HBM【源92，媒体】；Epoch 依照片推测接近 LPDDR【源74，推测】；TechInsights 只拆过 910B/910C（910C 内为三星、SK 海力士 HBM2E）【源93,94，拆解】；未见 950PR 拆解。上一版把"类 LPDDR"写成事实、把 128GB 当成出货卡规格，已更正。基准不变：950PR 不计入 HBM 账（推测）；若计入，2026 年覆盖率约 25% → 21%。新增预测 C8（2027-06-30）：拆解会显示 HiBL 1.0 不是 TSV 堆叠的标准 HBM。
+- 源90：昇腾官网 Ascend 950PR 处理器页：最大配备 128GB、1.6TB/s"高速片上内存"（页面未写 HBM） https://www.hiascend.com/hardware/processor
+- 源91：昇腾官网 Atlas 350 加速卡（950PR）技术规格：内存 112 GB HBM、带宽 1.4TB/s、支持 ECC，最大功耗 ≤600W https://www.hiascend.com/hardware/accelerator-card
+- 源92：路透 2026-03-27 独家（RTHK 转载）：华为 2026 年计划出货约 75 万颗 950PR，4 月量产、下半年放量；用传统 DDR 内存的版本约 5 万元/卡，用更快 HBM 的高配版约 7 万元 https://news.rthk.hk/rthk/en/component/k2/1849055-20260327.htm
+- 源93：Business Times（转引彭博）2025-10：TechInsights 拆解多枚 910C，发现台积电代工的 die，以及三星、SK 海力士的 HBM2E（分别出现在两个不同样本里）；台积电称这些 die 与 2024-10 分析过的是同一批 https://www.businesstimes.com.sg/companies-markets/huawei-used-tsmc-samsung-sk-hynix-components-top-ai-chips-techinsights
+- 源94：heise 2024-10：TechInsights 拆解 Atlas 300T A2 加速卡中的昇腾 910B，发现台积电制造的芯片 https://www.heise.de/en/news/Surprise-TSMC-technology-found-in-Huawei-s-AI-accelerator-9992277.html
+- 源95：TechPowerUp 2025-12：昇腾 950 芯片照片首次曝光，作者称计算 die 周围的内存"像 LPDDR/HBM 混合体"（照片判读，非拆解） https://www.techpowerup.com/344062/huawei-ascend-950-ai-accelerator-pictured
+- 源96：Huawei Central 2026-07-03（转引 X 用户 @zephyr_z9 泄露图）：950PR 封装为 2 个 AI die + 8 个内存模块，950DT 为 4 个 HiZQ 堆栈、每堆栈约 1TB/s（泄露，未证实；网站拒绝 curl，据搜索摘要） https://www.huaweicentral.com/huawei-ascend-950dt-die-chip-design-details/
+- 源97：Tom's Hardware 2026-03：Atlas 350 配 112GB 华为自研 HiBL 1.0、1.4TB/s；内存供应商未知 https://www.tomshardware.com/pc-components/gpus/huawei-unveils-new-atlas-350-ai-accelerator-with-1-56-pflops-of-fp4-compute-and-up-to-112gb-of-hbm-claims-2-8x-more-performance-than-nvidias-h20
 
 **新增来源（68–89）**
 - 源68：美国联邦公报 2024-12-05（BIS 暂行最终规则 2024-28270）：新增 ECCN 3A090.c，存储带宽密度 > 2 GB/s/mm² 的 HBM（即所有在产 HBM）对华需许可，2024-12-31 起执行；境外生产的 HBM 经先进计算 FDP 规则纳入 https://www.federalregister.gov/d/2024-28270

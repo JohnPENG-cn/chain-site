@@ -367,12 +367,12 @@
   },
   {
    "id": 74,
-   "t": "Epoch AI 2026-09（09-24 更新）《Huawei’s roadmap to 2031》：华为 2025 年约 80 万、2026 年中位约 150 万（950PR 约 75 万用类 LPDDR 非 HBM、910C 约 43 万用囤货、950DT 约 24 万用长鑫+武汉新芯 HBM、约 8 万用走私 HBM）；囤货多为 8 层 HBM2E 16GB、2026 年用完；长鑫 HBM 投片沿用 SemiAnalysis 口径、武汉新芯约为长鑫 1/10；北方华创 2026-03 发布混合键合机；TSV 刻蚀部分受控（Lam 受控、TEL 不受控）",
+   "t": "Epoch AI 2026-09（09-24 更新）《Huawei’s roadmap to 2031》：华为 2025 年约 80 万、2026 年中位约 150 万（950PR 约 75 万\"可能\"用接近 LPDDR 的非 HBM 内存（Epoch 依据一张疑似芯片照片推测：内存模块离计算 die 太远，不像 HBM）、910C 约 43 万用囤货、950DT 约 24 万用长鑫+武汉新芯 HBM、约 8 万用走私 HBM）；囤货多为 8 层 HBM2E 16GB、2026 年用完；长鑫 HBM 投片沿用 SemiAnalysis 口径、武汉新芯约为长鑫 1/10；北方华创 2026-03 发布混合键合机；TSV 刻蚀部分受控（Lam 受控、TEL 不受控）",
    "u": "https://epoch.ai/publications/huaweis-roadmap-to-2031"
   },
   {
    "id": 75,
-   "t": "华为 2025-09-18 全联接大会徐直军主题演讲：950PR（自研 HiBL 1.0，128GB、1.6TB/s，2026Q1）、950DT（HiZQ 2.0，144GB、4TB/s，2026Q4）、960（2027Q4）、970（2028Q4）",
+   "t": "华为 2025-09-18 全联接大会徐直军主题演讲（官方文字稿）：950 系列配两种自研 HBM，\"与 Ascend 950 Die 合封\"；HiBL 1.0 是\"自研低成本 HBM，比 HBM3E/HBM4E 更划算\"（950PR，2026Q1）；HiZQ 2.0 为 144GB、4TB/s（950DT，2026Q4）；960（2027Q4）、970（2028Q4）。注意：950PR 的 128GB、1.6TB/s 不在文字稿里，见发布会幻灯片转述（路透、Tom’s Hardware）与昇腾官网（源90）",
    "u": "https://www.huawei.com/en/news/2025/9/hc-xu-keynote-speech"
   },
   {
@@ -444,6 +444,46 @@
    "id": 89,
    "t": "东方财富财富号（个人作者，未证实）2026-05-27：长鑫 HBM 产线 TCB 国产化观察（称快克 TCB 进入长鑫验证、单台 800–1,200 万元）",
    "u": "https://caifuhao.eastmoney.com/news/20260527190247307266190"
+  },
+  {
+   "id": 90,
+   "t": "昇腾官网 Ascend 950PR 处理器页：最大配备 128GB、1.6TB/s\"高速片上内存\"（页面未写 HBM）",
+   "u": "https://www.hiascend.com/hardware/processor"
+  },
+  {
+   "id": 91,
+   "t": "昇腾官网 Atlas 350 加速卡（950PR）技术规格：内存 112 GB HBM、带宽 1.4TB/s、支持 ECC，最大功耗 ≤600W",
+   "u": "https://www.hiascend.com/hardware/accelerator-card"
+  },
+  {
+   "id": 92,
+   "t": "路透 2026-03-27 独家（RTHK 转载）：华为 2026 年计划出货约 75 万颗 950PR，4 月量产、下半年放量；用传统 DDR 内存的版本约 5 万元/卡，用更快 HBM 的高配版约 7 万元",
+   "u": "https://news.rthk.hk/rthk/en/component/k2/1849055-20260327.htm"
+  },
+  {
+   "id": 93,
+   "t": "Business Times（转引彭博）2025-10：TechInsights 拆解多枚 910C，发现台积电代工的 die，以及三星、SK 海力士的 HBM2E（分别出现在两个不同样本里）；台积电称这些 die 与 2024-10 分析过的是同一批",
+   "u": "https://www.businesstimes.com.sg/companies-markets/huawei-used-tsmc-samsung-sk-hynix-components-top-ai-chips-techinsights"
+  },
+  {
+   "id": 94,
+   "t": "heise 2024-10：TechInsights 拆解 Atlas 300T A2 加速卡中的昇腾 910B，发现台积电制造的芯片",
+   "u": "https://www.heise.de/en/news/Surprise-TSMC-technology-found-in-Huawei-s-AI-accelerator-9992277.html"
+  },
+  {
+   "id": 95,
+   "t": "TechPowerUp 2025-12：昇腾 950 芯片照片首次曝光，作者称计算 die 周围的内存\"像 LPDDR/HBM 混合体\"（照片判读，非拆解）",
+   "u": "https://www.techpowerup.com/344062/huawei-ascend-950-ai-accelerator-pictured"
+  },
+  {
+   "id": 96,
+   "t": "Huawei Central 2026-07-03（转引 X 用户 @zephyr_z9 泄露图）：950PR 封装为 2 个 AI die + 8 个内存模块，950DT 为 4 个 HiZQ 堆栈、每堆栈约 1TB/s（泄露，未证实；网站拒绝 curl，据搜索摘要）",
+   "u": "https://www.huaweicentral.com/huawei-ascend-950dt-die-chip-design-details/"
+  },
+  {
+   "id": 97,
+   "t": "Tom's Hardware 2026-03：Atlas 350 配 112GB 华为自研 HiBL 1.0、1.4TB/s；内存供应商未知",
+   "u": "https://www.tomshardware.com/pc-components/gpus/huawei-unveils-new-atlas-350-ai-accelerator-with-1-56-pflops-of-fp4-compute-and-up-to-112gb-of-hbm-claims-2-8x-more-performance-than-nvidias-h20"
   }
  ],
  "prices": {
@@ -754,6 +794,11 @@
  "changelog": [
   [
    "2026-10-15",
+   "v0.5.1",
+   "核实 950PR 内存：华为官方称 HiBL 1.0 是\"自研低成本 HBM\"，Atlas 350 官方规格 112GB HBM、1.4TB/s；路透称基础版用传统 DDR；\"类 LPDDR\"只是 Epoch 的推测；没有 950PR 拆解。改正：上一版把\"950PR 用类 LPDDR 非 HBM\"写成事实、把 128GB 写成出货卡规格、并说 128GB/1.6TB/s 出自演讲文字稿——都已更正并分级标注。中国账本基准数字不变（950PR 仍不计入 HBM 账，但改为\"推测\"并给出计入时的敏感度），新增预测 C8。"
+  ],
+  [
+   "2026-10-15",
    "v0.5",
    "新增<b>中国账本</b>（与全球账本平行）：只算国产加速卡能用上的裸 HBM，2024–2027 年需求 vs 可用（囤货消耗 + 国产 + 灰色渠道），结论层加中国中心思想和 3 条论点，底稿第 3/4/5/7/8/12 步各加中国块，台账加 C1–C7。<b>全球账本改判</b>：长鑫产能不再计入全球供给（它只能卖给中国，全球需求表里也没有国产卡），2027 年全球 HBM 满足率约 93% → 90%，缺口约 7% → 10%，结论\"略紧\"不变。"
   ],
@@ -938,7 +983,7 @@
     "2026",
     "不缺货需求",
     "4.0M × 1.25 − 0.75M",
-    "2025 年中国加速卡总量约 400 万张（含英伟达 H20）[源81]，增速 25%（估）；英伟达基本退出（H200 进大陆约 2 万颗 [源84]），全部要国产卡补；减去 950PR 等不用 HBM 的卡约 75 万 [源74]；每卡 100GB（950DT 96/144GB、910C 128GB、其他 64–96GB，估）"
+    "2025 年中国加速卡总量约 400 万张（含英伟达 H20）[源81]，增速 25%（估）；英伟达基本退出（H200 进大陆约 2 万颗 [源84]），全部要国产卡补；减去 950PR 约 75 万颗 [源92]（它的内存是否算 HBM 有争议，见第 3 步中国块的证据表；本页不计入 HBM 账，理由是按带宽和供给倒推都不像 TSV 堆叠 HBM——推测）；每卡 100GB（950DT 96/144GB、910C 128GB、其他 64–96GB，估）"
    ],
    [
     "2026",
@@ -984,6 +1029,11 @@
     "2025-09-18",
     "华为公布自研 HBM：HiBL 1.0（950PR）、HiZQ 2.0（950DT）",
     "75"
+   ],
+   [
+    "2026-03",
+    "Atlas 350（950PR）上市：官方规格 112GB\"HBM\"、1.4TB/s；路透称基础版用传统 DDR",
+    "91,92"
    ],
    [
     "2026-01-15",
@@ -1081,7 +1131,7 @@
     "who": "华为",
     "role": "最大需求方",
     "incentive": "用超节点规模弥补单卡差距，HBM 是单卡带宽的上限。",
-    "now": "2026 年 950PR 改用非 HBM 内存绕开 [源74]；950DT 涨价 20–50% [源78]；960DT 提前到 2027Q1 [源76]。",
+    "now": "950PR 用自称\"低成本 HBM\"的 HiBL 1.0 [源75]，路透称基础版其实用传统 DDR [源92]；950DT 涨价 20–50% [源78]；960DT 提前到 2027Q1 [源76]。",
     "history": "2024 年先囤后用，2025 年把囤货变成 65 万颗 910C [源72]。",
     "signal": "950DT 交付量与交期；Atlas 960E 的 HBM 容量是否兑现 [源76]。"
    },
@@ -1242,12 +1292,18 @@
     "text": "2027 年国产 HBM（长鑫 + 武汉新芯）产量 ≤ 0.15 EB（基准约 0.09）",
     "due": "2028-03-31",
     "check": "SemiAnalysis / TrendForce"
+   },
+   {
+    "id": "C8",
+    "text": "2027-06-30 前出现 950PR/Atlas 350 的第三方拆解；拆解显示 HiBL 1.0 不是 TSV 堆叠的标准 HBM（更接近 LPDDR/DDR 封装）",
+    "due": "2027-06-30",
+    "check": "TechInsights 等拆解报告"
    }
   ],
   "falsify": [
    {
     "j": "CJ1 2026–27 年中国 HBM 严重短缺（只够不缺货需求的 1/4 以下）",
-    "counter": "灰色渠道可能远大于本页估计：SemiAnalysis 称经第三国转出口的 HBM3 仍在流入 [源73]；950PR 用非 HBM 内存若好用，HBM 需求会被压低 [源74]。",
+    "counter": "灰色渠道可能远大于本页估计：SemiAnalysis 称经第三国转出口的 HBM3 仍在流入 [源73]；950PR 若用非 HBM 内存（路透称基础版用传统 DDR [源92]）且好用，HBM 需求会被压低；反过来，若 HiBL 实为 TSV 堆叠 HBM，2026 年 HBM 需求要多算约 0.08 EB。",
     "falsify": "国产卡降价、交期缩短；或寒武纪 690 顺利放量。",
     "ind": "950DT 报价与交期",
     "th": "报价回落到 < 20 万元",

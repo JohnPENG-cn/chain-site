@@ -71,7 +71,7 @@ SPEC = dict(
      dict(t='囤货：禁令前囤了约 0.21 EB，2025 年用掉大半', b=f'约 1,300 万颗，其中 1,140 万直接来自三星、禁令生效前一个月约 700 万，多为 8 层 HBM2E 16GB {S(72)}；够 2024–25 年出货，2026 年用完 {S(74)}。三星禁令前约 20%–30% 的 HBM 营收来自中国 {S("70,71")}。', steps=['supply', 'balance']),
      dict(t='需求：英伟达退出后要国产卡补', b=f'2025 年中国加速卡约 400 万张、国产 165 万 {S(81)}；2026 年英伟达基本缺席 {S(84)}。不缺货需求约 {CD26:.2f} EB {E}；就算只按机构出货预测（受限量）算，2026 年覆盖率也只有约 {CL26}%、2027 年约 {CL27}%。', steps=['demand', 'balance']),
      dict(t='价格信号：国产卡两个月涨 20–50%', b=f'950DT 报价超过 25 万元，950PR 6 万 → 8 万元以上，910C 9 万 → 11 万元以上，寒武纪 690 +20–30%；灰色渠道 HBM 价格是海外的数倍 {S(78)}。全球账本里 HBM 2026 年合约价"暂停" {S(2)}，两本账方向相反。', steps=['balance']),
-     dict(t='替代：华为 950PR 改用非 HBM 内存', b=f'2026 年约 75 万颗 950PR 用类 LPDDR 内存 {S(74)}，是缺 HBM 的行为证据；这部分不计入 HBM 需求。', steps=['demand', 'play']),
+     dict(t='替代：950PR 用"低成本"内存，是否算 HBM 有争议', b=f'华为称 HiBL 1.0 是"自研低成本 HBM" {S(75)}、Atlas 350 官方规格写"112GB HBM、1.4TB/s" {S(91)}；路透称基础版用传统 DDR {S(92)}，Epoch 看照片推测接近 LPDDR {S(74)}；<b>还没有拆解</b>。本页把约 75 万颗 950PR 放在 HBM 账外（推测）；若计入，2026 年覆盖率从约 {CC26}% 降到约 21%。', steps=['demand', 'play']),
     ]),
    dict(tag='约束', claim='卡住中国的不是逻辑芯片，而是"分给 HBM 的 DRAM 晶圆 × 堆叠良率"：长鑫 2026 年底约 3 万片/月做 HBM（韩美三家约 50 万），综合良率约 25%',
     key=f'2026 年可用 HBM 只够配 <b data-from="cnK26">—</b> 张卡 {E}',
@@ -117,9 +117,18 @@ SPEC = dict(
   cn=dict(h='国产卡要多少 HBM：不缺货需求 vs 机构出货口径', body=f'''<div class="tbl"><table id="cn-demT" class="stack"><thead><tr><th>年份</th><th>口径</th><th>算法</th><th>依据</th><th>需求（EB）</th></tr></thead><tbody></tbody></table></div>
 <div class="card" style="margin-top:12px"><b>每颗芯片要多少 HBM：华为路线图</b><div class="tbl"><table><thead><tr><th>芯片</th><th>内存</th><th>时间</th><th>来源</th></tr></thead><tbody>
 <tr><td>910B</td><td>64GB HBM2E（4 颗）</td><td>2023–</td><td>{S(72)}</td></tr><tr><td>910C</td><td>128GB HBM2E（8 颗 16GB）</td><td>2025–</td><td>{S(72)}</td></tr>
-<tr><td>950PR</td><td>自研 HiBL 1.0，128GB、1.6TB/s（Epoch 判断为类 LPDDR，非 HBM）</td><td>2026Q1</td><td>{S("75,74")}</td></tr><tr><td>950DT</td><td>自研 HiZQ 2.0，144GB、4TB/s（另有 96GB 版）</td><td>2026Q4</td><td>{S("75,74")}</td></tr>
+<tr><td>950PR</td><td>自研 HiBL 1.0；芯片最大 128GB、1.6TB/s，出货的 Atlas 350 卡为 112GB、1.4TB/s（内存类型有争议，见下表）</td><td>2026Q1 发布，4 月量产</td><td>{S("90,91,92")}</td></tr><tr><td>950DT</td><td>自研 HiZQ 2.0，144GB、4TB/s（另有 96GB 版）</td><td>2026Q4</td><td>{S("75,74")}</td></tr>
 <tr><td>960DT / 960PR</td><td>未公布；Atlas 960E 超节点 4,096 颗、最多 1PB HBM，折合每颗约 244GB</td><td>2027Q1 / Q3</td><td>{S(76)}</td></tr></tbody></table></div>
-<div class="note">寒武纪、平头哥、昆仑芯等单卡 HBM 容量没有找到可靠公开数据，按 64–96GB 估 {E}。</div></div>'''),
+<div class="note">寒武纪、平头哥、昆仑芯等单卡 HBM 容量没有找到可靠公开数据，按 64–96GB 估 {E}。</div></div>
+<div class="card" style="margin-top:12px"><b>950PR 用的到底是不是 HBM：证据分级</b><div class="tbl"><table class="stack"><thead><tr><th>说法</th><th>级别</th><th>来源</th></tr></thead><tbody>
+<tr><td>HiBL 1.0 是"自研低成本 HBM，比 HBM3E/HBM4E 更划算"，与 950 die 合封</td><td><span class="pill" style="color:var(--ok)">官方</span></td><td>{S(75)}</td></tr>
+<tr><td>950PR 最大 128GB、1.6TB/s"高速片上内存"（官网没写 HBM）；Atlas 350 卡写"112GB HBM、1.4TB/s、ECC"</td><td><span class="pill" style="color:var(--ok)">官方</span></td><td>{S("90,91")}</td></tr>
+<tr><td>基础版 950PR 用"传统 DDR"（约 5 万元/卡），高配版用 HBM（约 7 万元）</td><td><span class="pill" style="color:var(--warn)">媒体报道</span></td><td>{S(92)}</td></tr>
+<tr><td>封装为 2 个 AI die + 8 个内存模块（950DT 为 4 个 HiZQ 堆栈）</td><td><span class="pill" style="color:var(--mut)">泄露图，未证实</span></td><td>{S(96)}</td></tr>
+<tr><td>内存模块离计算 die 太远、像 LPDDR；"可能是接近 LPDDR 的非 HBM"</td><td><span class="pill" style="color:var(--mut)">推测（照片判读）</span></td><td>{S("74,95")}</td></tr>
+<tr><td>910C 里是三星、SK 海力士的 HBM2E + 台积电 die；910B 里有台积电 die</td><td><span class="pill" style="color:var(--acc2)">第三方拆解</span></td><td>{S("93,94")}</td></tr>
+<tr><td>950PR / 950DT 的拆解</td><td><span class="pill" style="color:var(--mut)">没有找到</span></td><td>—</td></tr></tbody></table></div>
+<div class="note">Kiko 的判断（推测）：1.4–1.6TB/s 分到 8 个模块，每个约 175–200GB/s，不到一颗 HBM2E 堆栈（约 410GB/s）的一半，更像宽位 LPDDR/DDR 封装；而且若 75 万颗 × 112GB ≈ 0.08 EB 都出自长鑫 HBM 线，要比本页估的 2026 年长鑫 HBM 产出（约 0.03 EB）大 2–3 倍。所以基准里 950PR 不计入 HBM 账，也不占长鑫 HBM 产能，但它占用长鑫普通 DRAM。若拆解证明是 TSV 堆叠 HBM，2026 年需求 +0.08 EB、覆盖率约 {CC26}% → 21%（见预测 C8）。{E}</div></div>'''),
   h='需求：谁在拉动，上一层是云厂商资本开支', body='''<div class="card"><b>HBM 需求按芯片厂商（EB）</b><div id="cMix" class="chart"></div><div class="note">KGI 出货 × 每封装 HBM（与 CoWoS 页同一张表），按芯片厂商汇总，单位 EB。2027 年需求 +71%。点击图例可隐藏。</div></div>
 <div class="grid g2" style="margin-top:14px"><div class="card"><b>需求的上一层：亚马逊、微软、谷歌季度资本开支（柱）与积压订单（虚线）</b><div id="hx-cDrv" class="chart" style="height:360px"></div><div class="note">十亿美元，与 CoWoS 页同一组数据（各公司财报，Midgard Finance 汇编，<a href="cowos.html#src39">CoWoS 页源39</a>）。微软为含融资租赁口径。</div></div>
 <div class="card"><table id="hx-drvT"><tbody></tbody></table><div class="note" style="margin-top:8px">链条：云收入/积压订单 → 资本开支 → 加速器订单 → HBM GB。表中来源编号指 <a href="cowos.html#src">CoWoS 页的来源表</a>（点开跳转）。反方证据是 AWS 资产回报在下降（证伪表 J4）。</div></div></div>'''),
