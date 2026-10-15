@@ -1,0 +1,101 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CoWoS 先进封装 · 产业链情报研究中心</title><link rel="stylesheet" href="assets.css"><script src="theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>@media(max-width:700px){#cw-procT thead,#cw-varT thead{display:none}#cw-procT tr,#cw-varT tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}#cw-procT td,#cw-varT td{display:block;border:0;padding:2px 0}#cw-procT td:nth-child(2),#cw-varT td:nth-child(2){color:var(--mut);font-size:13px}}
+.xlink{display:flex;gap:10px;align-items:center;flex-wrap:wrap}</style></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="hbm.html">HBM ⇄</a><span class="pill">CoWoS v0.2</span><button class="btn" onclick="toggleTheme()">◐</button></div></header>
+<nav class="sec" id="nav"><div class="wrap" style="padding:0 6px"><a href="#judg">判断</a><a href="#proc">工艺</a><a href="#data">供需</a><a href="#cost">利润池</a><a href="#neck">瓶颈</a><a href="#play">博弈</a><a href="#hist">历史</a><a href="#lead">领先指标</a><a href="#pred">预测台账</a><a href="#map">资本与公司</a><a href="#iface">接口</a><a href="#src">来源</a></div></nav>
+<main class="wrap">
+<section id="judg" style="padding-top:28px">
+<div class="kicker">CoWoS 小链 · 最近更新 <span id="cw-upd"></span> · <a href="#log">更新记录</a> · 上游接 <a href="hbm.html">HBM 小链</a></div>
+<h1 id="cw-title">2027 年卡住 AI 芯片的，<br>不再是 CoWoS，而是 HBM 和基板</h1>
+<p class="dek">CoWoS 产能三年涨了 9 倍，2027 年还要再涨约七成，总量缺口收窄到个位数。但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，<b>片数涨得比颗数快得多</b>；而 HBM、ABF 基板的扩产速度只有 CoWoS 的一半左右。两条小链一对账，2027 年木桶的短板是 HBM。</p>
+<div class="grid g4" style="margin-top:20px" id="cw-stats"></div>
+<h3>要害变量：哪个假设能把结论翻过来</h3>
+<p class="note" id="cw-torNote"></p>
+<div class="grid g2"><div class="card"><b>2027 年 CoWoS 缺口对各假设的敏感度</b><div id="cw-cTorA" class="chart" style="height:300px"></div><div class="note">每一行：只把这个变量调到低端（蓝）/高端（红），其他不动，2027 年缺口变成多少。条越长越要害。虚线 = 缺口为 0。</div></div>
+<div class="card"><b>"短板是 HBM 而不是 CoWoS"这个结论有多稳</b><div id="cw-cTorB" class="chart" style="height:300px"></div><div class="note">指标 = CoWoS 满足率 − HBM 满足率（百分点），大于 0 表示 HBM 更紧。基准约 +29pp。单独动任何一个变量都翻不过来；英伟达把每封装 HBM 降规格 30% 时只剩约 +2.5pp，如果同时 HBM 可供量按 TrendForce 口径上修 25%，短板就换成 CoWoS。<b>每封装 HBM 容量和 HBM 可供量就是要盯死的两个变量</b>。<span class="tag t-est">估</span></div></div></div>
+<h3>三个可证伪的核心争议</h3><div class="grid g3" id="cw-deb"></div>
+<p class="note">标注规则：<span class="tag t-src">源N</span> = 附录第 N 条公开来源；<span class="tag t-est">估</span> = Kiko 自估，假设可在下方滑块中修改。</p>
+</section>
+
+<section id="proc"><div class="kicker">00 · 边界与工艺</div><h2>先进封装有哪几种，CoWoS 是怎么做出来的</h2>
+<p class="sub">计量单位：需求和产能用 12 寸 CoWoS 晶圆（片/月、片/年），出货用颗（封装）。一片 CoWoS 晶圆能封几颗芯片，取决于中介层面积，这是整条链的第一性原理。</p>
+<h3>技术路线对比</h3><div class="tbl"><table id="cw-varT"><thead><tr><th>方案</th><th>结构</th><th>尺寸</th><th>典型产品</th><th>现状</th><th>来源</th></tr></thead><tbody></tbody></table></div>
+<h3>CoWoS 工序 → 设备 / 材料 / 供应商</h3><div class="tbl"><table id="cw-procT"><thead><tr><th>工序</th><th>要点</th><th>设备 / 材料 / 供应商</th><th>来源</th></tr></thead><tbody></tbody></table></div></section>
+
+<section id="data"><div class="kicker">01 · 供需</div><h2>供需平衡：自己拖动假设</h2>
+<p class="sub">需求 = 加速器出货 ÷ 每片可封颗数 + 其他（交换芯片、FPGA 等）；供给 = 12 个月的（台积电 + 非台积电）月产能 × 有效稼动率。浏览器里实时重算。</p>
+<div class="grid g2"><div class="card"><div class="ctl">
+<label>台积电 2027 年末产能 <output id="cw-o-cap"></output></label><input type="range" id="cw-cap" min="150" max="220" step="5" value="185">
+<label>非台积电 2027 年末产能 <output id="cw-o-os"></output></label><input type="range" id="cw-os" min="40" max="110" step="5" value="80">
+<label>2026–27 有效稼动率 <output id="cw-o-ut"></output></label><input type="range" id="cw-ut" min="80" max="100" step="1" value="95">
+<label>2027 每片可封颗数（相对基准）<output id="cw-o-ppw"></output></label><input type="range" id="cw-ppw" min="80" max="120" step="5" value="100">
+<label>2027 加速器出货（相对 KGI）<output id="cw-o-dem"></output></label><input type="range" id="cw-dem" min="70" max="130" step="5" value="100">
+<label>2027 每封装 HBM 容量（相对基准）<output id="cw-o-hbm"></output></label><input type="range" id="cw-hbm" min="60" max="110" step="5" value="100">
+</div><button class="btn" onclick="resetS()">恢复基准</button>
+<div class="grid g2" style="margin-top:16px;gap:8px"><div><div class="note">2027 缺口（可见出货口径）</div><div class="big" id="cw-gap"></div></div><div><div class="note">客户需求口径</div><div class="big" id="cw-gapu" style="color:var(--warn)"></div></div></div><div class="note" id="cw-gapTxt"></div>
+</div><div class="card"><div id="cw-cBal" class="chart"></div>
+<div class="note">出货来自 KGI 2026-09 预测 <span class="tag t-src"><a href="#src1">源1</a></span>，每片颗数为自估（锚点 H100≈28、B200≈16 <span class="tag t-src"><a href="#src9">源9</a></span>）<span class="tag t-est">估</span>。"客户需求口径"只加了 KGI 点名的差额（博通 50 万 vs 38–39 万片、Trainium3 350 万 vs 300 万颗、Venice 600 万 vs 450–500 万颗），约 19 万片。黑色菱形/灰色三角是摩根士丹利、UBS 的需求口径 <span class="tag t-src"><a href="#src4">源4</a> <a href="#src5">源5</a></span>。</div></div></div>
+<div class="card" style="margin-top:14px"><b>交叉验证</b><div class="note" style="font-size:13px">① 自下而上的 2026/2027 需求 132 万/255 万片，和 UBS（131 万/248 万）几乎一样，比摩根士丹利（139 万/269 万）低 5%。② 英伟达 2027 年 122 万片（本模型）对摩根士丹利 122.2 万、404K 汇总的 119.6–122.2 万片，基本一致 <span class="tag t-src"><a href="#src8">源8</a></span>。③ 2025–26 年模型显示总量略有富余（+5%～+7%），和"全年紧缺"的公开说法不一致：紧张主要来自 S/R 型号错配（KGI）和爬坡良率，而不是总片数。模型误差约 ±10%。④ 2023–24 年模型缺口 −10%/−14%，与当年 H100 缺货一致。</div></div>
+<h3>需求的上一层：云厂商资本开支与 AI 回报</h3>
+<div class="grid g2"><div class="card"><b>亚马逊、微软、谷歌季度资本开支（柱）与积压订单（虚线）</b><div id="cw-cDrv" class="chart" style="height:360px"></div><div class="note">十亿美元，取自各公司财报（Midgard Finance 汇编）<span class="tag t-src"><a href="#src39">源39</a></span>。微软为含融资租赁口径，三家口径不完全一致。</div></div>
+<div class="card"><table id="cw-drvT"><tbody></tbody></table><div class="note" style="margin-top:8px">链条：云收入/积压订单 → 资本开支 → 加速器订单 → CoWoS 片数。资本开支从 2023Q2 的约 270 亿美元/季涨到 2026Q2 的约 1,350 亿美元/季（三家合计），积压订单一年翻倍以上，是 2027 年需求的底气；反方证据是 AWS 资产回报在下降。</div></div></div>
+<h3>季末产能（千片/月）</h3><div class="card"><div id="cw-cCap" class="chart" style="height:360px"></div><div class="note">面积 = KGI 口径，年末为锚点，季度为线性插值 <span class="tag t-est">估</span>；圆点 = 各家对台积电年末产能的预测。</div>
+<div class="tbl"><table id="cw-capT" style="margin-top:8px"><thead><tr><th>机构</th><th>日期</th><th>2026 年末</th><th>2027 年末</th><th>其他</th><th>来源</th></tr></thead><tbody></tbody></table></div></div>
+<div class="grid g2" style="margin-top:14px"><div class="card"><b>需求由谁拉动（千片/年）</b><div id="cw-cMix" class="chart"></div><div class="note">点柱子看每个产品的"出货 ÷ 每片颗数"。2027 年英伟达占比从约 57% 降到约 48%，谷歌 TPU 和 AMD（含 Venice CPU）是最大增量。</div></div>
+<div class="card"><b>封装面积通胀：片数涨得比颗数快</b><div id="cw-cInf" class="chart"></div><div class="note">英伟达 GPU 颗数 2023→2027 涨约 6 倍，消耗的 CoWoS 片数涨约 23 倍（对数坐标）。<b>所以"CoWoS 产能 +70%"不等于"GPU +70%"。</b></div></div></div>
+<h3>每片可封颗数（单耗）</h3><div class="tbl"><table id="cw-ppwT"><thead><tr><th>产品</th><th>每片良品颗数</th><th>每封装 HBM</th><th>依据</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="cost"><div class="kicker">02 · 利润池</div><h2>钱堆在台积电，利润增速最快的是载板</h2>
+<p class="sub">Bain 利润池画法：宽度 = 年化营收，高度 = 毛利率，面积 = 毛利。各公司都不单独披露 CoWoS 数字，下面是能拿到的最接近口径。</p>
+<div class="card"><div id="cw-cPool" class="chart" style="height:330px"></div><div class="tbl"><table id="cw-poolT"><thead><tr><th>环节</th><th>营收（十亿美元/年）</th><th>毛利率</th><th>毛利</th><th>口径</th></tr></thead><tbody></tbody></table></div></div>
+<div class="grid g2" style="margin-top:14px"><div class="card"><b>毛利率迁移（季度，MOPS 财报）</b><div id="cw-cMar" class="chart"></div><div class="note">欣兴（载板）毛利率 2Q25 13.1% → 2Q26 24.8%，一年接近翻倍；日月光 17.0% → 21.0%；台积电 58.6% → 67.7% <span class="tag t-src"><a href="#src32">源32</a></span>。利润正在往扩得慢的环节（载板）迁移。</div></div>
+<div class="card"><b>资本开支与单位价值</b><table id="cw-capexT" style="margin-top:6px"><tbody></tbody></table><table id="cw-ucT" style="margin-top:10px"><tbody></tbody></table><div class="note">台积电先进封装：魏哲家 2024 年说毛利率"以前远低于公司平均，现在接近公司平均" <span class="tag t-src"><a href="#src15">源15</a></span>；占营收 2024 约 8%、2025 略超 10%、2026 预计"低双位数" <span class="tag t-src"><a href="#src14">源14</a></span>。</div></div></div>
+</section>
+
+<section id="neck"><div class="kicker">03 · 瓶颈（约束理论推导）</div><h2>把每一环换成同一单位，最小的那个才是约束</h2>
+<p class="sub">按 Goldratt 约束理论（TOC）：CoWoS 晶圆 → 封装颗数，DRAM 晶圆 → HBM GB → 封装，键合机台数 → 堆叠数 → 封装，载板片数、数据中心电力 → 封装，统一成"百万颗 AI 加速器封装/季"，每季取最小值。滑块改任何一环，约束实时更新。</p>
+<div id="cw-toc"></div>
+<h3>汇总排序（推导结果 + 定性证据）</h3><p class="sub">条形长度 = 缓解所需月数（示意）。</p><div id="cw-neck" class="grid"></div></section>
+
+<section id="play"><div class="kicker">03b · 关键玩家与博弈</div><h2>谁在做什么决定，为什么，什么信号说明他们变了</h2>
+<p class="sub">供需表是结果，玩家的决策是原因：台积电愿不愿意扩、英伟达锁多少货、ASIC 阵营找不找第二来源、上游材料商敢不敢扩产。</p><div class="grid g2" id="cw-play"></div></section>
+
+<section id="hist"><div class="kicker">04 · 历史</div><h2>技术代际与瓶颈迁移</h2><p class="sub" id="cw-rule"></p>
+<div class="grid g2"><div class="card"><b>技术与格局</b><div class="tl" style="margin-top:12px" id="cw-tl1"></div></div>
+<div class="card"><b>产能与瓶颈迁移</b><div class="tl" style="margin-top:12px" id="cw-tl2"></div></div></div></section>
+
+<section id="lead"><div class="kicker">05 · 领先指标</div><h2>先看哪个数据（已回测）</h2><p class="sub">台湾设备商、载板厂每月 10 日前公布上月营收。回测结论：设备营收和台积电营收的<b>水平相关很弱</b>（r=0.36），但<b>同比拐点</b>比台积电早 1–13 个月（13 次中 11 次，中位 4 个月）；设备营收是在客户验收时确认的，更接近"产能装进去了"，真正领先的是合约负债和 Disco 的出货额。</p>
+<h3>回测：设备三家、载板三家 vs 台积电、日月光营收（3 个月滚动同比）</h3>
+<div class="card"><div id="cw-cBt" class="chart" style="height:380px"></div><div class="note">MOPS 月营收（经 FinMind API 下载）2012-01 至 2026-09 <span class="tag t-src"><a href="#src31">源31</a></span>；同比截断在 −80%～+250% 以便显示。设备三家 = 弘塑 3131 + 辛耘 3583 + 万润 6187；载板三家 = 欣兴 3037 + 南电 8046 + 景硕 3189。</div></div>
+<div class="grid g2" style="margin-top:14px"><div class="card"><b>交叉相关：A 领先 k 个月时与 B 的相关系数</b><div id="cw-cXc" class="chart" style="height:280px"></div><div class="note">设备→台积电最高在 k=+3（0.36），载板→台积电最高在 k=0～1（0.55，同步）。样本 2014–2026，约 153 个月。</div></div>
+<div class="card"><b>拐点对照：设备三家同比 → 台积电营收同比</b><div class="tbl"><table id="cw-tpT"><thead><tr><th>设备同比拐点</th><th>台积电同比拐点</th><th>领先（月）</th></tr></thead><tbody></tbody></table></div><div class="note" id="cw-btNow"></div></div></div>
+<div class="card" style="margin-top:14px"><b>合约负债（预收款）vs 当季营收：设备三家合计</b><div id="cw-cCl" class="chart" style="height:280px"></div><div class="note">合约负债同比在 1Q23 见顶（+89%），营收同比在 3Q24 见顶（+87%），领先约 6 个季度，但只有这一个周期 <span class="tag t-est">估</span>。2Q26 合约负债 185.5 亿新台币，约等于 2.6 个季度的营收，同比 +10% 重新上升 <span class="tag t-src"><a href="#src32">源32</a> <a href="#src29">源29</a></span>。</div></div>
+<div class="grid g3" id="cw-lead" style="margin-top:14px"></div></section>
+
+<section id="pred"><div class="kicker">06 · 预测台账</div><h2>写下来，到期打分</h2><p class="sub" id="cw-predSum"></p><div class="tbl"><table id="cw-predT"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody></tbody></table></div>
+<h3>反方证据与证伪条件</h3><p class="sub">每个核心判断：现在已经看到的反方证据、什么情况算我错、看哪个公开指标、阈值是多少。触发阈值就改判断，不辩护。</p>
+<div class="tbl"><table id="cw-falT" class="fal"><thead><tr><th>判断</th><th>反方证据</th><th>证伪条件</th><th>观察指标与阈值</th><th>当前读数</th><th>状态</th></tr></thead><tbody></tbody></table></div></section>
+
+<section id="map"><div class="kicker">07 · 资本与公司图谱</div><h2>环节 → 公司 → 订单与资本</h2>
+<p class="sub">点节点看详情；实线边都附来源编号（绿=供货，橙=设备/材料订单）。虚线只表示公司在这个环节有业务，<b>CoWoS 专项营收占比基本都没有披露</b>。</p>
+<div class="seg" id="cw-fMk"><button class="on" data-m="all">全部</button><button data-m="A">A股</button><button data-m="TW">台</button><button data-m="US">美/欧/日</button><button data-m="HK">港</button></div>
+<div class="grid" style="margin-top:12px"><div class="card" style="padding:6px"><div id="cw-cNet" class="chart" style="height:600px"></div><div class="note" style="padding:0 6px">手机上按环节分簇固定排布（方块=环节，圆点=公司，长名称显示代码），可双指缩放、拖动；电脑上为力导向布局。</div><div style="display:flex;justify-content:flex-end;padding:4px 6px"><button class="btn" onclick="CH.net('cw-cNet','#cw-nodeInfo',J.companies,mk)">重置视图</button></div></div>
+<div class="card" id="cw-nodeInfo"><b>点击图中任一节点</b><div class="note">显示代码、角色与关联边及来源。</div></div></div>
+<h3>公司清单</h3><div class="tbl"><table id="cw-coT"><thead><tr><th>公司</th><th>代码</th><th>环节</th><th>角色/数据</th></tr></thead><tbody></tbody></table></div></section>
+
+<section id="iface"><div class="kicker">08 · 对外接口</div><h2>和 HBM 串起来：谁是木桶短板</h2>
+<p class="sub">本页直接读取 <a href="hbm.html#iface">HBM 小链</a>的供给模型，和本页"按出货算出的 HBM 需求"对账。拖动上方第 6 个滑块（每封装 HBM 容量），可以看英伟达"降规格"能缓解多少。</p>
+<div class="grid g2"><div class="card"><div id="cw-cIf" class="chart" style="height:300px"></div><div class="note" id="cw-ifTxt"></div></div>
+<div class="card"><b>反向对账发现</b><div class="note" style="font-size:13px">按 KGI 出货算，2026 年需要 HBM 约 3.8 EB，比 HBM 页模型供给（2.9 EB）高约 30%，但和 TrendForce 预测的 2026 年 HBM 出货（超过 300 亿 Gb，约 3.75 EB）<span class="tag t-src"><a href="#src34">源34</a></span>吻合。说明 HBM 页"每片有效 GB"假设可能偏保守，下一版要上修。即便按 TrendForce 口径上修 25%，2027 年 HBM 仍只够约 75%。</div></div></div>
+<div class="tbl" style="margin-top:14px"><table><thead><tr><th>输出</th><th>2026</th><th>2027</th><th>说明</th></tr></thead><tbody id="cw-ifT-b"></tbody></table></div>
+<p class="card" style="margin-top:12px"><b>约束公式</b><br><span id="cw-formula"></span></p></section>
+
+<section id="src"><div class="kicker">附录</div><h2>来源</h2><p class="sub">均于 2026-10-15 用 curl 或浏览器打开（Reuters 401 例外，用搜索摘要；Digitimes 付费墙只看标题）。券商数据多为二手转述，标在标题里。</p><ol class="src" id="cw-srcL"></ol>
+<h3>局限（公开数据补不了的）</h3><ul style="font-size:14px" id="cw-lim"></ul>
+<h3 id="log">更新记录</h3><div class="tbl"><table id="cw-logT"><tbody></tbody></table></div>
+<p><a href="cowos/cowos_model.xlsx">下载模型 Excel</a> · <a href="cowos/cowos_chain.md">报告原文 (Markdown)</a> · <a href="SOP.md">小链研究 SOP</a></p></section>
+</main><footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="hbm.html">HBM</a></footer>
+<script src="chain.js"></script><script src="toc.js"></script><script src="cowos.js"></script></body></html>

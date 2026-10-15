@@ -10,3 +10,6 @@ hbm_data/raw/mu_facts.json
 method_survey.md
 product_survey.md
 *.bak
+cowos_data/raw/
+*_data/raw/*.pdf
+!cowos/chart_*.png
