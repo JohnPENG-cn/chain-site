@@ -38,3 +38,5 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 footer{padding:30px 0 60px;color:var(--mut);font-size:13px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.seg button{border:0;background:none;color:var(--mut);padding:5px 12px;font-size:13px;cursor:pointer}.seg button.on{background:var(--fg);color:var(--bg)}
 ol.src li{margin-bottom:6px;font-size:14px;word-break:break-all}
+
+@media(max-width:700px){#procT thead{display:none}#procT tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}#procT td{display:block;border:0;padding:2px 0}#procT td:nth-child(2){color:var(--mut);font-size:13px}}

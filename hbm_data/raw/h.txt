@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Date: Thu, 15 Oct 2026 00:21:46 GMT
+Server: Apache
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Set-Cookie: JSESSIONID=_0ov7jId62RyvsyTI7UwXzZUpJHk5yyK-RELnSlL.portal11; path=/
+X-XSS-Protection: 1; mode=block
+Pragma: no-cache
+X-Frame-Options: DENY
+Content-Disposition: attachment; filename="산업통상부_반도체디스플레이 수출동향 추이_20251231.csv"
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+Content-Length: 11940
+Content-Type: application/octet-stream; charset=UTF-8
+
