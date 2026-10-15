@@ -68,3 +68,25 @@ details.apx>.body{padding:0 16px 16px;overflow-x:auto}details.apx .card{backgrou
 .pill{white-space:nowrap}
 @media(max-width:700px){table.ledger tr{padding:12px 0}table.ledger td:first-child{float:left;margin-right:8px;color:var(--acc)}table.ledger td:nth-child(2){display:block;font-size:15px}
 table.ledger td:nth-child(n+3){display:inline-block;margin:6px 12px 0 0;font-size:12px;color:var(--mut);vertical-align:middle}table.ledger td:nth-child(3) .note{display:inline;margin-left:4px}table.ledger td:nth-child(2) .note{display:block}}
+/* ===== 统一模板 v1.4：结论层（金字塔）+ 底稿（SOP 13 步）。两页由 tpl/page.py 生成 ===== */
+nav.two{overflow:hidden}nav.two .navw{display:flex;align-items:center;padding:0 0 0 10px;gap:8px}
+nav.two .tiers{flex:none;display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:6px 0}
+nav.two .tiers a{padding:3px 9px;font-size:12px;border:0;color:var(--mut);font-weight:600}nav.two .tiers a.on{background:var(--fg);color:var(--bg)}
+nav.two .links{flex:1;min-width:0;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent);overflow-x:auto;white-space:nowrap;scrollbar-width:none}nav.two .links::-webkit-scrollbar{display:none}
+nav.two .links a{padding:10px 9px}
+nav.two[data-tier=c] .l-b,nav.two[data-tier=b] .l-c{display:none}
+.hero{margin-top:6px}.hero>b{font-size:15px}
+.evs{display:grid;gap:10px;margin-top:14px}@media(min-width:760px){.evs{grid-template-columns:1fr 1fr}}
+.evc{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--card);scroll-margin-top:110px}
+.evc .ev{margin:0 0 2px}.evc>b{font-size:15px;line-height:1.5;display:block}.evc p{margin:.35em 0 .5em;font-size:14px;line-height:1.65;color:var(--fg)}
+.evc .go{font-size:12px}.evc .go a{white-space:nowrap}
+.evc:target,.step:target{box-shadow:0 0 0 2px var(--acc) inset}
+section.basehd{border-top:3px solid var(--fg);margin-top:24px}
+@media(max-width:700px){ol.stepix a{font-size:13px;padding:6px 8px;gap:6px}}
+ol.stepix{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px;grid-template-columns:1fr 1fr}@media(min-width:760px){ol.stepix{grid-template-columns:repeat(3,1fr)}}
+ol.stepix a{display:flex;gap:10px;align-items:baseline;border:1px solid var(--line);border-radius:8px;padding:7px 10px;color:var(--fg);font-size:14px;background:var(--card)}
+ol.stepix a:hover{text-decoration:none;border-color:var(--acc)}ol.stepix .n{font-weight:800;color:var(--acc);min-width:20px;font-variant-numeric:tabular-nums}ol.stepix .s{margin-left:auto;color:var(--acc);font-size:13px;letter-spacing:.05em}
+.step .sup{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}.step .sup a,.step .sup span{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--acc) 40%,transparent);color:var(--acc);white-space:nowrap}
+.step .sup span{border-color:var(--line);color:var(--mut)}.step .sup a:hover{text-decoration:none;background:color-mix(in srgb,var(--acc) 8%,transparent)}
+section.apxsec{border-bottom:0}
+@media(max-width:700px){#cw-procT thead,#cw-varT thead{display:none}#cw-procT tr,#cw-varT tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}#cw-procT td,#cw-varT td{display:block;border:0;padding:2px 0}#cw-procT td:nth-child(2),#cw-varT td:nth-child(2){color:var(--mut);font-size:13px}}

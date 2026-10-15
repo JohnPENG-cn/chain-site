@@ -1,0 +1,124 @@
+"""统一页面模板（SOP 页面规范 v1.4）。hbm.html、cowos.html 都由这里生成，不要手改这两个 HTML。
+结构：上半 = 结论层（金字塔：SCQA → 中心思想 → 3 条论点卡 → 每条论点的证据块 → 可能错在哪 → 预测台账）；
+     下半 = 底稿（SOP 13 步，按 SOP 顺序全部展开）；只有来源、更新记录折叠。
+证据块 ↔ 底稿步骤的双向链接由模板根据 spec 自动生成，两页结构不会漂移。
+用法：python3 tpl/page.py（build.sh 最后一步）。spec 在 <链>/page.py。"""
+import importlib.util, os, re, sys
+R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# SOP 13 步：(锚点, 编号, 导航短名, 底稿标题前缀)。两页共用同一组锚点。
+STEPS = [('key', '0', '要害', '要害变量'), ('debate', '1', '争议', '核心争议'), ('proc', '2', '工艺', '边界与工艺'),
+         ('demand', '3', '需求', '需求（含上一层）'), ('supply', '4', '供给', '供给'), ('balance', '5', '平衡价格', '平衡与价格'),
+         ('profit', '6', '利润池', '利润池'), ('neck', '7', '瓶颈', '瓶颈（TOC 推导）'), ('play', '8', '博弈', '关键玩家与博弈'),
+         ('hist', '9', '历史', '历史'), ('lead', '10', '领先', '领先指标（回测）'), ('ledger', '11', '台账', '预测台账'),
+         ('map', '12', '图谱接口', '公司图谱与对外接口')]
+SID = {s[0]: s for s in STEPS}
+MID = dict(zip([s[0] for s in STEPS], ['要害变量', '核心争议', '边界与工艺', '需求', '供给', '平衡与价格', '利润池', '瓶颈 TOC', '玩家与博弈', '历史', '领先指标', '预测台账', '图谱与接口']))   # 底稿目录用的中等长度名（手机两列放得下）
+CIRC = '①②③④'
+
+
+def render(S):
+    args = S['args']
+    assert 3 <= len(args) <= 4, '关键论点必须 3 条（最多 4 条）'
+    assert [s['id'] for s in S['steps']] == [s[0] for s in STEPS], '底稿必须按 SOP 13 步顺序给全'
+    back = {s[0]: [] for s in STEPS}   # 步骤 → 支撑的证据块
+    for i, a in enumerate(args, 1):
+        for j, e in enumerate(a['ev'], 1):
+            for st in e['steps']:
+                assert st in SID, st
+                back[st].append((i, j))
+    for st, lst in back.items():
+        if st not in ('ledger',) and not lst and not S['steps'][[x[0] for x in STEPS].index(st)].get('ctx'):
+            raise SystemExit(f"{S['file']}: 底稿第 {SID[st][1]} 步 {st} 没有支撑任何论点（如确属背景材料，spec 里标 ctx）")
+    o = []
+    w = o.append
+    w(f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- 由 tpl/page.py 根据 {S['spec']} 生成，不要手改；改内容请改 spec 后跑 ./build.sh -->
+<title>{S['title']} · 产业链情报研究中心</title><link rel="stylesheet" href="assets.css"><script src="theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="{S['other'][0]}">{S['other'][1]}</a><span class="pill">{S['pill']}</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
+''')
+    # 两层导航
+    t1 = [('top', '结论')] + [(f'a{i}', f'{CIRC[i-1]} {a["tag"]}') for i, a in enumerate(args, 1)] + [('wrong', '可能错在哪'), ('pred', '预测台账')]
+    t2 = [('base', '总览')] + [(s[0], f'{s[1]} {s[2]}') for s in STEPS] + [('src', '来源')]
+    w('<nav class="sec two" id="nav" data-tier="c"><div class="wrap navw"><span class="tiers"><a href="#top" data-t="c" class="on">结论层</a><a href="#base" data-t="b">底稿 13 步</a></span>')
+    w('<span class="links l-c">' + ''.join(f'<a href="#{i}">{t}</a>' for i, t in t1) + '</span>')
+    w('<span class="links l-b">' + ''.join(f'<a href="#{i}">{t}</a>' for i, t in t2) + '</span></div></nav>\n<main class="wrap">\n')
+    # ① SCQA + ② 中心思想 + ③ 论点卡
+    w(f'<section id="top" data-nav="c" style="padding-top:24px">\n<div class="kicker">{S["kicker"]} · <a href="#log">更新记录</a></div>\n<div class="scqa">')
+    for lab, txt in zip(('背景', '冲突', '问题'), S['scqa']):
+        w(f'<div><b>{lab}</b><span>{txt}</span></div>')
+    w(f'</div>\n<div class="kicker" style="margin-top:18px">回答 · 中心思想</div>\n<h1 class="gov" style="margin-top:.2em">{S["gov"]}</h1>\n<div class="kl">')
+    for i, a in enumerate(args, 1):
+        nolink = lambda t: re.sub(r'<a\b[^>]*>(.*?)</a>', r'\1', t)   # 卡片本身是链接，里面不能再嵌 <a>
+        w(f'<a href="#a{i}"><span class="i">{CIRC[i-1]}</span><span>{nolink(a["claim"])}<span class="k">{nolink(a["key"])}</span></span></a>')
+    w(f'</div>\n<p class="note">{S["mece"]} 标注：<span class="tag t-src">源N</span> = 页末第 N 条公开来源；<span class="tag t-est">估</span> = Kiko 自估，可在底稿里用滑块改。'
+      f'上半页是结论层（金字塔），下半页是<a href="#base">底稿</a>：按 <a href="https://github.com/JohnPENG-cn/chain-site/blob/main/SOP.md">SOP</a> 13 步的完整产业链分析；每个证据块都链到底稿对应步骤，底稿每一步也标了它支撑哪条论点。</p>\n</section>\n')
+    # ④ 论点节
+    for i, a in enumerate(args, 1):
+        steps_cov = sorted({SID[st][1] for e in a['ev'] for st in e['steps']}, key=int)
+        w(f'<section id="a{i}" data-nav="c"><div class="kicker">论点 {CIRC[i-1]} · {a["tag"]} · 依据底稿第 {"/".join(steps_cov)} 步</div>\n<h2 class="claim">{a["claim"]}</h2>\n')
+        if a.get('sub'):
+            w(f'<p class="sub">{a["sub"]}</p>\n')
+        h = a['hero']
+        w(f'<div class="card hero"><b>{h["t"]}</b><div id="m-{h["src"]}" data-mirror="{h["src"]}" class="chart" style="height:{h.get("h", 340)}px"></div>'
+          f'<div class="note">{h["note"]} <a href="#{h["step"]}">原图与假设在底稿第 {SID[h["step"]][1]} 步 ↓</a></div></div>\n<div class="evs">')
+        for j, e in enumerate(a['ev'], 1):
+            lk = ' · '.join(f'<a href="#{st}">底稿 {SID[st][1]} {SID[st][3]} ↓</a>' for st in e['steps'])
+            w(f'<div class="evc" id="e{i}-{j}"><div class="ev">证据 {i}.{j}</div><b>{e["t"]}</b><p>{e["b"]}</p><div class="go">{lk}</div></div>')
+        w('</div>\n</section>\n')
+    # ⑤ 可能错在哪  ⑥ 预测台账
+    w(f'<section id="wrong" data-nav="c"><div class="kicker">我们可能错在哪 · 底稿第 1/11 步</div>\n<h2>每条论点都写好了"什么情况算我错"</h2>\n{S["wrong"]}\n</section>\n')
+    w(f'<section id="pred" data-nav="c"><div class="kicker">预测台账 · 底稿第 11 步</div><h2>写下来，到期打分</h2>\n{S["pred"]}\n</section>\n')
+    # 底稿
+    w(f'<section id="base" data-nav="b" class="basehd"><div class="kicker">底稿 · SOP 13 步完整产业链分析</div><h2>{S["base_title"]}</h2><p class="sub">{S["base_sub"]}</p><ol class="stepix">')
+    for s in STEPS:
+        sup = ''.join(CIRC[i-1] for i in sorted({i for i, _ in back[s[0]]}))
+        w(f'<li><a href="#{s[0]}"><span class="n">{s[1]}</span>{MID[s[0]]}<span class="s">{sup}</span></a></li>')
+    w('</ol></section>\n')
+    for st, (sid, n, short, ttl) in zip(S['steps'], STEPS):
+        chips = ''
+        if back[sid]:
+            chips = '<div class="sup">' + ''.join(f'<a href="#e{i}-{j}">支撑论点{CIRC[i-1]} · 证据 {i}.{j} ↑</a>' for i, j in back[sid]) + '</div>'
+        elif st.get('ctx'):
+            chips = f'<div class="sup"><span>{st["ctx"]}</span></div>'
+        w(f'<section id="{sid}" data-nav="b" class="step"><div class="kicker">底稿 {n} · {ttl}</div>\n<h2>{st["h"]}</h2>{chips}\n')
+        if st.get('sub'):
+            w(f'<p class="sub">{st["sub"]}</p>\n')
+        w(st['body'].strip() + '\n</section>\n')
+    # 只有来源、更新记录折叠
+    w(f'<section id="apx" data-nav="b" class="apxsec"><div class="kicker">附录</div>\n'
+      f'<details class="apx" id="apxSrc"><summary>来源与局限 <small>{S["src_small"]}</small></summary><div class="body" id="src">{S["src"]}</div></details>\n'
+      f'<details class="apx" id="apxLog"><summary>更新记录与下载 <small>每次改判都记在这里</small></summary><div class="body" id="log">{S["log"]}</div></details>\n</section>\n')
+    w(f'</main><footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="{S["other"][0]}">{S["other"][1].replace(" ⇄","")}</a></footer>\n')
+    w(''.join(f'<script src="{x}"></script>' for x in ['chain.js'] + S['scripts']) + '\n</body></html>\n')
+    html = ''.join(o)
+    assert not re.search(r'<a\b(?:(?!</a>).)*<a\b', html, re.S), f'{S["file"]}: 有嵌套 <a>'
+    # 自检：id 不重复；所有页内锚点存在（#srcN 由脚本生成，跳过）
+    ids = re.findall(r'\bid="([^"]+)"', html)
+    dup = {x for x in ids if ids.count(x) > 1}
+    assert not dup, f'{S["file"]}: 重复 id {dup}'
+    miss = {h for h in re.findall(r'href="#([\w-]+)"', html) if h not in ids and not re.match(r'src\d+$', h)}
+    assert not miss, f'{S["file"]}: 锚点不存在 {miss}'
+    return html
+
+
+def load(chain):
+    p = os.path.join(R0, chain, 'page.py')
+    sp = importlib.util.spec_from_file_location(chain + '_page', p)
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    m.SPEC['spec'] = f'{chain}/page.py'
+    return m.SPEC
+
+
+if __name__ == '__main__':
+    idx = open(os.path.join(R0, 'index.html'), encoding='utf-8').read()
+    for chain in ('hbm', 'cowos'):
+        S = load(chain)
+        open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(render(S))
+        # 首页卡片 = 同一句中心思想
+        idx, n = re.subn(rf'(<!--card:{chain}-->).*?(<!--/card-->)', lambda m: m.group(1) + S['card'] + m.group(2), idx, flags=re.S)
+        assert n == 1, f'index.html 缺 card:{chain} 标记'
+        print(f'{S["file"]}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿')
+    open(os.path.join(R0, 'index.html'), 'w', encoding='utf-8').write(idx)

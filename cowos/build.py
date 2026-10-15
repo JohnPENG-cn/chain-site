@@ -15,11 +15,12 @@ HC=round(hsup(2027)/R['2027']['hbm']*100)          # 2027 HBM 满足率（可见
 CC=round(R['2027']['s']/R['2027']['d']*100)        # 2027 CoWoS 满足率（同一口径）
 HS26,HS27=hsup(2026),hsup(2027)
 S=lambda *a:','.join(map(str,a))
+GOV=__import__('re').search(r"^GOV = '(.*)'$",open(P('cowos','page.py'),encoding='utf-8').read(),__import__('re').M).group(1)
 J={}
 J['meta']=dict(id='cowos',name='CoWoS 先进封装',version='v0.3',updated='2026-10-15',schema='chain/v1',
   unit='需求与产能用 12 寸 CoWoS 晶圆（片/月、片/年）；出货用颗（封装）；HBM 用 GB/EB。')
 J['judgment']=dict(
- title='2027 年卡住 AI 芯片的，<br>不再是 CoWoS，而是载板和 HBM',
+ title=GOV,   # 中心思想只写在 cowos/page.py 一处（页面 h1、首页卡片、这里同一句）
  dek=f'CoWoS 产能三年涨了 9 倍，2027 年还要再涨约七成，总量缺口收窄到个位数。但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，<b>片数涨得比颗数快得多</b>；而 HBM、ABF 基板的扩产速度只有 CoWoS 的一半左右。HBM 页 v0.4 按券商产量重新校准后，HBM 供给比上一版高约五成：2027 年 HBM 够出货所需的约 {HC}%，CoWoS 约 {CC}%，两者都只略紧、差距在误差内；约束模型里最紧的是 ABF 载板（数据最弱，估）。',
  stats=[dict(id='cwHGap',n=f"{R['2027']['gap']:+.0f}%",l='2027 CoWoS 缺口/需求（可见出货口径）',tag='估'),
         dict(id='cwHHbm',n=f'约 {HC}%',l='2027 HBM 可供量 ÷ CoWoS 出货所需 HBM',tag='估'),
@@ -232,7 +233,7 @@ j['falsify']=[
 j['tornado_note']='要害变量：① 每片可封颗数（面积通胀）——只有 H100、B200 两个公开锚点，其余是估；② HBM 可供量——两条链的结论都取决于它。研究时间主要花在这两个变量上。'
 if not any(p['id']=='C8' for p in j['predictions']):
   j['predictions'].append({'id':'C8','text':'四大云厂商（亚马逊、谷歌、微软、Meta）首次给出的 2027 年资本开支指引合计 ≥ 8,500 亿美元（2026 年中值约 7,325 亿，+16%）','due':'2027-02-15','check':'各公司 4Q26 财报电话会','status':'pending'})
-j['meta']['version']='v0.2'
+j['meta']['version']='v0.3'   # 修正：合并旧 ext_v02 时遗留，曾把版本写回 v0.2
 cl=j['changelog']
 if not any(c[1]=='v0.2' for c in cl):cl.insert(0,['2026-10-15','v0.2','新增：要害变量龙卷风图、关键玩家与博弈、反方证据/证伪条件表、需求上一层（云厂商资本开支、积压订单、AI 回报），预测 C8。'])
 
@@ -244,6 +245,7 @@ for i,t,u in [(41,'电子新闻 ETNews 2025-07-30：韩美半导体 TC 键合机
  (43,'The Elec 2025-03-14：SK 海力士 2025 年计划采购约 80 台 TC 键合机，每条 HBM 线 2 台','https://www.thelec.net/news/articleView.html?idxno=5189')]:
   if i not in ids:S.append({'id':i,'t':t,'u':u})
 if not any(c[1]=='v0.3' for c in cl):cl.insert(0,['2026-10-15','v0.3',f'跟随 HBM 页 v0.4 重新校准：HBM 供给上修约五成，2027 年 HBM 满足率约 61% → {HC}%；结论由"短板是 HBM"改为"最紧是 ABF 载板（估），HBM 与 CoWoS 都只略紧"。CoWoS 与 HBM 满足率改为同一口径（可见出货）比较。构建合并为 cowos/build.py（重跑不丢来源 41–43）。'])
+if not any(c[1]=='v0.3 · 版式' for c in cl):cl.insert(0,['2026-10-15','v0.3 · 版式','页面改为与 HBM 页同一模板：上半结论层（SCQA、中心思想、3 条论点：量 / 利润 / 时点，证据卡、可能错在哪、预测台账），下半底稿按 SOP 13 步全部展开；证据卡与底稿步骤双向链接；约束迁移预测 T 系列移入预测台账。<b>数字未改</b>；修正 data/cowos.json 版本号（曾被旧扩展代码写回 v0.2）。'])
 json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
 # ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）
 T=json.load(open(P('data','toc.json')))

@@ -98,8 +98,6 @@ fetch('data/hbm.json').then(r=>r.json()).then(j=>{M=j;
  document.querySelectorAll('#fMk button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#fMk button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mk=b.dataset.m;drawNet()});
  render()});
 addEventListener('resize',()=>Object.values(charts).forEach(c=>c.resize()));
-const secs=[...document.querySelectorAll('main section')],na=[...document.querySelectorAll('#nav a')];
-addEventListener('scroll',()=>{let k=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<140)k=i});na.forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+secs[k].id));const on=na.find(a=>a.classList.contains('on'));if(on)on.scrollIntoView({block:'nearest',inline:'center'})},{passive:true});
 
 function fillStatic(){const sr=x=>/^[\d,]+$/.test(x)?`<span class="tag t-src">源${x}</span>`:x=='—'?'':x;
  $('#upd').textContent=M.updated;$('#srcN').textContent=M.sources.length;

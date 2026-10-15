@@ -58,14 +58,11 @@ function drawIf(r){const c=CH.C('cw-cIf'),ys=[2026,2027];if(!H){$('#cw-ifTxt').t
   series:[{name:'CoWoS 供给 ÷ 可见出货所需',type:'bar',markLine:{silent:true,symbol:'none',data:[{yAxis:1}],lineStyle:{type:'dashed',color:V('--mut')},label:{formatter:'100%',color:V('--mut')}},data:cov.map(x=>+x.c.toFixed(3)),color:'#5b8def',label:{show:true,position:'top',formatter:p=>(p.value*100).toFixed(0)+'%',color:V('--fg')}},{name:'HBM 供给 ÷ CoWoS 出货所需（HBM 页基准）',type:'bar',data:cov.map(x=>+x.h.toFixed(3)),color:'#d9534f',label:{show:true,position:'top',formatter:p=>(p.value*100).toFixed(0)+'%',color:V('--fg')}},{name:'同上，HBM 供给 ×1.08（KGI 口径）',type:'bar',data:cov.map(x=>+x.h2.toFixed(3)),color:'#f0a8a6',label:{show:!CH.mob(),position:'top',formatter:p=>(p.value*100).toFixed(0)+'%',color:V('--fg')}}]});
  const x=cov[1],bind=x.h<x.c?'HBM':'CoWoS',pp=Math.abs(x.c-x.h)*100;$('#cwHHbm').textContent='约 '+(x.h*100).toFixed(0)+'%';
  $('#cw-ifTxt').innerHTML=`2027（同一口径：KGI 可见出货）：CoWoS 够 <b>${(x.c*100).toFixed(0)}%</b>，HBM 够 <b>${(x.h*100).toFixed(0)}%</b>（按 KGI 供给 +45–50% 口径 ${(x.h2*100).toFixed(0)}%）→ <b>${bind}</b> 略紧，两者只差 ${pp.toFixed(0)} 个百分点，在模型误差内。对客户需求口径，CoWoS 只够 ${(x.cu*100).toFixed(0)}%。HBM 供给直接读自 HBM 页的模型（${r[2027].hs.toFixed(2)} EB），出货所需 ${r[2027].hbm.toFixed(2)} EB。`}
-function drawDrv(){const D=J.driver,c=CH.C('cw-cDrv'),cl={'亚马逊':'#ff9900','微软':'#5b8def','谷歌':'#26a69a','谷歌云':'#26a69a'};
- c.setOption({...CH.base(),legend:{top:0,textStyle:{color:V('--fg'),fontSize:10},itemWidth:14,itemGap:6},grid:{left:40,right:40,top:CH.mob()?100:64,bottom:30},xAxis:{data:D.q,axisLabel:{interval:3}},yAxis:[{name:'资本开支',nameTextStyle:{align:'left'},...CH.ax()},{name:'积压订单',nameTextStyle:{align:'right'},splitLine:{show:false}}],tooltip:{trigger:'axis',confine:true},
-  series:Object.keys(D.capex).map(k=>({name:k+' 资本开支',type:'bar',stack:'c',data:D.capex[k].map(v=>+(v/1000).toFixed(1)),itemStyle:{color:cl[k],opacity:.8}})).concat(Object.keys(D.backlog).map(k=>({name:k+' 积压订单',type:'line',yAxisIndex:1,showSymbol:false,data:D.backlog[k],lineStyle:{width:2,type:'dashed'},color:cl[k]})))});
- CH.table('#cw-drvT tbody',D.facts,2)}
-function render(){if(H&&T){if(tocDraw)tocDraw();else tocDraw=TOC.render('cw','#cw-toc',J,H,T)}drawDrv();drawBal();drawCap();drawMix();drawInf();drawPool();drawMar();drawBt();drawXc();drawCl();CH.net('cw-cNet','#cw-nodeInfo',J.companies,mk)}
+function drawDrv(){CH.driver('cw-cDrv','#cw-drvT tbody',J.driver)}
+function render(){if(H&&T){if(tocDraw)tocDraw();else tocDraw=TOC.render('cw','#cw-toc',J,H,T,{ledger:'#cw-tpred'})}drawDrv();drawBal();drawCap();drawMix();drawInf();drawPool();drawMar();drawBt();drawXc();drawCl();CH.net('cw-cNet','#cw-nodeInfo',J.companies,mk)}
 window.redraw=render;
 let T,tocDraw=null;Promise.all([fetch('data/cowos.json').then(r=>r.json()),fetch('data/hbm.json').then(r=>r.json()).catch(()=>null),fetch('data/toc.json').then(r=>r.json())]).then(([j,h,t])=>{J=j;H=h;T=t;
- $('#cw-upd').textContent=J.meta.updated;$('#cw-title').innerHTML=J.judgment.title;$('#cw-dek').innerHTML=J.judgment.dek;CH.stats('#cw-stats',J.judgment.stats);CH.debates('#cw-deb',J.debates);
+ $('#cw-upd').textContent=J.meta.updated;CH.stats('#cw-stats',J.judgment.stats);CH.debates('#cw-deb',J.debates);
  CH.table('#cw-varT tbody',J.variants,5);CH.table('#cw-procT tbody',J.process,3);CH.table('#cw-capT tbody',J.cap_src,5);CH.table('#cw-ppwT tbody',J.ppw,-1);
  CH.table('#cw-capexT tbody',J.profit.capex,2);CH.table('#cw-ucT tbody',J.profit.unit_cost,2);
  CH.neck('#cw-neck',J.neck);CH.timeline('#cw-tl1',J.history.tl1,'');CH.timeline('#cw-tl2',J.history.tl2,'h');$('#cw-rule').textContent=J.history.rule;
@@ -76,4 +73,4 @@ let T,tocDraw=null;Promise.all([fetch('data/cowos.json').then(r=>r.json()),fetch
  CH.sources('#cw-srcL',J.sources);CH.list('#cw-lim',J.limits);CH.table('#cw-logT tbody',J.changelog,-1);
  ['cap','os','ut','ppw','dem','hbm'].forEach(k=>document.getElementById('cw-'+k).addEventListener('input',drawBal));
  CH.segFilter('#cw-fMk',m=>{mk=m;CH.net('cw-cNet','#cw-nodeInfo',J.companies,mk)});render()});
-CH.scrollspy();
+

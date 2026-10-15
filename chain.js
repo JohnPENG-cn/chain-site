@@ -62,3 +62,31 @@ CH.players=(el,P)=>{CH.$(el).innerHTML=P.map(p=>`<div class="card"><div style="d
  <div class="note" style="color:var(--fg)"><b>行为改变的信号</b>　${CH.srcInline(p.signal)}</div></div>`).join('')};
 /* 反方证据/证伪条件：[{j, counter, falsify, ind, th, now, st}]，st = ok | watch | hit */
 CH.falsify=(tb,F)=>{const S={ok:['未触发','var(--ok)'],watch:['需盯紧','var(--warn)'],hit:['已触发','var(--acc)']};CH.$(tb).innerHTML=F.map(x=>{const s=S[x.st]||S.ok;return`<tr><td><b>${x.j}</b></td><td>${CH.srcInline(x.counter)}</td><td>${CH.srcInline(x.falsify)}</td><td>${CH.srcInline(x.ind)}<div class="note">阈值：${x.th}</div></td><td>${CH.srcInline(x.now)}</td><td><span class="pill" style="color:${s[1]}">${s[0]}</span></td></tr>`}).join('')};
+/* ===== 统一模板（SOP 页面规范 v1.4）共用组件 ===== */
+/* 镜像图：结论层的"主证据图"是底稿里原图的只读副本。原图每次 setOption 后，把完整 option 复制过去（含滑块、深浅色重画）。 */
+CH._mir={};CH._mi={};CH._mt={};
+(function(){if(!window.echarts)return;const init0=echarts.init.bind(echarts);
+ echarts.init=function(dom,th,op){const c=init0(dom,th,op),so=c.setOption.bind(c);
+  c.setOption=function(o,...a){const r=so(o,...a);const d=dom&&CH._mir[dom.id];if(d){clearTimeout(CH._mt[d]);CH._mt[d]=setTimeout(()=>CH._copy(c,d),30)}return r};return c};
+ CH._copy=(c,d)=>{const el=document.getElementById(d);if(!el||c.isDisposed())return;let m=CH._mi[d];if(!m||m.isDisposed())m=CH._mi[d]=init0(el,null,{renderer:'svg'});m.setOption(c.getOption(),true)};
+ document.querySelectorAll('[data-mirror]').forEach(el=>{CH._mir[el.dataset.mirror]=el.id});
+ addEventListener('resize',()=>Object.values(CH._mi).forEach(m=>m.isDisposed()||m.resize()))})();
+/* 镜像数字：<b data-from="gap"> 跟随原元素文字（原元素由页面脚本实时算）。 */
+CH.mirrorText=()=>document.querySelectorAll('[data-from]').forEach(function bind(el,_,__,n=0){const s=document.getElementById(el.dataset.from);if(!s){if(n<40)setTimeout(()=>bind(el,0,0,n+1),250);return}const f=()=>{if(s.textContent.trim())el.textContent=s.textContent};f();new MutationObserver(f).observe(s,{childList:true,characterData:true,subtree:true})});
+/* 两层导航：结论层 / 底稿 13 步。滚动时自动切换层并高亮当前节。 */
+CH.pyrNav=()=>{const nav=document.getElementById('nav');if(!nav||!nav.classList.contains('two'))return;
+ const secs=[...document.querySelectorAll('main [data-nav]')],links=[...nav.querySelectorAll('.links a')],tiers=[...nav.querySelectorAll('.tiers a')];
+ let cur='';const upd=()=>{let k=0;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<150)k=i});const s=secs[k];if(!s||s.id==cur)return;cur=s.id;const t=s.dataset.nav;
+  nav.dataset.tier=t;tiers.forEach(a=>a.classList.toggle('on',a.dataset.t==t));links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+s.id));
+  const on=links.find(a=>a.classList.contains('on'));if(on){const box=on.parentElement;box.scrollTo({left:on.offsetLeft-box.clientWidth/2+on.clientWidth/2,behavior:'smooth'})}};
+ addEventListener('scroll',upd,{passive:true});addEventListener('load',upd);upd()};
+/* 折叠块（只剩来源、更新记录）：点到里面的锚点（#srcN、#log）先展开。 */
+CH.autoOpen=()=>{const open=h=>{if(!h||h.length<2)return;let t;try{t=document.querySelector(h)}catch(e){return}const d=t&&(t.tagName=='DETAILS'?t:t.closest('details'));if(d&&!d.open)d.open=true};
+ document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a)open(a.getAttribute('href'))},true);
+ addEventListener('load',()=>{if(location.hash){open(location.hash);const t=document.querySelector(location.hash);if(t)setTimeout(()=>t.scrollIntoView(),60)}});addEventListener('hashchange',()=>open(location.hash))};
+/* 需求的上一层：云厂商资本开支（柱）与积压订单（虚线）。srcHref 给出时，来源列链接到别的页面（如 HBM 页引用 CoWoS 页来源）。 */
+CH.driver=(id,tbl,D,o={})=>{const c=CH.C(id),cl={'亚马逊':'#ff9900','微软':'#5b8def','谷歌':'#26a69a','谷歌云':'#26a69a'};
+ c.setOption({...CH.base(),legend:{top:0,textStyle:{color:CH.V('--fg'),fontSize:10},itemWidth:14,itemGap:6},grid:{left:40,right:40,top:CH.mob()?100:64,bottom:30},xAxis:{data:D.q,axisLabel:{interval:3}},yAxis:[{name:'资本开支',nameTextStyle:{align:'left'},...CH.ax()},{name:'积压订单',nameTextStyle:{align:'right'},splitLine:{show:false}}],tooltip:{trigger:'axis',confine:true},
+  series:Object.keys(D.capex).map(k=>({name:k+' 资本开支',type:'bar',stack:'c',data:D.capex[k].map(v=>+(v/1000).toFixed(1)),itemStyle:{color:cl[k],opacity:.8}})).concat(Object.keys(D.backlog).map(k=>({name:k+' 积压订单',type:'line',yAxisIndex:1,showSymbol:false,data:D.backlog[k],lineStyle:{width:2,type:'dashed'},color:cl[k]})))});
+ if(o.srcHref)CH.$(tbl).innerHTML=D.facts.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${String(r[2]).split(',').map(n=>`<a class="tag t-src" title="CoWoS 页来源" href="${o.srcHref}${n}">源${n}</a>`).join(' ')}</td></tr>`).join('');else CH.table(tbl,D.facts,2)};
+CH.mirrorText();CH.pyrNav();CH.autoOpen();
