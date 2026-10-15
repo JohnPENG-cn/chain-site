@@ -263,10 +263,13 @@ S=J['sources'];ids={x['id'] for x in S}
 for i,t,u in CN.pop('sources'):
   if i not in ids:S.append({'id':i,'t':t,'u':u})
 J['cn']=CN
+for i,t,u in [(63,'톱스타뉴스 2026-10（汇总韩国券商）：키움증권估 CoWoS 产能 12 万 → 15 万片/月，HBM 2027 年需求 +56%、产量 +50%','https://www.topstarnews.net/news/articleView.html?idxno=16160242')]:
+  if i not in {x['id'] for x in S}:S.append({'id':i,'t':t,'u':u})
 _ids={x['id'] for x in S};_bad=sorted({int(n) for n in __import__('re').findall(r'源(\d+)',json.dumps(CN,ensure_ascii=False)+open(P('cowos','page.py'),encoding='utf-8').read()) if int(n) not in _ids})
 assert not _bad,f'CoWoS 中国账本引用了不存在的来源 {_bad}'
 J['meta']['version']='v0.4'
 if not any(c[1]=='v0.4' for c in cl):cl.insert(0,['2026-10-15','v0.4','新增中国账本（SOP v1.5 两本账）：国产 AI 卡只能在大陆做的 2.5D 封装。台积电通道 2024-11 / 2025-01 关闭；按 HBM 页中国账本能配的卡算，2026 年国产 2.5D 和 HBM 一样紧，2027 年国内产能翻倍后让位给 HBM；ABF 膜是下一个卡点（数据弱）。新增来源 44–62、预测 N1–N5、证伪 CJ1–CJ3。产能数字主要来自调研纪要，标为弱证据。'])
+if not any(c[1]=='v0.4.1' for c in cl):cl.insert(0,['2026-10-15','v0.4.1','页面最上方新增"逻辑层"（SOP v1.6）：三个问题（全球 + 中国）、三句话逻辑、一张图看懂、主流观点 vs 我们（新增来源 63：韩国券商口径）、我们重点盯什么。数字不变。'])
 for r in CN['bal']:print('中国 2.5D',r['y'],'供给 %.0f 千片 / 不缺货需求 %.0f / HBM 能配需求 %.0f，覆盖 %.0f%%（%.0f%%），能封 %.2fM 张 vs HBM 能配 %.2fM'%(r['s'],r['du'],r['dh'],r['cov']*100,r['covh']*100,r['cards'],r['hcards']))
 json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
 # ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）

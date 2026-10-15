@@ -484,6 +484,26 @@
    "id": 97,
    "t": "Tom's Hardware 2026-03：Atlas 350 配 112GB 华为自研 HiBL 1.0、1.4TB/s；内存供应商未知",
    "u": "https://www.tomshardware.com/pc-components/gpus/huawei-unveils-new-atlas-350-ai-accelerator-with-1-56-pflops-of-fp4-compute-and-up-to-112gb-of-hbm-claims-2-8x-more-performance-than-nvidias-h20"
+  },
+  {
+   "id": 98,
+   "t": "路透 2026-07-10 专访：SK 海力士 CEO 郭鲁正称 2027 年将是\"业界史上供给最紧的一年\"，客户需求到 2030 年后仍高于产能（路透需登录，据搜索摘要）",
+   "u": "https://www.reuters.com/world/asia-pacific/sk-hynix-ceo-sees-worst-ever-memory-supply-shortage-2027-says-demand-outstrip-2026-07-10/"
+  },
+  {
+   "id": 99,
+   "t": "톱스타뉴스 2026-10（汇总韩国券商）：키움증권估 2027 年 HBM 需求 534 亿 Gb（+56%），产量只 +50%，缺口扩大，HBM4 均价 +65%；HBM 产能 53 万 → 79 万片/月，CoWoS 12 万 → 15 万片/月",
+   "u": "https://www.topstarnews.net/news/articleView.html?idxno=16160242"
+  },
+  {
+   "id": 100,
+   "t": "韩国经济 2026-10-14：摩根大通称存储短缺持续到 2028 年（标题）；Hilo 转述同一报告：2027/28 年 HBM 混合均价 +54%/+25%",
+   "u": "https://www.hankyung.com/article/202610142408i"
+  },
+  {
+   "id": 101,
+   "t": "NoCut News 2026-10：存储\"售罄到 2028 年\"；美光 CEO Mehrotra 称 2027、2028 年需求都将超过供给；TrendForce 称新产能 2028 年才实质放量",
+   "u": "https://en.nocutnews.co.kr/news/6586071"
   }
  ],
  "prices": {
@@ -792,6 +812,11 @@
   "ASMPT": "先进封装 5.32 亿美元，占 2025 年营收约 30%；TCB 收入创纪录"
  },
  "changelog": [
+  [
+   "2026-10-15",
+   "v0.5.2",
+   "页面最上方新增\"逻辑层\"（SOP v1.6）：三个问题（供需怎么走 / 制约是什么 / 预期差在哪，全球 + 中国）、三句话逻辑、一张图看懂、主流观点 vs 我们（新增来源 98–101：SK 海力士 CEO、韩国券商、摩根大通、美光 CEO 的公开说法）、我们重点盯什么。数字不变。"
+  ],
   [
    "2026-10-15",
    "v0.5.1",

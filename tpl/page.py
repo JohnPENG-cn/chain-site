@@ -1,5 +1,6 @@
 """统一页面模板（SOP 页面规范 v1.4）。hbm.html、cowos.html 都由这里生成，不要手改这两个 HTML。
-结构：上半 = 结论层（金字塔：SCQA → 中心思想 → 3 条论点卡 → 每条论点的证据块 → 可能错在哪 → 预测台账）；
+结构：最上 = 逻辑层（v1.6：三个问题 + 三句话逻辑 + 一张图 + 主流观点 vs 我们 + 我们重点盯什么，手机第一屏）；
+     其下 = 结论层（金字塔：SCQA → 中心思想 → 3 条论点卡 → 每条论点的证据块 → 可能错在哪 → 预测台账）；
      下半 = 底稿（SOP 13 步，按 SOP 顺序全部展开）；只有来源、更新记录折叠。
 证据块 ↔ 底稿步骤的双向链接由模板根据 spec 自动生成，两页结构不会漂移。
 两本账（SOP v1.5）：spec 有 cn=dict(...) 时，结论层在全球论点后加平行的中国账本（#cn、#c1..），
@@ -19,6 +20,23 @@ MID = dict(zip([s[0] for s in STEPS], ['要害变量', '核心争议', '边界�
 CIRC = '①②③④'
 CNC = '❶❷❸❹'   # 中国账本论点用实心圈，和全球账本区分
 CN_REQ = ['demand', 'supply', 'balance', 'neck', 'play', 'map']   # SOP v1.5：有中国账本的链，这 6 步必须各有中国块
+
+
+LQ = ('① 未来整体供需怎么走', '② 制约它的是什么', '③ 哪里有没被看到的预期差')
+
+
+def flow(nodes):
+    """一张图看懂：竖排流程图（SVG，颜色全用 CSS 变量，深浅色自动跟随）。nodes = [(标题, 一行说明)]，最后一个是约束。"""
+    W, h, g, y, o = 340, 52, 24, 4, []
+    for i, (t, d) in enumerate(nodes):
+        last = i == len(nodes) - 1
+        o.append(f'<rect x="10" y="{y}" width="{W-20}" height="{h}" rx="12" class="{"fk" if last else "fn"}"/>'
+                 f'<text x="{W//2}" y="{y+22}" class="ft">{t}</text><text x="{W//2}" y="{y+41}" class="fd">{d}</text>')
+        if not last:
+            ya = y + h
+            o.append(f'<path d="M{W//2} {ya+3} V{ya+g-5}" class="fa"/><path d="M{W//2-5} {ya+g-10} L{W//2} {ya+g-4} L{W//2+5} {ya+g-10}" class="fa"/>')
+        y += h + g
+    return f'<svg class="flow" viewBox="0 0 {W} {y-g+8}" role="img" aria-label="一张图看懂">{"".join(o)}</svg>'
 
 
 def render(S):
@@ -47,6 +65,10 @@ def render(S):
     for st, lst in back.items():
         if st not in ('ledger',) and not lst and not S['steps'][[x[0] for x in STEPS].index(st)].get('ctx'):
             raise SystemExit(f"{S['file']}: 底稿第 {SID[st][1]} 步 {st} 没有支撑任何论点（如确属背景材料，spec 里标 ctx）")
+    L = S['logic']   # v1.6：逻辑层必须有
+    assert len(L['qa']) == 3 and len(L['three']) == 3, '逻辑层：恰好 3 个问题、三句话'
+    assert 3 <= len(L['watch']) <= 5 and len(L['cons']) >= 3, '逻辑层：盯 3–5 项，主流 vs 我们至少 3 行'
+    assert all(len(r) == 4 for r in L['watch']) and all(len(r) == 5 for r in L['cons'])
     o = []
     w = o.append
     w(f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -56,16 +78,26 @@ def render(S):
 <header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="{S['other'][0]}">{S['other'][1]}</a><span class="pill">{S['pill']}</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
 ''')
     # 两层导航
-    t1 = [('top', '结论')] + [(f'a{i}', f'{CIRC[i-1]} {a["tag"]}') for i, a in enumerate(args, 1)]
+    t1 = [('logic', '逻辑'), ('top', '结论')] + [(f'a{i}', f'{CIRC[i-1]} {a["tag"]}') for i, a in enumerate(args, 1)]
     if cn:
         t1 += [('cn', cn['nav'])] + [(f'c{i}', f'{CNC[i-1]} {a["tag"]}') for i, a in enumerate(cn['args'], 1)]
     t1 += [('wrong', '可能错在哪'), ('pred', '预测台账')]
     t2 = [('base', '总览')] + [(s[0], f'{s[1]} {s[2]}') for s in STEPS] + [('src', '来源')]
-    w('<nav class="sec two" id="nav" data-tier="c"><div class="wrap navw"><span class="tiers"><a href="#top" data-t="c" class="on">结论层</a><a href="#base" data-t="b">底稿 13 步</a></span>')
+    w('<nav class="sec two" id="nav" data-tier="c"><div class="wrap navw"><span class="tiers"><a href="#logic" data-t="c" class="on">结论层</a><a href="#base" data-t="b">底稿 13 步</a></span>')
     w('<span class="links l-c">' + ''.join(f'<a href="#{i}">{t}</a>' for i, t in t1) + '</span>')
     w('<span class="links l-b">' + ''.join(f'<a href="#{i}">{t}</a>' for i, t in t2) + '</span></div></nav>\n<main class="wrap">\n')
+    # ⓪ 逻辑层：三个问题（全球 + 中国）→ 三句话 + 一张图 → 主流 vs 我们 → 我们重点盯什么
+    w(f'<section id="logic" data-nav="c" class="logic"><div class="kicker">逻辑层 · 先看这一屏 · 往下是<a href="#top">结论层</a>和<a href="#base">底稿</a></div>\n<h1 class="lgt">{L["title"]}</h1>\n<div class="q3">')
+    for q, (g, c) in zip(LQ, L['qa']):
+        w(f'<div class="qa"><div class="qn">{q}</div><p class="ag"><i>全球</i>{g}</p><p class="ac"><i>中国</i>{c}</p></div>')
+    w(f'</div>\n<p class="note terms">{L["terms"]}</p>\n<div class="grid g2 lg2"><div class="card"><b>三句话逻辑</b><ol class="three">' + ''.join(f'<li>{x}</li>' for x in L['three']) + '</ol></div>')
+    w('<div class="card"><b>一张图看懂</b><div class="keys">' + ''.join(f'<div><b>{v}</b><span>{k}</span></div>' for v, k in L['keys']) + f'</div>{flow(L["fig"])}<div class="note">{L["fig_note"]}</div></div></div>\n')
+    w('<h3>主流观点 vs 我们</h3><p class="sub">左边是券商、研究机构、韩媒的公开说法（带来源）；"差距"一栏就是预期差。</p><div class="tbl"><table class="stack cons"><thead><tr><th>主流观点</th><th>我们</th><th>差距</th><th>证据</th><th>什么能确认</th></tr></thead><tbody>'
+      + ''.join('<tr>' + ''.join(f'<td>{x}</td>' for x in r) + '</tr>' for r in L['cons']) + '</tbody></table></div>\n')
+    w('<h3>我们重点盯什么</h3><div class="tbl"><table class="stack watch"><thead><tr><th>盯什么</th><th>指标</th><th>阈值 → 含义</th><th>日期</th></tr></thead><tbody>'
+      + ''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td style="white-space:nowrap">{d}</td></tr>' for a, b, c, d in L['watch']) + '</tbody></table></div>\n</section>\n')
     # ① SCQA + ② 中心思想 + ③ 论点卡
-    w(f'<section id="top" data-nav="c" style="padding-top:24px">\n<div class="kicker">{S["kicker"]} · <a href="#log">更新记录</a></div>\n<div class="scqa">')
+    w(f'<section id="top" data-nav="c">\n<div class="kicker">结论层 · {S["kicker"]} · <a href="#log">更新记录</a></div>\n<div class="scqa">')
     for lab, txt in zip(('背景', '冲突', '问题'), S['scqa']):
         w(f'<div><b>{lab}</b><span>{txt}</span></div>')
     w(f'</div>\n<div class="kicker" style="margin-top:18px">回答 · 中心思想</div>\n<h1 class="gov" style="margin-top:.2em">{S["gov"]}</h1>\n<div class="kl">')
