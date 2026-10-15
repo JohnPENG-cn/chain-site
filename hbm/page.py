@@ -8,9 +8,9 @@ def S(x):  # 来源胶囊
 E = '<span class="tag t-est">估</span>'
 
 SPEC = dict(
- file='hbm.html', title='HBM 产业链', pill='HBM v0.5', other=('cowos.html', 'CoWoS ⇄'),
+ file='hbm.html', title='HBM 产业链', pill='HBM v0.5.1', other=('cowos.html', 'CoWoS ⇄'),
  scripts=['toc.js', 'hbm.js', 'hbm_x.js', 'hbm_cn.js'],
- kicker='HBM 小链 · v0.5 · 更新 <span id="upd">2026-10-15</span> · 下游接 <a href="cowos.html">CoWoS 小链</a>',
+ kicker='HBM 小链 · v0.5.1 · 更新 <span id="upd">2026-10-15</span> · 下游接 <a href="cowos.html">CoWoS 小链</a>',
  card=f'全球账本：2027 年 HBM 只是略紧（缺约 {HGAP}%），涨价靠的是 DDR5 抢晶圆；周期顶部看 2027 年下半年。中国账本：2026 年国产 AI 芯片能用上的 HBM 只够需求约 {CC26}%，严重短缺{E}',
  scqa=[
   'AI 加速器每颗要 192–432GB HBM（B300/Rubin 288GB、MI450 432GB）。HBM 和普通 DRAM 用同一批晶圆，三家原厂（海力士、三星、美光）决定给 HBM 分多少。',
@@ -78,7 +78,7 @@ SPEC = dict(
     sub=f'按约束理论（TOC）把每一环换成"能配多少张国产卡"，取最小值。HBM 最少；逻辑芯片有台积电代工的 die bank 超过 290 万颗加中芯产出 {S(72)}。',
     hero=dict(src='cn-cCx', step='supply', t='HBM 投片：长鑫 vs 韩美三家（千片/月，年底）', h=300, note=f'韩美三家为 UBS 口径 {S(63)}，长鑫为 SemiAnalysis 口径 {S(73)}（另一口径 2026 年 6 万片 {S(88)}）。'),
     ev=[
-     dict(t='TOC：换成同一单位，HBM 最少', b=f'2026 年可用 HBM 只能配约 {CK26:.2f} 百万张卡 {E}；SemiAnalysis 判断没有外国 HBM，华为 2026 年做不出 100 万颗昇腾 {S(72)}。先进封装没有可靠公开数据。', steps=['neck']),
+     dict(t='TOC：换成同一单位，HBM 最少', b=f'2026 年可用 HBM 只能配约 {CK26:.2f} 百万张卡 {E}；SemiAnalysis 判断没有外国 HBM，华为 2026 年做不出 100 万颗昇腾 {S(72)}。2.5D 封装按 <a href="cowos.html#cn">CoWoS 页中国账本</a>估算，2026 年和 HBM 几乎一样紧（加上 950PR 都约 180 万张卡），2027 年不再是约束 {E}。', steps=['neck']),
      dict(t='晶圆：长鑫按经济账不愿多做 HBM', b=f'普通 DRAM 每片位元约是 HBM 3 倍、毛利更高；2025 年约 99% 收入是 DDR/LPDDR，招股书没有 HBM 募投项目 {S(73)}。HBM 投片 2025 年底约 5K → 2026 年底约 30K（另一口径 60K {S(88)}）。', steps=['supply', 'play']),
      dict(t='良率：TSV 与堆叠是瓶颈', b=f'HBM3 8 层前段约 35% × 后段约 70% ≈ 综合约 25%，12 层更低 {S("73,80")}；对照：成熟 1z 节点前段良率 85–90% {S(73)}。', steps=['supply', 'neck']),
      dict(t='设备与制程：买得到，但爬坡慢', b=f'TSV 刻蚀部分受控（Lam 受控、TEL 不受控），韩美 TCB 受限 {S("74,72")}；国产 TCB（快克智能）仍在打样、未出单 {S(87)}；北方华创 2026-03 发布混合键合机 {S(74)}。G4 ≈ 1z、G5 ≈ 1a 不用 EUV 也能做，2028 年前不是主约束 {S(73)}。', steps=['neck', 'map']),
@@ -175,7 +175,7 @@ SPEC = dict(
 <div class="grid g2" style="margin-top:14px"><div class="card"><b>每 GB 耗用晶圆面积（相对 DDR5）</b><div id="cCost" class="chart" style="height:300px"></div><div class="note">前三步来自 TrendForce 2024 {S(25)}；HBM4 一步按美光"约 3 倍"倒推 {E}{S(9)}。</div></div>
 <div class="card"><b>成本与资本开支要点</b><table id="costF" style="margin-top:6px"><tbody></tbody></table><p style="font-size:15px;margin:.8em 0 0" id="parity"></p><div class="note">晶圆等价线是 Kiko 的推算 {E}：DDR5 固定价是 PC 颗粒口径，服务器 RDIMM 不同；HBM 长约的确定性也值钱。</div></div></div>'''),
   dict(id='neck',
-  cn=dict(h='中国的约束：换成"能配多少张国产卡"，HBM 最少', body=f'''<div class="tbl"><table id="cn-tocT" class="stack"><thead><tr><th>环节</th><th>2026 年能支撑</th><th>依据</th><th>判断</th></tr></thead><tbody></tbody></table></div>
+  cn=dict(h='中国的约束：换成"能配多少张国产卡"，HBM 最少，2.5D 封装几乎一样紧', body=f'''<div class="tbl"><table id="cn-tocT" class="stack"><thead><tr><th>环节</th><th>2026 年能支撑</th><th>依据</th><th>判断</th></tr></thead><tbody></tbody></table></div>
 <div class="grid g2" style="margin-top:12px"><div class="card"><div id="cn-cCov" class="chart" style="height:300px"></div><div class="note">实线 = 可用 ÷ 不缺货需求；虚线 = 可用 ÷ 机构出货口径。跟随第 5 步中国块滑块。</div></div>
 <div class="card"><b>国产化时间表（约束什么时候松）</b><div class="tl" style="margin-top:10px" id="cn-tl"></div></div></div>'''),
   h='约束推导：换成同一单位后，2027 年 HBM 不是最紧的一环', sub='按约束理论（TOC）把 DRAM 晶圆、CoWoS、键合机、载板、电力都换成"百万颗 AI 加速器封装/季"，每季取最小值；与 CoWoS 页共用同一个模型。', body=f'''<div id="hx-toc"></div>

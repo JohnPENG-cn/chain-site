@@ -247,6 +247,27 @@ for i,t,u in [(41,'电子新闻 ETNews 2025-07-30：韩美半导体 TC 键合机
 if not any(c[1]=='v0.3' for c in cl):cl.insert(0,['2026-10-15','v0.3',f'跟随 HBM 页 v0.4 重新校准：HBM 供给上修约五成，2027 年 HBM 满足率约 61% → 93%；结论由"短板是 HBM"改为"最紧是 ABF 载板（估），HBM 与 CoWoS 都只略紧"。CoWoS 与 HBM 满足率改为同一口径（可见出货）比较。构建合并为 cowos/build.py（重跑不丢来源 41–43）。'])
 if not any(c[1]=='v0.3 · 版式' for c in cl):cl.insert(0,['2026-10-15','v0.3 · 版式','页面改为与 HBM 页同一模板：上半结论层（SCQA、中心思想、3 条论点：量 / 利润 / 时点，证据卡、可能错在哪、预测台账），下半底稿按 SOP 13 步全部展开；证据卡与底稿步骤双向链接；约束迁移预测 T 系列移入预测台账。<b>数字未改</b>；修正 data/cowos.json 版本号（曾被旧扩展代码写回 v0.2）。'])
 if not any(c[1]=='v0.3.1' for c in cl):cl.insert(0,['2026-10-15','v0.3.1',f'跟随 HBM 页 v0.5：长鑫产能移到 HBM 页的中国账本（只能卖给中国，KGI 出货表里也没有国产卡），不再计入全球 HBM 供给；2027 年 HBM 满足率约 93% → {HC}%，CoWoS 结论不变。'])
+# ===== v0.4 中国账本（SOP v1.5 两本账）：国产 AI 卡要用、只能在大陆做的 2.5D 封装。公式与 cowos_cn.js 一致 =====
+CN=json.load(open(P('cowos','cn.json'),encoding='utf-8'))
+HB={r['y']:r for r in H['cn']['bal']}   # HBM 页中国账本（hbm/build.py 先跑）
+def cwcn(m,o={}):
+  cap={**m['cap'],**{k:v for k,v in o.get('cap',{}).items()}};ai=o.get('ai',m['ai']);ut=o.get('ut',m['ut']);pk=o.get('ppw',1.0);out=[]
+  for y in (2025,2026,2027):
+    k=str(y);pw=m['ppw'][k]*pk;npr=m['npr'][k];h=HB[y]
+    s=(cap[str(y-1)]+cap[k])/2*12*ai*ut;u=h['u'];hc=min(h['cards'],u)
+    du=(u+npr)/pw*1000;dh=(hc+npr)/pw*1000
+    out.append(dict(y=y,s=round(s,1),du=round(du,1),dh=round(dh,1),cov=round(s/du,4),covh=round(s/dh,4),ppw=pw,cards=round(s*pw/1000,3),hcards=round(hc+npr,3)))
+  return out
+CN['bal']=cwcn(CN['model'])
+S=J['sources'];ids={x['id'] for x in S}
+for i,t,u in CN.pop('sources'):
+  if i not in ids:S.append({'id':i,'t':t,'u':u})
+J['cn']=CN
+_ids={x['id'] for x in S};_bad=sorted({int(n) for n in __import__('re').findall(r'源(\d+)',json.dumps(CN,ensure_ascii=False)+open(P('cowos','page.py'),encoding='utf-8').read()) if int(n) not in _ids})
+assert not _bad,f'CoWoS 中国账本引用了不存在的来源 {_bad}'
+J['meta']['version']='v0.4'
+if not any(c[1]=='v0.4' for c in cl):cl.insert(0,['2026-10-15','v0.4','新增中国账本（SOP v1.5 两本账）：国产 AI 卡只能在大陆做的 2.5D 封装。台积电通道 2024-11 / 2025-01 关闭；按 HBM 页中国账本能配的卡算，2026 年国产 2.5D 和 HBM 一样紧，2027 年国内产能翻倍后让位给 HBM；ABF 膜是下一个卡点（数据弱）。新增来源 44–62、预测 N1–N5、证伪 CJ1–CJ3。产能数字主要来自调研纪要，标为弱证据。'])
+for r in CN['bal']:print('中国 2.5D',r['y'],'供给 %.0f 千片 / 不缺货需求 %.0f / HBM 能配需求 %.0f，覆盖 %.0f%%（%.0f%%），能封 %.2fM 张 vs HBM 能配 %.2fM'%(r['s'],r['du'],r['dh'],r['cov']*100,r['covh']*100,r['cards'],r['hcards']))
 json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
 # ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）
 T=json.load(open(P('data','toc.json')))

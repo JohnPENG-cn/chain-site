@@ -23,3 +23,10 @@ CL26, CL27 = round(CN[2026]['covl'] * 100), round(CN[2027]['covl'] * 100)       
 CA26, CA27 = CN[2026]['a'], CN[2027]['a']                                          # 可用 EB
 CD26, CD27X = CN[2026]['d'], CN[2027]['d']
 CK26, CK27 = CN[2026]['cards'], CN[2027]['cards']                                  # 可用 HBM 能配的卡（百万张）
+# ---- CoWoS 中国账本（v0.4）：国产 AI 卡只能在大陆做的 2.5D 封装，见 cowos/build.py cwcn()
+W = {r['y']: r for r in json.load(open(_P('data', 'cowos.json')))['cn']['bal']}
+WC26, WC27 = round(W[2026]['cov'] * 100), round(W[2027]['cov'] * 100)          # 国产 AI 可用 2.5D ÷ 不缺货需求
+WH26, WH27 = round(W[2026]['covh'] * 100), round(W[2027]['covh'] * 100)        # ÷ HBM 能配的卡所需
+WS26, WS27 = W[2026]['s'], W[2027]['s']                                          # 国产 AI 可用 2.5D（千片/年）
+WK26, WK27 = W[2026]['cards'], W[2027]['cards']                                  # 2.5D 能封的卡（百万张）
+WHK26, WHK27 = W[2026]['hcards'], W[2027]['hcards']                              # HBM 能配的卡 + 950PR（百万张）

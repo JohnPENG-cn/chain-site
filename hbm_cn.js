@@ -1,6 +1,6 @@
 /* hbm_cn.js — HBM v0.5 中国账本：国产加速卡能用上的裸 HBM（需求 vs 可用 = 期初库存 + 合法进口 + 灰色渠道 + 长鑫 + 武汉新芯）。
    公式与 hbm/build.py 的 cnbal() 一致；所有 id 带 cn 前缀。数据：data/hbm.json 的 cn 字段。 */
-(function(){let M,N;const $=CH.$,Y=[2024,2025,2026,2027],E='<span class="tag t-est">估</span>';
+(function(){let M,N,CW=null;const $=CH.$,Y=[2024,2025,2026,2027],E='<span class="tag t-est">估</span>';
 const S0={g:25,w27:55,g27:165,gray:10};
 function bal(o){const m=N.model,g=o.g/100,cxw={...m.cxw,'2027':o.w27},cxg={...m.cxg,'2027':o.g27};let inv=0;const out={};
  for(const y of Y){const k=String(y);let u,gb,ul;
@@ -33,11 +33,12 @@ function draw(){if(!N)return;const o=opt(),R=bal(o),fg=CH.V('--fg'),ln=CH.V('--l
  $('#cn-supT tbody').innerHTML=Y.map(y=>{const r=R[y];return`<tr><td><b>${y}</b></td>${['inv','imp','gray','cx','xmc','a'].map(k=>`<td>${k=='a'?'<b>'+f3(r[k])+'</b>':f3(r[k])}</td>`).join('')}</tr>`}).join('');
  const dd={'2024|实际':R[2024].d,'2025|实际':R[2025].d,'2026|不缺货需求':R[2026].d,'2026|机构出货口径（下限）':R[2026].dl,'2027|不缺货需求':R[2027].d,'2027|机构出货口径（下限）':R[2027].dl};
  $('#cn-demT tbody').innerHTML=N.dem_basis.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td style="white-space:nowrap">${r[2]}</td><td>${CH.srcInline(r[3]).replace(/（估）/g,E)}</td><td><b>${f3(dd[r[0]+'|'+r[1]])}</b></td></tr>`).join('');
- $('#cn-tocT tbody').innerHTML=N.toc.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]=='__HBM__'?`约 ${Math.round(R[2026].cards*100)} 万张卡（${R[2026].a.toFixed(2)} EB ÷ ${R[2026].gb}GB）`:CH.srcInline(r[1])}</td><td>${/^源[\d,]+$/.test(r[2])?CH.tag(r[2].slice(1)):CH.srcInline(r[2]).replace('{E}',E)}</td><td><span class="pill" style="color:${r[3]=='约束'||r[3]=='约束之一'?'var(--acc)':'var(--mut)'}">${r[3]}</span></td></tr>`).join('')}
+ $('#cn-tocT tbody').innerHTML=N.toc.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]=='__HBM__'?`约 ${Math.round(R[2026].cards*100)} 万张卡（${R[2026].a.toFixed(2)} EB ÷ ${R[2026].gb}GB）`:r[1]=='__CW__'?(CW?`约 ${Math.round(CW.cards*100)} 万张卡（含不用标准 HBM 的 950PR 约 ${Math.round(CW.np*100)} 万；对照 HBM ${Math.round(R[2026].cards*100)} 万 + 950PR）`:'—'):CH.srcInline(r[1])}</td><td>${/^源[\d,]+$/.test(r[2])?CH.tag(r[2].slice(1)):CH.srcInline(r[2]).replace('{E}',E)}</td><td><span class="pill" style="color:${r[3]=='约束'||r[3]=='约束之一'?'var(--acc)':'var(--mut)'}">${r[3]}</span></td></tr>`).join('')}
 function once(){CH.timeline('#cn-tl',N.timeline);CH.players('#cnPl',N.players);CH.falsify('#cnFalT tbody',N.falsify);CH.ledger('#cnPredT tbody','#cnPredS',N.preds);
  $('#cn-coT tbody').innerHTML=N.co.map(c=>`<tr><td>${c[0]}</td><td><b>${c[1]}</b></td><td style="white-space:nowrap">${c[2]}</td><td>${c[3]}</td><td><span class="pill" style="color:${/^强/.test(c[4])?'var(--ok)':/^中/.test(c[4])?'var(--warn)':'var(--mut)'}">${c[4]}</span></td><td>${CH.tag(c[5])}</td></tr>`).join('');
  ['cns1','cns2','cns3','cns4'].forEach(id=>document.getElementById(id).addEventListener('input',draw))}
 window.cnReset=()=>{cns1.value=S0.g;cns2.value=S0.w27;cns3.value=S0.g27;cns4.value=S0.gray;draw()};
 fetch('data/hbm.json').then(r=>r.json()).then(m=>{M=m;N=m.cn;once();draw()});
+fetch('data/cowos.json').then(r=>r.json()).then(j=>{const b=j.cn.bal.find(x=>x.y==2026);CW={cards:b.cards,np:j.cn.model.npr['2026']};draw()}).catch(()=>{});
 addEventListener('load',()=>setTimeout(()=>{const o=window.redraw;window.redraw=()=>{o&&o();draw()}},0));
 })();
