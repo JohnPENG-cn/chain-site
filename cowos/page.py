@@ -57,11 +57,11 @@ LOGIC = dict(
 
 SPEC = dict(
  logic=LOGIC,
- file='cowos.html', title='CoWoS 先进封装', pill='CoWoS v0.4.1', other=('hbm.html', 'HBM ⇄'),
+ file='cowos.html', title='CoWoS 先进封装', pill='CoWoS v0.4.2', other=('hbm.html', 'HBM ⇄'),
  scripts=['toc.js', 'cowos.js', 'cowos_cn.js'],
  ledgers=[('a1', 'gl', '全球账本', f'2027 年 CoWoS 只略紧（缺约 {CGAP}%–{CGAPU}%），最紧的是载板，利润往载板迁移'),
           ('cn', 'cnl', '中国账本', f'台积电已不接国产 AI 芯片；2026 年国产 2.5D 和 HBM 一样紧（够 HBM 能配的卡约 {WH26}%），2027 年产能翻倍、让位给 HBM')],
- kicker='CoWoS 小链 · v0.4.1 · 更新 <span id="cw-upd"></span> · 上游接 <a href="hbm.html">HBM 小链</a>',
+ kicker='CoWoS 小链 · v0.4.2 · 更新 <span id="cw-upd"></span> · 上游接 <a href="hbm.html">HBM 小链</a>',
  card=f'全球账本：2027 年 CoWoS 只略紧（缺约 {CGAP}%–{CGAPU}%），最紧的是载板，设备景气还没见顶。中国账本：台积电已不接国产 AI 芯片，2026 年国产 2.5D 封装和 HBM 一样紧{E}',
  scqa=[
   'AI 加速器要把 GPU 和 HBM 放在同一块硅中介层上（2.5D 封装），台积电 CoWoS 是主力。2023–24 年 H100 缺货，卡的就是 CoWoS。',
