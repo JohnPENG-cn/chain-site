@@ -277,15 +277,64 @@ for f in j['falsify']:
   if f['j'].startswith('J1'):
     f['now']='15–20%（KGI）；年末 18.5–19 万 [源1]；台积电 3Q26 法说会措辞从 7 月"严重供不应求"降为"后段产能确实有些短缺"，并把部分硅中介层外包给格罗方德（2028 上半年放量）[源64]'
 if not any(c[1]=='v0.4.2' for c in cl):cl.insert(0,['2026-10-16','v0.4.2','台积电 3Q26 法说会（10-15）：J1 观察项更新（封装短缺措辞由"严重供不应求"降为"确实有些短缺"，方向支持"2027 年 CoWoS 只略紧"；硅中介层部分外包格罗方德，2028 上半年放量），新增来源 64。数字不变。'])
+# ===== v0.4.3 硅中介层单独成一环（John 2026-10-16 批准）：model.py 算需求/供给，toc.js 换成"百万颗封装/季" =====
+IP=M['ip'];IR=IP['res'];g=lambda y,k:IR[str(y)][k]
+for i,t,u in [
+ (65,'经济日报 2025-12-02（转述摩根士丹利）：台积电扩建 65nm 中介层产能每月 2 万片、主要给 CoWoS-S（推估终端为谷歌 TPU）；博通 CoWoS-S 订单 15.5 万 → 20 万片；英伟达 Spectrum 增加 CoWoS-S 约 5,000 片/月','https://money.udn.com/money/story/11162/9176309'),
+ (66,'财联社 2026-06-25（转述摩根士丹利）：台积电把 Fab 15A 部分 28/22nm 空间改成 55nm 中介层；博通 TPU v7+v8i 约 34.3 万片 CoWoS-S、联发科 18 万片 CoWoS-S（TPU v8t）；AMD 在台积电 CoWoS-L 24 万片；非台积电扩产集中在 L、R 型','https://finance.sina.com.cn/roll/2026-06-25/doc-inierpqn0965351.shtml'),
+ (67,'格罗方德新闻稿 2026-10-08：与台积电签 5 年约 20 亿美元协议，在纽约 Malta 为 CoWoS 生产硅中介层（含嵌入式深沟槽电容），2028 年上半年开始放量','https://investors.gf.com/news-releases/news-release-details/globalfoundries-reaches-agreement-establish-us-based-supply'),
+ (68,'TrendForce 2026-10-12：中介层一般用 65/90nm 成熟工艺，外包可腾出 12 寸产能；联电中介层 3,000 → 6,000 片/月，并给 Intel EMIB 供硅桥；力积电供 EMIB 硅电容','https://www.trendforce.com/news/2026/10/12/news-tsmcs-2b-silicon-interposer-deal-with-gf-could-fast-track-u-s-packaging-to-1h28-free-up-fab-capacity/'),
+ (69,'民视财经/财讯 2026-05-29：联电财务长称硅中介层产能已由 3,000 片提升至 6,000 片/月，后续是否扩产视客户需求而定','https://finance.ftvnews.com.tw/news/detail/2026529W0248'),
+ (70,'TrendForce 2023-08-25（转述工商时报）：2023 年 CoWoS 扩产的关键卡点是硅中介层不足；联电 3k 片/月，翻倍到 6k（最早 1Q24），并评估 10k','https://www.trendforce.com/news/2023/08/25/news-nvidia-establishes-non-tsmc-cowos-supply-chain-umc-doubles-interposer-capacity/'),
+ (71,'优分析 2026-10-12：台积电已把部分硅中介层交给世界先进；VSMC（新加坡）把中介层纳入产品，2027Q1 量产、2029 年满载 4.4 万片/月（全厂，非全为中介层），尚未确认承接台积电订单','https://uanalyze.com.tw/articles/2073056855'),
+ (72,'经济日报 2026-10-12：法人认为台积电为确保中介层产能无虞而扩大委外；联电、力积电扩中介层','https://udn.com/news/story/7240/9808153'),
+ (73,'TrendForce 2026-09-18：CoWoS-S 最多 2 颗 SoC + 8 颗 HBM，Maia 200 仍用 S；英伟达、AMD、Meta MTIA 400 已用 CoWoS-L，AWS、微软 2027 年转 L；谷歌 2027 年导入 EMIB-T','https://www.trendforce.com/presscenter/news/20260918-13241.html'),
+ (74,'TrendForce 2026-05-21：AMD 与日月光/矽品开发晶圆级 2.5D 硅桥 EFB，用于 Venice CPU；与力成验证面板级 EFB','https://www.trendforce.com/news/2026/05/21/news-amds-lisa-su-reportedly-to-visit-tsmc-for-2nm-capacity-announces-us10b-taiwan-ai-packaging-investment/'),
+ (75,'武汉新芯招股说明书（上交所 2025-09-29）：2.5D 硅转接板（Interposer）平台已规模量产；募投 12 寸线 5 万片/月，其中三维集成（含 2.5D）4 万片/月','https://static.sse.com.cn/stock/disclosure/announcement/c/202509/002044_20250929_SM99.pdf'),
+ (76,'财联社 2026-08-13：中芯国际 2Q26 月产能 109.65 万片（折合 8 寸），产能利用率 93.7%','https://finance.sina.com.cn/jjxw/2026-08-13/doc-inineqhh4636728.shtml'),
+ (77,'工商时报 2026-08-12：台积电副总何军称 CoWoS 已量产 5.5 倍光罩、多项产品良率 >98%；点名未来数年短缺的是存储和 ABF 载板','https://www.ctee.com.tw/news/20260812700094-439901'),
+ (78,'TVBS 2026-07-14：力积电法说会称 CoWoS 供不应求，硅中介层"有订单外溢"，新竹中介层产线已复线量产','https://news.tvbs.com.tw/tech/3257362')]:
+  if i not in {x['id'] for x in S}:S.append({'id':i,'t':t,'u':u})
+J['ip']=dict(rows=[[y,g(y,'sw') if y<2028 else None,g(y,'need') if y<2028 else None,g(y,'cap'),g(y,'ts'),g(y,'umc'),g(y,'oth_s'),g(y,'sup'),g(y,'gap') if y<2028 else None] for y in range(2024,2029)],
+  x=IP['x'],be27=IP['be27'],be28=IP['be28'],br=IP['br'],eff=IP['eff'])
+J['variants'][0][4]='成熟主力；KGI 称 S 型产能 2027 仍紧；整片硅中介层由台积电自制 + 联电/世界先进/力积电，2028 起加格罗方德'
+J['variants'][0][5]='10,1,67'
+J['process'][0][2]='台积电自制（65/55nm 级，Fab 15A 部分改产，源66）+ 委外：联电约 6,000 片/月、世界先进、力积电，2028 上半年起格罗方德纽约厂；L 型硅桥同样由台积电做。CoWoS-S 中介层每片价值约 1 万美元、L 型约 1.5 万美元'
+J['process'][0][3]='10,9,66,67,69,71'
+if not any(n['name'].startswith('硅中介层') for n in J['neck']):
+  J['neck'].insert(4,dict(name='硅中介层（只卡 S 型）',now=f"2026 年余量约 {g(2026,'gap'):+.0f}%，2027 年约 {g(2027,'gap'):+.0f}%（估）：S 型需求 +{(g(2027,'need')/g(2026,'need')-1)*100:.0f}%（谷歌 TPU），台积电 2027 年要再加约 {IP['be27']:.1f} 千片/月才不缺；格罗方德 2028 上半年才放量",months=18,verdict='2027 年和 S 型需求打平，不是总约束',src='65,66,67,69'))
+if not any(f['j'].startswith('J6') for f in J['falsify']):
+  J['falsify'].append({'j':'J6 硅中介层 2027 年只和 S 型需求打平，不是总约束；2028 年转松','counter':f"中介层产能没有任何公司披露：台积电 2024–25 年自制量是按“2025 年多 10%”反推的（估），2027 年新增 2 万片/月是假设；格罗方德协议、世界先进接单、法人说“为确保产能无虞而扩大委外” [源67,71,72]，都说明台积电自己觉得偏紧",
+   'falsify':'2027 年谷歌 TPU（CoWoS-S）出货被下修、原因指向中介层；或台积电/券商把中介层列为 CoWoS-S 的首要限制',
+   'ind':'① 券商对博通+联发科 2027 年 CoWoS-S 片数（MS 现为 34.3 万 + 18 万）；② 台积电 2027 年中介层自制新增；③ 新的中介层委外签约',
+   'th':f"① 下修 ≥ 10% 且归因中介层；② 新增 < {IP['be27']:.0f} 千片/月（盈亏平衡）；③ 2027 年内再出现一家新委外厂或联电扩到 ≥ 1 万片/月 → 都说明比我们算的紧",
+   'now':'台积电 2026 年 +2 万片/月 [源65]、Fab 15A 部分改产 [源66]；联电 6,000 片/月 [源69]；格罗方德 2028 上半年 [源67]；台积电点名的短缺是存储和 ABF 载板 [源77]','st':'watch'})
+if not any(p['id']=='C9' for p in J['predictions']):
+  J['predictions'].append({'id':'C9','text':'2027 年内没有主流券商或台积电把"硅中介层"列为 CoWoS 出货的首要限制（我们判断 2027 年中介层只和 S 型需求打平，首要限制仍在载板/HBM）','due':'2027-12-31','check':'台积电法说会；KGI/MS/TrendForce','status':'pending'})
+  J['predictions'].append({'id':'C10','text':'格罗方德 Malta 中介层 2028-06-30 前开始量产出货（新闻稿口径"2028 上半年放量"）','due':'2028-08-15','check':'格罗方德 2Q28 财报','status':'pending'})
+J['limits'].insert(5,f"硅中介层（v0.4.3）：没有公司披露中介层产能。需求是第一性原理换算（1 片 CoWoS-S = 1 片中介层），较可靠；供给只有增量有来源（台积电 2026 +2 万、联电 6,000、格罗方德 2028），台积电 2024–25 年自制约 {IP['x']:.0f} 千片/月是按“2025 年多 10%”反推的，2027 年新增 2 万是假设（盈亏平衡 {IP['be27']:.1f} 千片）。CoWoS-L 硅桥按每片 {IP['br']} 片硅折算（LSI 面积未公开）。")
+if 'cn' in J and not any(r[0].startswith('硅中介层') for r in J['cn']['toc']):
+  J['cn']['toc'].insert(3,['硅中介层（TSV 转接板）','不少于 2.5D 封装产能','65/55nm 级成熟工艺 [源68]，不在 16/14nm 以下的管制线内 [源44]；武汉新芯 2.5D 硅转接板已规模量产、募投三维集成（含 2.5D）4 万片/月 [源75]；中芯月产能 109.65 万片（8 寸约当）[源76]；盛合部分 TSV 转接板由客户供料 [源51]。国内 2.5D 2026 年底约 2.3 万片/月，最多也就要这么多中介层','不是约束（估）'])
+J['meta']['version']='v0.4.3';J['meta']['updated']='2026-10-16'
+if not any(c[1]=='v0.4.3' for c in cl):cl.insert(0,['2026-10-16','v0.4.3',f"硅中介层单独成为约束推导的一环（John 批准）：1 片 CoWoS-S = 1 片良品中介层，L/EFB 只算硅桥；改正 2027 年 AMD MI450/455 为 CoWoS-L、Venice 为 EFB 硅桥（源66,74，不影响 CoWoS 片数）。结论：中介层 2026 年余量约 {g(2026,'gap'):+.0f}%，2027 年约 {g(2027,'gap'):+.0f}%，只卡谷歌 TPU 等 S 型、不改变总约束；2028 年格罗方德/世界先进放量后，需求涨 {IP['be28']:.0f}% 以内都不缺（估）。中国账本：中介层不是约束。新增来源 65–78、证伪 J6、预测 C9–C10。核心判断不变。"])
 for r in CN['bal']:print('中国 2.5D',r['y'],'供给 %.0f 千片 / 不缺货需求 %.0f / HBM 能配需求 %.0f，覆盖 %.0f%%（%.0f%%），能封 %.2fM 张 vs HBM 能配 %.2fM'%(r['s'],r['du'],r['dh'],r['cov']*100,r['covh']*100,r['cards'],r['hcards']))
 json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
 # ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）
 T=json.load(open(P('data','toc.json')))
+if not any(x['k']=='ip' for x in T['stages']):
+    T['stages'].insert(1,{'k':'ip','n':'硅中介层','c':'#c2185b','native':'','conv':''})
+for x in T['stages']:
+    if x['k']=='ip': x['native']=f"中介层投片 千片/月（季末）：台积电自制（2024–25 年约 {IP['x']:.0f} 千片，按“2025 年最紧一季仍多 10%”反推，估；2026 年 +2 万 {{ipms}}；2027 年 +2 万，估，Fab 15A 改产 {{ipfab}}）+ 联电 6 千 {{ipumc}} + 世界先进/力积电（2027 年 2 千，估）{{ipvis}}"
+    if x['k']=='ip': x['conv']=f"× 3 × 稼动率 95% × 良率 97%（估）→ 良品片/季；先扣 L/EFB 硅桥（每片 {IP['br']} 片硅，估）和交换芯片用量，剩下的 × S 型每片颗数（2026 年 {g(2026,'su')/g(2026,'sw')*1000:.1f}、2027 年 {g(2027,'su')/g(2027,'sw')*1000:.1f} 颗）= 能封的 S 型颗数；L/R 型不用整片中介层，直接通过 <span class=\"tag t-est\">估</span>"
+T['srcmap']['cw'].update({'ipms':'65','ipfab':'66','ipumc':'69','ipvis':'71,78','ipgf':'67'});T['srcmap']['hx'].update({'ipms':'56','ipfab':'56','ipumc':'56','ipvis':'56','ipgf':'56'})
+gp=[x for x in T['gaps'] if '中介层' in x]
+if not gp: T['gaps'].append('硅中介层：没有公司披露产能，台积电自制量按 2025 年反推、2027 年新增为假设；2028 年格罗方德放量 {ipgf} 在本图之外（图只到 2027Q4），见 CoWoS 页第 7 步中介层表。')
+json.dump(T,open(P('data','toc.json'),'w'),ensure_ascii=False,indent=1)
 js=r"""const TOC=require(process.argv[1]+'/toc.js'),fs=require('fs'),r=p=>JSON.parse(fs.readFileSync(process.argv[1]+'/data/'+p));
 const J=r('cowos.json'),H=r('hbm.json'),T=r('toc.json'),o=TOC.calc(J,H,T,{}),o2=TOC.calc(J,H,T,{hbm:.8});
-console.log(JSON.stringify({raw:o.out.map(x=>[x.q,x.D,x.st.cw,x.st.hbm,x.st.tcb,x.st.sub,x.st.pw,x.min,x.bind,x.thru]),b:o.out.map(x=>[x.q,x.bind,Object.fromEntries(Object.entries(x.st).map(([k,v])=>[k,v/x.D-1]))]),b2:o2.out.map(x=>[x.q,x.bind]),coef:o.coef}))"""
+console.log(JSON.stringify({raw:o.out.map(x=>[x.q,x.D,x.st.cw,x.st.ip,x.st.hbm,x.st.tcb,x.st.sub,x.st.pw,x.min,x.bind,x.thru]),b:o.out.map(x=>[x.q,x.bind,Object.fromEntries(Object.entries(x.st).map(([k,v])=>[k,v/x.D-1]))]),b2:o2.out.map(x=>[x.q,x.bind]),coef:o.coef}))"""
 t=json.loads(subprocess.run(['node','-e',js,R0],capture_output=True,text=True,check=True).stdout)
-NM={'cw':'CoWoS','hbm':'HBM','tcb':'键合机','sub':'ABF 载板','pw':'电力','dem':'各环节都够'}
+NM={'cw':'CoWoS','ip':'硅中介层','hbm':'HBM','tcb':'键合机','sub':'ABF 载板','pw':'电力','dem':'各环节都够'}
 def runs(b):
     out=[]
     for q,k in b:
@@ -296,7 +345,7 @@ seq=runs([(q,k) for q,k,_ in t['b']]);seq2=runs(t['b2'])
 last=t['b'][-1][2];h27=[x[2]['hbm'] for x in t['b'] if x[0].startswith('2027')];s27=[x[2]['sub'] for x in t['b'] if x[0].startswith('2027')]
 pw26=[x[2]['pw'] for x in t['b'] if x[0].startswith('2026')]
 c=t['coef'];g=lambda y:H['gbw'][str(y)]
-T['stages'][1]['conv']=f"× 3 × 每片有效 GB（{g(2025)}/{g(2026)}/{g(2027)}，按券商产量校准 HBM 页源65）× 稼动率 = GB，÷ 每封装 HBM（产品加权：2025 年 {c['2025']['gb']:.0f}、2026 年 {c['2026']['gb']:.0f}、2027 年 {c['2027']['gb']:.0f} GB）<span class=\"tag t-est\">估</span>"
+next(x for x in T['stages'] if x['k']=='hbm')['conv']=f"× 3 × 每片有效 GB（{g(2025)}/{g(2026)}/{g(2027)}，按券商产量校准 HBM 页源65）× 稼动率 = GB，÷ 每封装 HBM（产品加权：2025 年 {c['2025']['gb']:.0f}、2026 年 {c['2026']['gb']:.0f}、2027 年 {c['2027']['gb']:.0f} GB）<span class=\"tag t-est\">估</span>"
 T['steps'][0][2]=f"模型（v0.4 校准后）：{seq}。HBM 可供量下调 20% 时：{seq2}。行为证据：英伟达下调 HBM 规格以多出货 {{kgi}}；供应承诺一季加到 2,790 亿美元、主要是存储 {{nv}}"
 T['steps'][4][2]=f"2027 年模型约束在 ABF 载板（相对需求 {min(s27)*100:+.0f}%，估，数据最弱），HBM 紧随其后（{min(h27)*100:+.0f}%）；电力余量从 2026 年约 {min(pw26)*100:+.0f}%～{max(pw26)*100:+.0f}% 降到 2027Q4 约 {t['b'][-1][2]['pw']*100:+.0f}%，2028 年可能轮到电力 <span class=\"tag t-est\">估</span>"
 for p in T['preds']:
@@ -307,6 +356,8 @@ if not any(p['id']=='T4' for p in T['preds']):
 for f in T['falsify']:
     if f['j'].startswith('T1'):
         f.update({'j':'T1′ 2027 年约束不在 HBM（v0.4）','counter':f'HBM 只比需求低约 {-min(h27)*100:.0f}%，载板产能是估的；只要载板实际扩产比 KGI 的 +25–30% 快，约束就回到 HBM','falsify':'2027 年 HBM 原厂称需配额、无法满足客户，同时载板价格松动','ind':'HBM 原厂财报会措辞；欣兴毛利率；ABF 报价','th':'HBM 2027 年产量增速 < +25%（见 T4）','now':'iM 证券 2026 年产量 44.4 亿 GB（HBM 页源65）','st':'watch'})
+_ip=lambda y,k:[x[2][k] for x in t['b'] if x[0].startswith(str(y))]
+T['ipsum']={str(y):dict(ip=round(min(_ip(y,'ip'))*100,1),cwlo=round(min(_ip(y,'cw'))*100,1),cwhi=round(max(_ip(y,'cw'))*100,1),hbm=round(min(_ip(y,'hbm'))*100,1),sub=round(min(_ip(y,'sub'))*100,1)) for y in (2026,2027)}
 json.dump(T,open(P('data','toc.json'),'w'),ensure_ascii=False,indent=1)
 # ---- 两个 Excel 都附上同一张"TOC约束"表（以前是手工追加的，重跑会丢）
 import openpyxl
@@ -315,7 +366,7 @@ for xf in [P('cowos','cowos_model.xlsx'),P('hbm','hbm_model.xlsx')]:
     wb=openpyxl.load_workbook(xf)
     if 'TOC约束' in wb.sheetnames: del wb['TOC约束']
     ws=wb.create_sheet('TOC约束');ws.append(['单位：百万颗 AI 加速器封装/季；算法见 toc.js / data/toc.json；除 CoWoS、HBM 外各环节规模为估计（含校准）；由 cowos/build.py 生成'])
-    ws.append(['季度','需求','CoWoS','HBM','TC键合机','ABF载板','电力','最小环节','约束','通过量']);[setattr(c,'font',Font(bold=True)) for c in ws[2]]
-    for r in t['raw']: ws.append([r[0]]+[round(v,3) for v in r[1:7]]+[NM[r[7]],'需求（各环节都够）' if r[8]=='dem' else NM[r[8]],round(r[9],3)])
+    ws.append(['季度','需求','CoWoS','硅中介层','HBM','TC键合机','ABF载板','电力','最小环节','约束','通过量']);[setattr(c,'font',Font(bold=True)) for c in ws[2]]
+    for r in t['raw']: ws.append([r[0]]+[round(v,3) for v in r[1:8]]+[NM[r[8]],'需求（各环节都够）' if r[9]=='dem' else NM[r[9]],round(r[10],3)])
     wb.save(xf)
 print('ok · 来源',len(S),'· HBM 满足率',HC,'CoWoS',CC,'\n',seq,'\n',seq2)

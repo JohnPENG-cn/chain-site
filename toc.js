@@ -12,12 +12,14 @@ TOC.calc=(J,H,T,s={})=>{const k=x=>s[x]??1,m=J.model,P=T.param,Q=[],W=P.ramp,yrs
   const D=c.u*w*k('dem');
   const ut=y==2024?m.ut:y==2025?m.ut:(s.cwut??0.95);
   const wf=3*(m.cap.tsmc[ci+i]+m.cap.osat[ci+i])*ut-m.other[y]/4;const cw=wf*c.ppw/1000*k('cw');
+  // 硅中介层（v0.4.3）：只卡整片中介层的 S 型封装；L/EFB 只扣硅桥、R 型不用硅。良品片/季 = 3 × 季末产能 × 稼动率 × 良率
+  const I=m.ip.res[y],ipw=3*m.cap.ip[ci+i]*m.ip.eff*k('ip'),ipS=Math.max(0,ipw-I.br*w-I.oth/4),ip=(c.u-I.su)*w*k('dem')+ipS*(I.su/I.sw*1000)/1000;
   const GB=y==2024?H.hist_supply[2024].s*1e9*hk(i)/h24:hk(i)*1000*3*H.gbw[y]*H.ut[y];const hbm=GB/c.gb/1e6*k('hbm');
   const B0=B;B+=P.tcb_add[y]*3*P.tcb_util/P.tcb_share;
   const tcb=B0*c.stk/c.gb/1e6;
   const sub=P.sub[y]*c.u*w*k('sub')/(y==2027?1:1);
   const pw=P.gw[i]*P.ai_share*1e6/P.kw_gpu/c.weq/1e6;
-  out.push({q:y+'Q'+(qi+1),y,D,st:{cw,hbm,tcb,sub,pw},GB,wf,B:B0})}
+  out.push({q:y+'Q'+(qi+1),y,D,st:{cw,ip,hbm,tcb,sub,pw},GB,wf,B:B0,ipw})}
  // 基板：2027 年 = 2026 年产能 × (1+KGI 增速)
  const s26=out.filter(o=>o.y==2026).reduce((a,o)=>a+o.st.sub/k('sub'),0);out.filter(o=>o.y==2027).forEach((o,j)=>o.st.sub=s26*P.sub27*W[j]*k('sub'));
  // 校准（估）：键合机、电力在 2024–26 年没有卡住出货（出货已发生 / HBM 页研究结论），按"历史最紧时仍有 10% 余量"反推规模系数；未来只看增速
@@ -26,8 +28,8 @@ TOC.calc=(J,H,T,s={})=>{const k=x=>s[x]??1,m=J.model,P=T.param,Q=[],W=P.ramp,yrs
  out.forEach(o=>{let b=null,v=1e9;for(const n in o.st)if(o.st[n]<v){v=o.st[n];b=n}o.min=b;o.bind=v>=o.D?'dem':b;o.cap=v;o.thru=Math.min(o.D,v)});return{out,coef}};
 if(typeof module!='undefined')module.exports=TOC;
 /* 渲染：p = 页面前缀（cw / hx），host = 容器选择器 */
-TOC.render=(p,host,J,H,T,opt={})=>{const f=t=>CH.srcInline(String(t).replace(/\{(\w+)\}/g,(m,a)=>T.srcmap[p][a]?`[源${T.srcmap[p][a]}]`:'')),id=x=>`${p}-t-${x}`,S=T.stages,N=Object.fromEntries(S.map(s=>[s.k,s]));N.dem={k:'dem',n:'需求（各环节都够）',c:'#7a869a'};const SN={cw:'CoWoS',hbm:'HBM',tcb:'键合机',sub:'ABF 载板',pw:'电力'},Q0=15;
- const SL=[['dem','需求（相对 KGI 出货）',70,130,100],['cw','CoWoS 产能',70,130,100],['hbm','HBM 可供量（100 = HBM 页 v0.4 校准）',70,130,100],['tcb','TC 键合机',50,150,100],['sub','ABF 载板',70,140,100],['pw','电力',50,150,100]];
+TOC.render=(p,host,J,H,T,opt={})=>{const f=t=>CH.srcInline(String(t).replace(/\{(\w+)\}/g,(m,a)=>T.srcmap[p][a]?`[源${T.srcmap[p][a]}]`:'')),id=x=>`${p}-t-${x}`,S=T.stages,N=Object.fromEntries(S.map(s=>[s.k,s]));N.dem={k:'dem',n:'需求（各环节都够）',c:'#7a869a'};const SN={cw:'CoWoS',ip:'中介层',hbm:'HBM',tcb:'键合机',sub:'ABF 载板',pw:'电力'},Q0=15;
+ const SL=[['dem','需求（相对 KGI 出货）',70,130,100],['cw','CoWoS 产能',70,130,100],['ip','硅中介层产能（S 型用）',70,130,100],['hbm','HBM 可供量（100 = HBM 页 v0.4 校准）',70,130,100],['tcb','TC 键合机',50,150,100],['sub','ABF 载板',70,140,100],['pw','电力',50,150,100]];
  const LED=` <h3>约束迁移预测（到期打分）</h3><p class="sub" id="${id('pSum')}"></p><div class="tbl"><table class="stack ledger"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody id="${id('pT')}"></tbody></table></div>
  <div class="tbl" style="margin-top:10px"><table class="fal"><thead><tr><th>判断</th><th>反方证据</th><th>证伪条件</th><th>观察指标与阈值</th><th>当前读数</th><th>状态</th></tr></thead><tbody id="${id('fT')}"></tbody></table></div>`;
  CH.$(host).innerHTML=`<div class="grid g2"><div class="card"><div class="ctl">${SL.map(s=>`<label>${s[1]} <output id="${id('o-'+s[0])}"></output></label><input type="range" id="${id(s[0])}" min="${s[2]}" max="${s[3]}" step="5" value="${s[4]}">`).join('')}

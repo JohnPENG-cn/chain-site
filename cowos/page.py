@@ -3,6 +3,7 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tpl'))
 from nums import HC, CC, CGAP, CGAPU, HGAP, CS27, CD27   # 关键数字从模型算，不手写
 from nums import WC26, WC27, WH26, WH27, WS26, WS27, WK26, WK27, WHK26, WHK27, CK26, CK27, W   # 中国账本
+from nums import IPM, IPR, IPG26, IPG27, IPBE27, IPBE28, IPX, IPT   # v0.4.3 硅中介层
 def S(x):
     return '<span class="tag t-src">' + ' '.join(f'<a href="#src{n}">源{n}</a>' for n in str(x).split(',')) + '</span>'
 E = '<span class="tag t-est">估</span>'
@@ -15,7 +16,7 @@ LOGIC = dict(
  qa=[
   (f'台积电产能三年涨了约 9 倍，2027 年总产能再涨约七成，缺口收窄到约 {CGAP}%（只加 KGI 点名的客户需求约 {CGAPU}%）。2028 年看台积电面板级封装（CoPoS）放量 {S(26)}（未建模）',
    f'台积电不接国产 AI 芯片；国内 2.5D 封装 2026 年刚好够 HBM 能配的卡（约 {WH26}%），2027 年产能翻倍，是所需的约 {WH27/100:.1f} 倍 {E}'),
-  ('约束在迁移：2023–24 年是 CoWoS，2026 年要看 HBM，2027 年换成封装载板（ABF 载板和它用的 T-glass 玻纤布，数据最弱），2028 年可能轮到数据中心电力 ' + E,
+  ('约束在迁移：2023–24 年是 CoWoS，2026 年要看 HBM，2027 年换成封装载板（ABF 载板和它用的 T-glass 玻纤布，数据最弱），2028 年可能轮到数据中心电力 ' + E + f'；硅中介层单独算过：2027 年只和谷歌 TPU 等 S 型需求打平（余量约 {IPG27:+d}%），不是总约束',
    f'2026 年 HBM 和国产 2.5D 并列最紧（都约 {WK26:.1f} 百万张卡），2027 年只剩 HBM；下一个卡点是 ABF 膜（味之素占 95% 以上）{S(55)}'),
   (f'主流还把 CoWoS 当头号瓶颈（KGI：对客户需求缺 15–20%）{S(1)}；我们算只缺 {CGAP}–{CGAPU}%，利润涨得最快的是扩得慢的载板（欣兴毛利率一年 13.1% → 24.8%）{S(32)}',
    '主流把国产 CoWoS 扩产当主线；我们看 2027 年国内封装会超过 HBM 能配的卡，封装厂可能先遇到产能闲置，载板和 ABF 膜更稀缺'),
@@ -50,18 +51,41 @@ LOGIC = dict(
   ['封装设备景气见顶', '弘塑 + 辛耘 + 万润 3 个月营收同比（每月 10 日）', '从峰值回落 ≥ 20 个百分点并连降 3 个月 → 约 4 个月后台积电营收同比见顶', '每月；2027-01-12 打分 C2'],
   ['载板利润能否持续', '欣兴（3037）季度毛利率', '连续两季 < 20% → "利润往载板迁移"错', '每季财报'],
   ['需求上一层', '四大云厂商 2027 年首次资本开支指引', '合计 ≥ 8,500 亿美元 → 需求继续上修；增速 < 10% 或任一家下降 → 需求见顶', '2027-02-15'],
-  ['CoWoS 缺口口径', '券商对台积电 2027 年缺口和年末产能', '缺口 ≥ 25% 或年末 < 16 万片/月 → "不再是头号瓶颈"错', '2027 年中'],
+  ['CoWoS 缺口与硅中介层', '券商对台积电 2027 年缺口和年末产能；台积电 2027 年中介层自制新增', f'缺口 ≥ 25% 或年末 < 16 万片/月 → "不再是头号瓶颈"错；中介层自制新增 < {IPBE27:.0f} 千片/月 → S 型卡在中介层（J6）', '2027 年中'],
   ['国产 2.5D 产能', '盛合 / 通富 / 长电年报里的 2.5D 产能', '2026 年底 ≥ 2 万片/月（N1）；< 1.5 万 → 封装比 HBM 更紧', '2027-03-31'],
  ],
 )
 
+# ---- v0.4.3 硅中介层推导块（第 7 步），数字全部来自 cowos/model.py
+def _f(v, d=0):
+    return '—' if v is None else f'{v:,.{d}f}'
+_r = lambda y: IPR[y]
+_gp = lambda y: '—' if IPR[y].get('gap') is None else f"{IPR[y]['gap']:+.0f}%"
+_rows = ''.join(f"<tr><td>{y}</td><td>{_f(_r(y).get('sw'))}</td><td>{_f(_r(y).get('need'))}</td><td>{_f(_r(y)['cap'])}（{_f(_r(y)['ts'])} / {_r(y)['umc']} / {_r(y)['oth_s']}）</td><td>{_f(_r(y)['sup'])}</td><td><b>{_gp(y)}</b></td></tr>" for y in range(2024, 2029))
+_sens = ''.join(f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in IPM['sens'])
+_n26, _n27 = IPR[2026], IPR[2027]
+IPBLOCK = f"""<h3 id="ip">硅中介层：单独拆成一环（v0.4.3）</h3>
+<p class="sub"><b>结论：</b>2026 年中介层有约 {IPG26:+d}% 余量；2027 年谷歌 TPU 把需求推高约 {(_n27['need']/_n26['need']-1)*100:.0f}%，中介层和需求<b>基本打平（约 {IPG27:+d}%，单项敏感度 −14% ～ +11%）</b>，但它只卡用整片中介层的 S 型（2027 年约三成颗数），换成封装颗数后不改变"2027 年最紧是载板"；2028 年格罗方德、世界先进放量，需求涨 {IPBE28:.0f}% 以内都不缺 {E}。中国账本里中介层不是约束。</p>
+<div class="card"><b>推导过程（每一步都可在 Excel「硅中介层」表复核）</b><ol style="font-size:14px;margin:8px 0 0 18px;line-height:1.7">
+<li><b>定单位</b>：CoWoS-S 是把芯片贴在一整片还没切割的硅中介层晶圆上（CoW），所以 1 片 CoWoS-S 晶圆 = 1 片良品中介层晶圆；中介层越做越大（3.3 倍光罩封顶 {S(73)}）已经体现在"每片颗数"里（TPU v7 约 20 颗 → v8 约 17 颗）{E}。CoWoS-L 和日月光 EFB 只用小块硅桥，按每片封装晶圆折 {IPM['br']} 片硅 {E}；CoWoS-R 不用硅。</li>
+<li><b>需求</b> = S 型片数 + 硅桥折算 + 交换芯片：2027 年 {_n27['sw']:.0f} + {_n27['br']:.0f} + {_n27['oth']:.0f} = <b>{_n27['need']:.0f} 千片</b>（2026 年 {_n26['need']:.0f}）。S 型主要是谷歌 TPU v7/v8i/v8t（KGI：都用 CoWoS-S {S(1)}；MS：博通 34.3 万 + 联发科 18 万片 CoWoS-S {S(66)}，本页 53.6 万片）。改正：AMD MI450/455 是 CoWoS-L {S(66)}、Venice 用 EFB 硅桥 {S(74)}，不再算进 S 型（CoWoS 总片数不变）。</li>
+<li><b>供给</b> = 年末产能线性插值 × 12 × 稼动率 95% × 良率 97% {E}。台积电自制没有披露：2023 年末按当年 CoWoS 产能 13 千片（当时全是 S 型 {S(1)}），2024–25 年 CoWoS 增量几乎全是 L 型、S 型片数持平，设 2024、2025 年末都为 <b>{IPX:.0f} 千片/月</b>（按"2025 年最紧一季仍多 10%"反推，与键合机、电力同一校准规则）{E}；2026 年 +2 万（MS：65nm 中介层，主要给 TPU）{S(65)}；2027 年再 +2 万（假设与 2026 同速，Fab 15A 部分改产 55nm 中介层，量未披露 {S(66)}）{E}。委外：联电 6,000 片/月 {S("69,70")}，世界先进/力积电 2027 年合计约 2 千（估，量未披露 {S("71,78")}），格罗方德 2028 年末约 5 千（20 亿美元 / 5 年 ÷ 每片 4k–10k 美元 ≈ 3–8 千片/月，估 {S(67)}）。</li>
+<li><b>平衡</b>：见下表。盈亏平衡：台积电 2027 年自制只要新增 ≥ <b>{IPBE27:.1f} 千片/月</b>就不缺（2026 年加了 20）。</li>
+<li><b>换成 TOC 单位</b>（百万颗封装/季）：中介层一环 = 非 S 型颗数（直接通过）+（良品中介层 − 硅桥 − 交换芯片）× S 型每片颗数。2027 年每季比需求多约 {IPT['2027']['ip']:+.0f}%；同期 CoWoS {IPT['2027']['cwlo']:+.0f}% ～ {IPT['2027']['cwhi']:+.0f}%、HBM {IPT['2027']['hbm']:+.0f}%、载板 {IPT['2027']['sub']:+.0f}%。中介层产能低 20%，2026 年前三季它就会成为图上的约束；2027 年低 10% 就会比需求少（约 −2%），但载板更紧，图上的约束仍是载板——上面 TOC 图的"硅中介层"滑块可以直接试。</li>
+<li><b>2028 年</b>（TOC 图只到 2027Q4，这里单独算）：台积电自制按 0 新增（改为委外 {S("67,68")}）、格罗方德 +5、世界先进/力积电 +3 千片，年末约 {_f(IPR[2028]['cap'])} 千片/月，能支撑的需求比 2027 年多 {IPBE28:.0f}%。需求端：联发科的 TPU v9 改用 Intel EMIB-T、博通的 v8px 仍用 CoWoS-S {S(1)}，AWS、微软 2027 年起转 CoWoS-L {S(73)}，S 型需求增速大概率低于 {IPBE28:.0f}% → 2028 年转松（弱，未建 2028 出货模型）。</li>
+</ol></div>
+<div class="grid g2" style="margin-top:12px"><div class="card"><b>中介层平衡表（千片 12 寸）</b><div class="tbl"><table class="stack"><thead><tr><th>年</th><th>S 型片数/年</th><th>中介层需求/年</th><th>年末产能/月（台积电 / 联电 / 其他）</th><th>良品供给/年</th><th>余量</th></tr></thead><tbody>{_rows}</tbody></table></div><div class="note">2024 年余量只有约 {IPR[2024]['gap']:+.0f}%：和 2023 年"CoWoS 扩产卡在中介层不足"的报道一致 {S(70)}。2028 年没有出货预测，只给供给 {E}。</div></div>
+<div class="card"><b>敏感度：2027 年中介层余量（单项变动，其他不动）</b><div class="tbl"><table class="stack"><tbody>{_sens}</tbody></table></div><div class="note">最要害的是硅桥面积（LSI 尺寸未公开）和台积电 2027 年自制新增量；即使取最差的 −14%，S 型只占约三成颗数，折成全部封装约 −4%，仍比载板（{IPT['2027']['sub']:+.0f}%）和 HBM（{IPT['2027']['hbm']:+.0f}%）松 {E}。</div></div></div>
+<div class="card" style="margin-top:12px"><b>为什么台积电还要外包中介层？</b><div class="note" style="font-size:13px">三个动机，不全是"缺"：① 腾出 12 寸成熟产能——中介层用 65/90nm、晶体管很少，却占整片晶圆 {S(68)}；② 美国本土化——格罗方德 2028 上半年 + Amkor 亚利桑那 2028 年，台积电美国封装可能提前到 2028 {S("68,71")}；③ 确实偏紧——魏哲家："后段产能确实有些短缺" {S(64)}，法人称"为确保中介层产能无虞而扩大委外" {S(72)}，力积电称中介层"有订单外溢" {S(78)}。反方：台积电副总何军 2026-08 点名未来数年短缺的是存储和 ABF 载板，没提中介层 {S(77)}。</div></div>
+<div class="card" style="margin-top:12px"><b>中国账本：中介层不是约束</b> {E}<div class="note" style="font-size:13px">中介层用 65/55nm 级成熟工艺 {S(68)}，在 16/14nm 以下的管制线之外 {S(44)}；武汉新芯 2.5D 硅转接板已规模量产，募投三维集成（含 2.5D）4 万片/月 {S(75)}；中芯月产能 109.65 万片（8 寸约当，约合 49 万片 12 寸）{S(76)}；盛合部分 TSV 转接板由客户供料 {S(51)}。国内 2.5D 封装 2026 年底约 2.3 万片/月 {S(53)}，最多也只需要这么多中介层，不到中芯产能的 5%。国产卡的墙仍是 HBM 和 2.5D 封装本身。</div></div>"""
+
 SPEC = dict(
  logic=LOGIC,
- file='cowos.html', title='CoWoS 先进封装', pill='CoWoS v0.4.2', other=('hbm.html', 'HBM ⇄'),
+ file='cowos.html', title='CoWoS 先进封装', pill='CoWoS v0.4.3', other=('hbm.html', 'HBM ⇄'),
  scripts=['toc.js', 'cowos.js', 'cowos_cn.js'],
  ledgers=[('a1', 'gl', '全球账本', f'2027 年 CoWoS 只略紧（缺约 {CGAP}%–{CGAPU}%），最紧的是载板，利润往载板迁移'),
           ('cn', 'cnl', '中国账本', f'台积电已不接国产 AI 芯片；2026 年国产 2.5D 和 HBM 一样紧（够 HBM 能配的卡约 {WH26}%），2027 年产能翻倍、让位给 HBM')],
- kicker='CoWoS 小链 · v0.4.2 · 更新 <span id="cw-upd"></span> · 上游接 <a href="hbm.html">HBM 小链</a>',
+ kicker='CoWoS 小链 · v0.4.3 · 更新 <span id="cw-upd"></span> · 上游接 <a href="hbm.html">HBM 小链</a>',
  card=f'全球账本：2027 年 CoWoS 只略紧（缺约 {CGAP}%–{CGAPU}%），最紧的是载板，设备景气还没见顶。中国账本：台积电已不接国产 AI 芯片，2026 年国产 2.5D 封装和 HBM 一样紧{E}',
  scqa=[
   'AI 加速器要把 GPU 和 HBM 放在同一块硅中介层上（2.5D 封装），台积电 CoWoS 是主力。2023–24 年 H100 缺货，卡的就是 CoWoS。',
@@ -81,6 +105,7 @@ SPEC = dict(
     dict(t='需求：封装面积通胀，片数涨得比颗数快', b='英伟达 GPU 颗数 2023→2027 涨约 6 倍，消耗的 CoWoS 片数涨约 23 倍；需求的上一层是云厂商资本开支（三家合计从 2023Q2 约 270 亿美元/季涨到 2026Q2 约 1,350 亿）。', steps=['demand']),
     dict(t='和 HBM 对账：两者差不多紧', b=f'同一口径（KGI 可见出货）下，2027 年 CoWoS 够约 {CC}%、HBM 够约 {HC}%，差距在模型误差内 {S(33)}{E}。', steps=['map']),
     dict(t='要害变量："HBM 更紧"只领先约 3.5 个百分点', b=f'HBM 可供量按 KGI 口径 ×1.08、台积电 2027 年末只有 155k、每片颗数 −20%、英伟达降规格，任何一项都会让短板换成 CoWoS {E}。', steps=['key']),
+    dict(t=f'硅中介层单独算：2027 年和需求打平（约 {IPG27:+d}%），不是总约束', b=f'1 片 CoWoS-S 晶圆 = 1 片中介层；2027 年谷歌 TPU 拉动中介层需求约 +{(IPR[2027]["need"]/IPR[2026]["need"]-1)*100:.0f}%，台积电 2026 年已加 2 万片/月 {S(65)}、联电 6,000 片 {S(69)}，格罗方德 2028 上半年才放量 {S(67)}。只卡 S 型（约三成颗数），换成封装颗数后比需求多约 {IPT["2027"]["ip"]:.0f}% {E}。', steps=['neck']),
     dict(t='约束推导：最紧的是 ABF 载板（数据最弱）', b=f'日东纺约占 T-glass 90%，福岛扩产到 2027 年才放量；KGI：2027 年 ABF 只 +25–30% {S("23,24,25,1")}{E}。', steps=['neck']),
    ]),
   dict(tag='利润', claim='钱堆在台积电，但利润涨得最快的是扩得慢的载板：欣兴毛利率一年从 13.1% 升到 24.8%',
@@ -209,8 +234,8 @@ SPEC = dict(
   cn=dict(h='中国的约束：换成"能支撑多少张国产卡"', body=f'''<div class="tbl"><table id="wn-tocT" class="stack"><thead><tr><th>环节</th><th>2026 年能支撑</th><th>依据</th><th>判断</th></tr></thead><tbody></tbody></table></div>
 <div class="grid g2" style="margin-top:12px"><div class="card"><div id="wn-cToc" class="chart" style="height:300px"></div><div class="note">跟随第 5 步中国块滑块；HBM 一栏来自 <a href="hbm.html#cn">HBM 页中国账本</a>基准 {S(62)}。</div></div>
 <div class="card"><b>国产化时间表</b><div class="tl" style="margin-top:10px" id="wn-tl"></div></div></div>'''),
-  h='约束推导：把每一环换成同一单位，最小的那个才是约束', sub='按 Goldratt 约束理论（TOC）：CoWoS 晶圆 → 封装颗数，DRAM 晶圆 → HBM GB → 封装，键合机台数 → 堆叠数 → 封装，载板片数、数据中心电力 → 封装，统一成"百万颗 AI 加速器封装/季"，每季取最小值。滑块改任何一环，约束实时更新。',
-   body='<div id="cw-toc"></div>\n<h3>汇总排序（推导结果 + 定性证据）</h3><p class="sub">条形长度 = 缓解所需月数（示意）。</p><div id="cw-neck" class="grid"></div>'),
+  h='约束推导：把每一环换成同一单位，最小的那个才是约束', sub='按 Goldratt 约束理论（TOC）：CoWoS 晶圆 → 封装颗数，硅中介层晶圆 → S 型封装颗数，DRAM 晶圆 → HBM GB → 封装，键合机台数 → 堆叠数 → 封装，载板片数、数据中心电力 → 封装，统一成"百万颗 AI 加速器封装/季"，每季取最小值。滑块改任何一环，约束实时更新。',
+   body='<div id="cw-toc"></div>\n' + IPBLOCK + '\n<h3>汇总排序（推导结果 + 定性证据）</h3><p class="sub">条形长度 = 缓解所需月数（示意）。</p><div id="cw-neck" class="grid"></div>'),
   dict(id='play',
   cn=dict(h='中国账本的玩家：谁的决定会改变这本账', body='<div class="grid g2" id="wnPl"></div>'),
   h='谁在做什么决定，为什么，什么信号说明他们变了', sub='供需表是结果，玩家的决策是原因：台积电愿不愿意扩、英伟达锁多少货、ASIC 阵营找不找第二来源、上游材料商敢不敢扩产。', body='<div class="grid g2" id="cw-play"></div>'),

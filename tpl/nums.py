@@ -30,3 +30,9 @@ WH26, WH27 = round(W[2026]['covh'] * 100), round(W[2027]['covh'] * 100)        #
 WS26, WS27 = W[2026]['s'], W[2027]['s']                                          # 国产 AI 可用 2.5D（千片/年）
 WK26, WK27 = W[2026]['cards'], W[2027]['cards']                                  # 2.5D 能封的卡（百万张）
 WHK26, WHK27 = W[2026]['hcards'], W[2027]['hcards']                              # HBM 能配的卡 + 950PR（百万张）
+# ---- CoWoS v0.4.3 硅中介层（cowos/model.py ip；TOC 汇总由 cowos/build.py 写进 toc.json ipsum）
+IPM = json.load(open(_P('cowos_data', 'model_out.json')))['ip']
+IPR = {int(k): v for k, v in IPM['res'].items()}
+IPG26, IPG27 = round(IPR[2026]['gap']), round(IPR[2027]['gap'])        # 中介层余量（良品片，%）
+IPBE27, IPBE28, IPX = IPM['be27'], IPM['be28'], IPM['x']
+IPT = json.load(open(_P('data', 'toc.json'))).get('ipsum', {})

@@ -15,6 +15,7 @@ if FP: fm.fontManager.addfont(FP); FN=fm.FontProperties(fname=FP).get_name()
 else: FN='sans-serif'
 plt.rcParams['font.family']=FN; plt.rcParams['axes.unicode_minus']=False
 # (year, vendor, product, units_M, ppw, hbm_GB_per_pkg, pkg, src_units)
+# pkg: S=整片硅中介层 L=RDL+局部硅桥 R=有机 RDL B=封测厂 2.5D 硅桥(EFB)。v0.4.3 改正：2027 AMD MI450/MI455 为 CoWoS-L（MS：AMD 在台积电 CoWoS-L 24 万片，源66）；Venice 为日月光/矽品 EFB 硅桥（源74）。pkg 只影响硅中介层一环，不影响 CoWoS 片数。
 K='KGI Fig.10'
 D=[
 (2023,'英伟达','A100',1.450,30,80,'S',K),(2023,'AMD','MI250/MI300',0.168,18,128,'S',K),(2023,'其他GPU','Gaudi等',0.027,25,96,'S',K),
@@ -32,7 +33,7 @@ D=[
 (2026,'其他ASIC','MTIA/Maia/OpenAI/其他',1.084,22,150,'S',K),
 (2027,'英伟达','B300',0.266,13,288,'L',K),(2027,'英伟达','Rubin',5.890,10,288,'L',K),(2027,'英伟达','Rubin Ultra',2.850,6,256,'L',K),
 (2027,'英伟达','Vera CPU',6.000,45,0,'R','KGI 正文'),
-(2027,'AMD','MI450/MI455',1.680,9,432,'S',K),(2027,'AMD','Venice CPU',4.750,25,0,'S','KGI 正文(4.5–5.0M)'),(2027,'其他GPU','其他',0.600,25,96,'S',K),
+(2027,'AMD','MI450/MI455',1.680,9,432,'L',K),(2027,'AMD','Venice CPU',4.750,25,0,'B','KGI 正文(4.5–5.0M)'),(2027,'其他GPU','其他',0.600,25,96,'S',K),
 (2027,'谷歌TPU','v8i Sunfish + v8t Zebrafish',9.104,17,260,'S',K),(2027,'AWS','Trainium3',3.060,24,144,'R',K),
 (2027,'其他ASIC','Maia/MTIA/OpenAI/其他',2.300,20,200,'S',K),
 ]
@@ -69,8 +70,74 @@ for y in range(2023,2028):
         if yy==y: by.setdefault(v,{}).setdefault(y,0); by[v][y]+=u/p*1000
 for v in by: print(v,{y:round(x) for y,x in by[v].items()})
 q,vt,vn=quarters()
+# ---------- v0.4.3 硅中介层（整片 TSV 硅中介层，CoWoS-S 用）----------
+# 第一性原理：CoWoS-S 的"CoW"就是把芯片贴在一整片未切割的硅中介层晶圆上，所以 1 片 CoWoS-S 晶圆 = 1 片良品中介层晶圆（面积通胀已在 ppw 里）。
+# CoWoS-L / EFB 只用小块硅桥（LSI），按每片封装晶圆折 BR 片中介层晶圆；CoWoS-R 不用硅。
+SFRAC={(2026,'MTIA/Maia/OpenAI/其他'):0.5,(2027,'Maia/MTIA/OpenAI/其他'):0.5}  # 估：Maia 200 用 S、MTIA 400 用 L（源73）
+BR=0.05      # 估：每片 L/EFB 封装晶圆消耗的硅桥面积 ≈ 0.05 片 12 寸硅晶圆（LSI 面积未公开，区间 0.02–0.15）
+OTH_SI=0.6   # 估："其他"（交换芯片等）里用整片中介层的比例；MS：英伟达 Spectrum 交换芯片 CoWoS-S 约 5k 片/月（源65）
+IP_UT,IP_Y=0.95,0.97   # 估：中介层产线稼动率；中介层良率（台积电称多项 CoWoS 产品良率 >98%，源77；中介层取略低）
+IPE=IP_UT*IP_Y
+def ip_need(y):
+    sw=su=br=0
+    for yy,_,ch,u,p,g,k,_s in D:
+        if yy!=y: continue
+        f=SFRAC.get((y,ch),1.0 if k=='S' else 0.0); w=u/p*1000
+        sw+=w*f; su+=u*f
+        if k in 'SLB': br+=BR*w*(1-f)
+    oth=OTH_SI*OTHER[y]
+    return dict(sw=round(sw,1),su=round(su,3),br=round(br,1),oth=round(oth,1),need=round(sw+br+oth,1))
+IPN={y:ip_need(y) for y in range(2023,2028)}
+# 供给（年末，千片/月，投片口径）
+IP_UMC={2022:3,2023:3,2024:6,2025:6,2026:6,2027:6,2028:6}          # 源70（2023 年 3k，1Q24 起 6k）、源69（CFO 2026-05：已由 3,000 提升至 6,000）
+IP_OTH={2022:0,2023:0,2024:0,2025:0,2026:0,2027:2,2028:5}          # 估：世界先进/VSMC 2027Q1 量产（源71）、力积电复线（源78），量未披露
+IP_GF={2027:0,2028:5}                                              # 估：20 亿美元/5 年 ≈ 4 亿美元/年 ÷ 每片 4k–10k 美元 ≈ 3–8 千片/月，2028 上半年起量（源67）
+IP_ADD={2026:20,2027:20,2028:0}   # 台积电自制新增：2026 +2 万（MS，源65）；2027 估与 2026 同速（Fab 15A 转产，量未披露，源66）；2028 估 0（改为委外，源67,68）
+def ann(a,b): return 12*a+6.5*(b-a)   # 与 CoWoS 供给同一插值公式（千片/年）
+# 校准（估）：台积电 2023 年末 = 当年 CoWoS 产能（2023 年全是 S 型，源1）；2024–25 年 CoWoS 增量几乎都是 L 型、S 型片数持平（302k→319k），
+# 所以设 2024 年末 = 2025 年末 = X，X 取"2025 年最紧的一季中介层仍多 10%"（与 TOC 里键合机、电力同一校准规则；季度需求权重同 toc.json ramp）
+RAMP=[0.22,0.24,0.26,0.28]
+_qn=[(IPN[2025]['sw']+IPN[2025]['br'])*RAMP[k]+IPN[2025]['oth']/4 for k in range(4)]   # 2025 各季良品需求（千片/季）
+X=round(max(_qn)*1.10/(3*IPE)-IP_UMC[2025],1)    # 2025 年产能持平，最紧在 Q4
+IP_TS={2022:TS[2022],2023:TS[2023],2024:X,2025:X}
+for y in (2026,2027,2028): IP_TS[y]=IP_TS[y-1]+IP_ADD[y]
+IPC={y:IP_TS[y]+IP_UMC[y]+IP_OTH[y]+IP_GF.get(y,0) for y in range(2022,2029)}
+ipres={}
+for y in range(2023,2029):
+    sup=ann(IPC[y-1],IPC[y])*IPE   # 良品中介层 千片/年
+    r=dict(cap=round(IPC[y],1),ts=round(IP_TS[y],1),umc=IP_UMC[y],oth_s=IP_OTH[y]+IP_GF.get(y,0),sup=round(sup,1))
+    if y in IPN: r.update(IPN[y]); r['gap']=round((sup-IPN[y]['need'])/IPN[y]['need']*100,1)
+    ipres[y]=r
+# 盈亏平衡：2027 年台积电自制要新增多少才不缺；2028 年需求最多能涨多少
+_n27=IPN[2027]['need']/IPE; _a=IPC[2026]
+BE27=round((_n27-12*_a)/6.5-IP_OTH[2027],1)       # 台积电 2027 新增（千片/月）
+BE28=round(ipres[2028]['sup']/IPN[2027]['need']*100-100,1)   # 2028 中介层需求同比上限（%）
+# 敏感度（2027 年中介层余量 %，其他不动）
+def gap27(br=BR,oth=OTH_SI,add27=IP_ADD[2027],x=None,amd_s=False,eff=IPE):
+    sw=su=b2=0
+    for yy,_,ch,u,p,g,k,_s in D:
+        if yy!=2027: continue
+        if amd_s and ch=='MI450/MI455': k='S'
+        f=SFRAC.get((2027,ch),1.0 if k=='S' else 0.0); w=u/p*1000; sw+=w*f
+        if k in 'SLB': b2+=br*w*(1-f)
+    need=sw+b2+oth*OTHER[2027]; xx=X if x is None else x
+    a=xx+IP_UMC[2026]+IP_OTH[2026]+IP_ADD[2026]; b=a+add27+IP_OTH[2027]
+    return round((ann(a,b)*eff-need)/need*100,1)
+_xa=round(IPN[2025]['need']*1.10/IPE/12-IP_UMC[2025],1)   # 另一种校准：2025 全年多 10%
+SENS=[['基准',f"{gap27():+.0f}%"],['硅桥折算 0.02 / 0.10 / 0.15 片（LSI 面积未公开）',f"{gap27(br=0.02):+.0f}% / {gap27(br=0.10):+.0f}% / {gap27(br=0.15):+.0f}%"],
+ ['台积电 2027 年自制新增 1 万 / 3 万片/月',f"{gap27(add27=10):+.0f}% / {gap27(add27=30):+.0f}%"],
+ [f'校准改为“2025 全年多 10%”（台积电 2024–25 年末 {_xa:.0f} 千片）',f"{gap27(x=_xa):+.0f}%"],
+ ['交换芯片等用整片中介层的比例 30% / 90%',f"{gap27(oth=0.3):+.0f}% / {gap27(oth=0.9):+.0f}%"],
+ ['AMD MI450/455 仍按 CoWoS-S 算（v0.4.2 的标签）',f"{gap27(amd_s=True):+.0f}%"],
+ ['良率 90%（基准 97%）',f"{gap27(eff=IP_UT*0.90):+.0f}%"]]
+print('敏感度',SENS)
+ipq=[];
+for y in range(2023,2028):
+    for k in range(1,5): ipq.append(round(IPC[y-1]+(IPC[y]-IPC[y-1])*k/4,1))
+print('硅中介层', {y:(r['cap'],r['sup'],r.get('need'),r.get('gap')) for y,r in ipres.items()},'X',X,'BE27',BE27,'BE28',BE28)
 out=dict(demand=[dict(y=a,v=b,chip=c,units=u,ppw=p,gb=g,pkg=k,src=s) for a,b,c,u,p,g,k,s in D],other=OTHER,uncon=UNCON,
- ts=TS,nt=NT,ut=UT,cap=dict(q=q,tsmc=vt,osat=vn),res=res)
+ ts=TS,nt=NT,ut=UT,cap=dict(q=q,tsmc=vt,osat=vn,ip=ipq),res=res,
+ ip=dict(res=ipres,eff=IPE,ut=IP_UT,yld=IP_Y,br=BR,oth_si=OTH_SI,x=X,add=IP_ADD,be27=BE27,be28=BE28,sens=SENS,umc=IP_UMC,oth=IP_OTH,gf=IP_GF))
 json.dump(out,open('/workspace/chain_site/cowos_data/model_out.json','w'),ensure_ascii=False)
 # ---------- Excel ----------
 wb=openpyxl.Workbook();b=Font(bold=True);inp=PatternFill('solid',fgColor='FFF2CC')
@@ -96,6 +163,11 @@ for i,y in enumerate(range(2023,2028),start=2):
     wbal.append([y,f'=SUMIF(需求!A2:A{n},A{i},需求!H2:H{n})+其他与供给!B{r}',sup,f'=C{i}-B{i}',f'=D{i}/B{i}',f'=SUMIF(需求!A2:A{n},A{i},需求!I2:I{n})/1000'])
 wq=wb.create_sheet('季度产能');wq.append(['季度','TSMC(千片/月)','非TSMC(千片/月)','合计','类型']);[setattr(c,'font',b) for c in wq[1]]
 for a,x,z in zip(q,vt,vn): wq.append([a,x,z,round(x+z,1),'锚点' if a.endswith('Q4') else '插值(估)'])
+wi=wb.create_sheet('硅中介层');wi.append(['v0.4.3：1 片 CoWoS-S 晶圆 = 1 片良品硅中介层晶圆；L/EFB 按每片 %.2f 片硅桥折算；R 型不用硅。单位：千片 12 寸/年（需求、供给）与千片/月（年末产能）。估=自估'%BR])
+wi.append(['年份','S 型片数','S 型颗数(百万)','硅桥折算','其他(交换芯片)','中介层需求','年末产能(千片/月)','其中台积电','联电','其他/格罗方德','良品供给(千片/年)','余量%']);[setattr(c,'font',b) for c in wi[2]]
+for y in range(2023,2029):
+    r=ipres[y];wi.append([y,r.get('sw'),r.get('su'),r.get('br'),r.get('oth'),r.get('need'),r['cap'],r['ts'],r['umc'],r['oth_s'],r['sup'],r.get('gap')])
+wi.append([]);wi.append(['台积电 2024/2025 年末自制（校准）',X]);wi.append(['2027 年台积电自制新增的盈亏平衡（千片/月）',BE27]);wi.append(['2028 年中介层需求同比上限（%）',BE28])
 wb.create_sheet('来源').append(['见 cowos_chain.md 附录'])
 wb.save('cowos_model.xlsx')
 # ---------- charts ----------

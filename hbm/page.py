@@ -225,7 +225,7 @@ SPEC = dict(
   cn=dict(h='中国的约束：换成"能配多少张国产卡"，HBM 最少，2.5D 封装几乎一样紧', body=f'''<div class="tbl"><table id="cn-tocT" class="stack"><thead><tr><th>环节</th><th>2026 年能支撑</th><th>依据</th><th>判断</th></tr></thead><tbody></tbody></table></div>
 <div class="grid g2" style="margin-top:12px"><div class="card"><div id="cn-cCov" class="chart" style="height:300px"></div><div class="note">实线 = 可用 ÷ 不缺货需求；虚线 = 可用 ÷ 机构出货口径。跟随第 5 步中国块滑块。</div></div>
 <div class="card"><b>国产化时间表（约束什么时候松）</b><div class="tl" style="margin-top:10px" id="cn-tl"></div></div></div>'''),
-  h='约束推导：换成同一单位后，2027 年 HBM 不是最紧的一环', sub='按约束理论（TOC）把 DRAM 晶圆、CoWoS、键合机、载板、电力都换成"百万颗 AI 加速器封装/季"，每季取最小值；与 CoWoS 页共用同一个模型。', body=f'''<div id="hx-toc"></div>
+  h='约束推导：换成同一单位后，2027 年 HBM 不是最紧的一环', sub='按约束理论（TOC）把 DRAM 晶圆、CoWoS、硅中介层（2026-10-16 加入，见 CoWoS 页）、键合机、载板、电力都换成"百万颗 AI 加速器封装/季"，每季取最小值；与 CoWoS 页共用同一个模型。', body=f'''<div id="hx-toc"></div>
 <h3>汇总排序（推导结果 + 定性证据）</h3><p class="sub">条形长度 = 缓解所需月数（取区间上限，示意）。</p><div id="neckList" class="grid"></div>
 <p class="note">键合机是跟着扩产走的环节，不是卡脖子：韩美一单 442 亿韩元（约 15 台）{S(17)}，ASMPT 也拿到海力士 HBM4 TCB 订单 {S(18)}。</p>'''),
   dict(id='play',
