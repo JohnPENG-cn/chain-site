@@ -260,7 +260,7 @@ def main():
     # 首页卡片
     idx_f = f'{SITE}/index.html'; idx = open(idx_f, encoding='utf-8').read()
     lt = items[0]; ds, wd = fmt_date(lt['date'])
-    card = f'<a class="card" href="daily/{lt["date"]}.html" style="color:inherit;text-decoration:none;display:block"><div class="kicker">最新 · {ds} {wd}</div><p style="margin:.3em 0 8px;font-size:15px">{html.escape(lt["short"])}</p><span class="pill">共 {len(items)} 期 · 每个交易日 20:00</span></a>'
+    card = f'<a class="card" href="daily/{lt["date"]}.html" style="color:inherit;text-decoration:none;display:block"><div class="kicker">最新 · {ds} {wd}</div><p style="margin:.3em 0 8px;font-size:15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{html.escape(lt["short"])}</p><span class="pill">共 {len(items)} 期 · 每个交易日 20:00</span></a>'
     idx, n = re.subn(r'(<!--daily:latest-->).*?(<!--/daily-->)', lambda m: m.group(1) + card + m.group(2), idx, flags=re.S)
     assert n == 1, 'index.html 缺 <!--daily:latest--> 标记'
     open(idx_f, 'w', encoding='utf-8').write(idx)
