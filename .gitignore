@@ -13,3 +13,6 @@ product_survey.md
 cowos_data/raw/
 *_data/raw/*.pdf
 !cowos/chart_*.png
+
+# 日报栏目的图片需要入库
+!daily/img/*.png

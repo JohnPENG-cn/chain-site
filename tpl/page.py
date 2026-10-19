@@ -75,7 +75,7 @@ def render(S):
 <!-- 由 tpl/page.py 根据 {S['spec']} 生成，不要手改；改内容请改 spec 后跑 ./build.sh -->
 <title>{S['title']} · 产业链情报研究中心</title><link rel="stylesheet" href="assets.css"><script src="theme.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script></head><body>
-<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="{S['other'][0]}">{S['other'][1]}</a><span class="pill">{S['pill']}</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
+<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="daily/">日报</a><a class="btn" href="{S['other'][0]}">{S['other'][1]}</a><span class="pill">{S['pill']}</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
 ''')
     # 两层导航
     t1 = [('logic', '逻辑'), ('top', '结论')] + [(f'a{i}', f'{CIRC[i-1]} {a["tag"]}') for i, a in enumerate(args, 1)]
