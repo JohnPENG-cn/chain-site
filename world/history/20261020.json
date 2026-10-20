@@ -1,6 +1,6 @@
 {
  "date": "20261020",
- "generated": "2026-10-20 03:16",
+ "generated": "2026-10-20 15:11",
  "backfilled": false,
  "prev": "20261019",
  "composites": [
@@ -58,7 +58,7 @@
      "id": "hy_oas",
      "name": "美国高收益债利差 HY OAS",
      "status": "amber",
-     "vtxt": "331bp"
+     "vtxt": "329bp"
     },
     {
      "id": "sloos",
@@ -86,19 +86,19 @@
    "q": "钱是不是在变贵、变难借？",
    "light": "amber",
    "head": "由松转紧：价格和波动先动，水管未堵。",
-   "detail": "8项中 2红2黄；最紧：美债10Y实际利率 2.74%、关键名字 CDS CoreWeave 5年CDS 约1,200bp、美国高收益债利差 HY OAS 331bp。",
+   "detail": "8项中 2红2黄；最紧：美债10Y实际利率 2.74%、关键名字 CDS CoreWeave 5年CDS 约1,200bp、美国高收益债利差 HY OAS 329bp。",
    "score": 0.375,
    "n": 8,
    "red": 2,
    "amber": 2,
-   "line": "由松转紧：价格和波动先动，水管未堵。8项中 2红2黄；最紧：美债10Y实际利率 2.74%、关键名字 CDS CoreWeave 5年CDS 约1,200bp、美国高收益债利差 HY OAS 331bp。",
+   "line": "由松转紧：价格和波动先动，水管未堵。8项中 2红2黄；最紧：美债10Y实际利率 2.74%、关键名字 CDS CoreWeave 5年CDS 约1,200bp、美国高收益债利差 HY OAS 329bp。",
    "vs": "较 10-19：VIX 期限结构 🟡→🟢",
    "members": [
     {
      "id": "hy_oas",
      "name": "美国高收益债利差 HY OAS",
      "status": "amber",
-     "vtxt": "331bp"
+     "vtxt": "329bp"
     },
     {
      "id": "real_yield",
@@ -122,7 +122,7 @@
      "id": "funding",
      "name": "短端融资压力 SOFR−IORB",
      "status": "green",
-     "vtxt": "-2bp"
+     "vtxt": "-3bp"
     },
     {
      "id": "nfci",
@@ -244,13 +244,13 @@
      "id": "cn_10y",
      "name": "中国10Y国债 与 中美利差",
      "status": "amber",
-     "vtxt": "1.650%"
+     "vtxt": "1.635%"
     },
     {
      "id": "csi300_erp",
      "name": "沪深300 股债性价比（3年滚动z）",
      "status": "green",
-     "vtxt": "5.99%"
+     "vtxt": "6.03%"
     },
     {
      "id": "cn_margin",
@@ -537,18 +537,18 @@
    "ok": true,
    "status": "amber",
    "opp": "False",
-   "value": 331.0,
-   "vtxt": "331bp",
-   "obs": "2026-10-16",
-   "pct": 80.4,
+   "value": 329.0,
+   "vtxt": "329bp",
+   "obs": "2026-10-19",
+   "pct": 79.7,
    "pct_label": "近3年（FRED 只给 3 年）",
    "danger": 500,
    "ddir": ">=",
-   "dist": 169.0,
-   "dist_txt": "距危险线 169bp（危险线 >= 500bp）",
+   "dist": 171.0,
+   "dist_txt": "距危险线 171bp（危险线 >= 500bp）",
    "extras": [
     "1个月 +61bp（月扩≥50bp 警戒，≥100bp 危险）",
-    "投资级 IG 85bp"
+    "投资级 IG 87bp"
    ],
    "spark_label": "",
    "err": null,
@@ -741,15 +741,15 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": -2.0,
-   "vtxt": "-2bp",
-   "obs": "2026-10-16",
-   "pct": 81.0,
+   "value": -3.0,
+   "vtxt": "-3bp",
+   "obs": "2026-10-19",
+   "pct": 77.8,
    "pct_label": "2021年以来",
    "danger": 10,
    "ddir": ">=",
-   "dist": 12.0,
-   "dist_txt": "距危险线 12bp（危险线 >= 10bp）",
+   "dist": 13.0,
+   "dist_txt": "距危险线 13bp（危险线 >= 10bp）",
    "extras": [
     "商业票据−国债 0.25pp"
    ],
@@ -774,8 +774,8 @@
    "status": "amber",
    "opp": false,
    "value": 350.03,
-   "vtxt": "1.650%",
-   "obs": "2026-10-19",
+   "vtxt": "1.635%",
+   "obs": "2026-10-20",
    "pct": 99.8,
    "pct_label": "2004年以来（利差）",
    "danger": 400,
@@ -784,7 +784,7 @@
    "dist_txt": "距危险线 50bp（危险线 >= 400bp）",
    "extras": [
     "中美利差 350bp（美高中低）",
-    "中国10Y 20日 -4bp（单月上行≥30bp=债市调整）"
+    "中国10Y 20日 -5bp（单月上行≥30bp=债市调整）"
    ],
    "spark_label": "中国10Y（%）",
    "err": null,
@@ -807,19 +807,19 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": 0.1745,
-   "vtxt": "5.99%",
-   "obs": "2026-10-19",
-   "pct": 42.2,
+   "value": 0.2579,
+   "vtxt": "6.03%",
+   "obs": "2026-10-20",
+   "pct": 44.3,
    "pct_label": "2009年以来（z值）",
    "danger": -1.5,
    "ddir": "<=",
-   "dist": 1.6745,
-   "dist_txt": "距危险线 1.67σ（危险线 <= -1.50σ）",
+   "dist": 1.7579,
+   "dist_txt": "距危险线 1.76σ（危险线 <= -1.50σ）",
    "extras": [
-    "3年滚动 z = +0.17（>+2 为历史强底部信号）",
-    "PE_TTM 13.10，10Y 1.650%",
-    "全样本分位 79%"
+    "3年滚动 z = +0.26（>+2 为历史强底部信号）",
+    "PE_TTM 13.04，10Y 1.635%",
+    "全样本分位 80%"
    ],
    "spark_label": "ERP（%）",
    "err": null,
