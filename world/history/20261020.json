@@ -334,7 +334,7 @@
    "name": "FRED（圣路易斯联储）",
    "link": "https://fred.stlouisfed.org/",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": "27/27 条序列"
   },
   {
@@ -342,7 +342,7 @@
    "name": "CBOE VIX/VIX3M 历史",
    "link": "https://www.cboe.com/tradable_products/vix/",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -350,7 +350,7 @@
    "name": "CBOE 每日 Put/Call",
    "link": "https://www.cboe.com/us/options/market_statistics/daily/",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -358,7 +358,7 @@
    "name": "Yahoo Finance（非官方接口）",
    "link": "https://finance.yahoo.com/",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -366,7 +366,7 @@
    "name": "东方财富 中美国债收益率",
    "link": "https://data.eastmoney.com/cjsj/zmgzsyl.html",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -374,7 +374,7 @@
    "name": "Tushare Pro",
    "link": "https://tushare.pro/",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -382,7 +382,7 @@
    "name": "TrendForce DRAM 现货",
    "link": "https://www.trendforce.com/price/dram/dram_spot",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -390,7 +390,7 @@
    "name": "纽约联储（衰退概率/GSCPI）",
    "link": "https://www.newyorkfed.org/research/capital_markets/ycfaq",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -398,7 +398,7 @@
    "name": "美联储 EBP",
    "link": "https://www.federalreserve.gov/econres/notes/feds-notes/ebp_csv.csv",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -406,7 +406,7 @@
    "name": "FINRA 保证金统计",
    "link": "https://www.finra.org/rules-guidance/key-topics/margin-accounts/margin-statistics",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -414,7 +414,7 @@
    "name": "AAII 情绪调查",
    "link": "https://www.aaii.com/sentimentsurvey",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -422,7 +422,7 @@
    "name": "multpl（Shiller CAPE）",
    "link": "https://www.multpl.com/shiller-pe/table/by-month",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -430,7 +430,7 @@
    "name": "Damodaran 隐含 ERP",
    "link": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/home.htm",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
@@ -438,7 +438,7 @@
    "name": "BIS 信贷/GDP 缺口",
    "link": "https://data.bis.org/topics/CREDIT_GAPS",
    "ok": true,
-   "last": "2026-10-20T03:16:26",
+   "last": "2026-10-20T03:16:32",
    "note": ""
   },
   {
