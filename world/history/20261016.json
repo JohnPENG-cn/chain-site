@@ -1,0 +1,1616 @@
+{
+ "date": "20261016",
+ "generated": "2026-10-20 03:11",
+ "backfilled": true,
+ "prev": null,
+ "composites": [
+  {
+   "id": "recession",
+   "name": "美国衰退风险",
+   "q": "未来6–12个月美国会不会衰退？",
+   "light": "amber",
+   "score": 0.25,
+   "n": 10,
+   "red": 1,
+   "amber": 3,
+   "line": "有警示但确认类指标（初请、萨姆）未亮。10项中 1红3黄；最紧：原油 101.9美元、美债曲线 10Y−3M +0.82pp、Conference Board LEI 99.5，6个月 −0.1%。",
+   "vs": "无上期数据",
+   "members": [
+    {
+     "id": "us_curve",
+     "name": "美债曲线 10Y−3M",
+     "status": "amber",
+     "vtxt": "+0.82pp"
+    },
+    {
+     "id": "us_claims",
+     "name": "美国初请失业金（4周均值）",
+     "status": "green",
+     "vtxt": "19.85万"
+    },
+    {
+     "id": "sahm",
+     "name": "萨姆规则",
+     "status": "green",
+     "vtxt": "0.00pp"
+    },
+    {
+     "id": "ism_noi",
+     "name": "ISM 新订单−库存",
+     "status": "green",
+     "vtxt": "新订单 55.3 − 库存 48.6 = +6.7"
+    },
+    {
+     "id": "lei",
+     "name": "Conference Board LEI",
+     "status": "amber",
+     "vtxt": "99.5，6个月 −0.1%"
+    },
+    {
+     "id": "ebp",
+     "name": "超额债券溢价 EBP",
+     "status": "green",
+     "vtxt": "-0.39"
+    },
+    {
+     "id": "hy_oas",
+     "name": "美国高收益债利差 HY OAS",
+     "status": "amber",
+     "vtxt": "323bp"
+    },
+    {
+     "id": "sloos",
+     "name": "银行放贷标准 SLOOS（净收紧%）",
+     "status": "green",
+     "vtxt": "0.0%"
+    },
+    {
+     "id": "oil",
+     "name": "原油（WTI 同比）",
+     "status": "red",
+     "vtxt": "101.9美元"
+    },
+    {
+     "id": "bis_gap",
+     "name": "BIS 信贷/GDP 缺口（中国）",
+     "status": "green",
+     "vtxt": "-5.1pp"
+    }
+   ]
+  },
+  {
+   "id": "liquidity",
+   "name": "流动性 / 金融条件",
+   "q": "钱是不是在变贵、变难借？",
+   "light": "amber",
+   "score": 0.375,
+   "n": 8,
+   "red": 2,
+   "amber": 2,
+   "line": "由松转紧：价格和波动先动，水管未堵。8项中 2红2黄；最紧：美债10Y实际利率 2.78%、关键名字 CDS CoreWeave 5年CDS 约1,200bp、美国高收益债利差 HY OAS 323bp。",
+   "vs": "无上期数据",
+   "members": [
+    {
+     "id": "hy_oas",
+     "name": "美国高收益债利差 HY OAS",
+     "status": "amber",
+     "vtxt": "323bp"
+    },
+    {
+     "id": "real_yield",
+     "name": "美债10Y实际利率（TIPS）",
+     "status": "red",
+     "vtxt": "2.78%"
+    },
+    {
+     "id": "move",
+     "name": "MOVE 美债波动率",
+     "status": "amber",
+     "vtxt": "102.5"
+    },
+    {
+     "id": "dollar",
+     "name": "美元（广义贸易加权，6个月涨幅）",
+     "status": "green",
+     "vtxt": "121.6"
+    },
+    {
+     "id": "funding",
+     "name": "短端融资压力 SOFR−IORB",
+     "status": "green",
+     "vtxt": "-1bp"
+    },
+    {
+     "id": "nfci",
+     "name": "芝加哥联储金融条件 NFCI",
+     "status": "green",
+     "vtxt": "-0.499"
+    },
+    {
+     "id": "vix_ts",
+     "name": "VIX 期限结构（VIX/VIX3M）",
+     "status": "green",
+     "vtxt": "0.89"
+    },
+    {
+     "id": "key_cds",
+     "name": "关键名字 CDS（AI融资链）",
+     "status": "red",
+     "vtxt": "CoreWeave 5年CDS 约1,200bp"
+    }
+   ]
+  },
+  {
+   "id": "valuation",
+   "name": "估值 / 情绪（美股）",
+   "q": "安全垫有多厚？大家是不是太乐观？",
+   "light": "amber",
+   "score": 0.429,
+   "n": 7,
+   "red": 3,
+   "amber": 0,
+   "line": "估值偏贵，时点信号未齐。7项中 3红0黄；最紧：席勒市盈率 CAPE 40.8、巴菲特指标 255%、美国保证金债务同比 1.480万亿美元。",
+   "vs": "无上期数据",
+   "members": [
+    {
+     "id": "cape",
+     "name": "席勒市盈率 CAPE",
+     "status": "red",
+     "vtxt": "40.8"
+    },
+    {
+     "id": "buffett",
+     "name": "巴菲特指标（市值/GDP，FRED口径）",
+     "status": "red",
+     "vtxt": "255%"
+    },
+    {
+     "id": "erp_us",
+     "name": "美股隐含 ERP（Damodaran）",
+     "status": "green",
+     "vtxt": "4.20%"
+    },
+    {
+     "id": "margin_debt",
+     "name": "美国保证金债务同比（FINRA）",
+     "status": "red",
+     "vtxt": "1.480万亿美元"
+    },
+    {
+     "id": "aaii",
+     "name": "AAII 牛熊差（看多−看空）",
+     "status": "green",
+     "vtxt": "-2.9pp"
+    },
+    {
+     "id": "pc_equity",
+     "name": "CBOE 个股 Put/Call（10日均）",
+     "status": "green",
+     "vtxt": "0.59"
+    },
+    {
+     "id": "vix_ts",
+     "name": "VIX 期限结构（VIX/VIX3M）",
+     "status": "green",
+     "vtxt": "0.89"
+    }
+   ]
+  },
+  {
+   "id": "china",
+   "name": "中国信用与通胀（含A股位置）",
+   "q": "中国经济在活化还是失血？A股贵不贵？",
+   "light": "amber",
+   "score": 0.438,
+   "n": 8,
+   "red": 0,
+   "amber": 7,
+   "line": "价格起来了，信用没跟上。8项中 0红7黄；最紧：中国信贷脉冲 -2.58%GDP、中国 M1−M2 剪刀差 -4.0pp、中国 PPI−CPI +4.1pp。",
+   "vs": "无上期数据",
+   "members": [
+    {
+     "id": "cn_credit",
+     "name": "中国信贷脉冲（社融12个月新增变化/GDP）",
+     "status": "amber",
+     "vtxt": "-2.58%GDP"
+    },
+    {
+     "id": "cn_m1m2",
+     "name": "中国 M1−M2 剪刀差",
+     "status": "amber",
+     "vtxt": "-4.0pp"
+    },
+    {
+     "id": "cn_ppi_cpi",
+     "name": "中国 PPI−CPI",
+     "status": "amber",
+     "vtxt": "+4.1pp"
+    },
+    {
+     "id": "cn_pmi",
+     "name": "中国官方制造业 PMI",
+     "status": "amber",
+     "vtxt": "50.1"
+    },
+    {
+     "id": "cn_10y",
+     "name": "中国10Y国债 与 中美利差",
+     "status": "amber",
+     "vtxt": "1.648%"
+    },
+    {
+     "id": "csi300_erp",
+     "name": "沪深300 股债性价比（3年滚动z）",
+     "status": "green",
+     "vtxt": "6.02%"
+    },
+    {
+     "id": "cn_margin",
+     "name": "A股融资余额（20日变化）",
+     "status": "amber",
+     "vtxt": "2.460万亿"
+    },
+    {
+     "id": "gscpi",
+     "name": "全球供应链压力 GSCPI",
+     "status": "amber",
+     "vtxt": "1.28σ"
+    }
+   ]
+  },
+  {
+   "id": "ai_semis",
+   "name": "AI / 半导体周期",
+   "q": "AI链的需求、价格、融资到了哪一段？",
+   "light": "amber",
+   "score": 0.417,
+   "n": 6,
+   "red": 2,
+   "amber": 1,
+   "line": "需求强，但融资/价格出现背离。6项中 2红1黄；最紧：关键名字 CDS CoreWeave 5年CDS 约1,200bp、美债10Y实际利率 2.78%、铜/金比 1.561；缺数据 1 项。",
+   "vs": "无上期数据",
+   "members": [
+    {
+     "id": "capex",
+     "name": "超大厂资本开支",
+     "status": "green",
+     "vtxt": "2026E 7,200–7,450亿美元；2027 一致预期约9,345亿"
+    },
+    {
+     "id": "kr_exports",
+     "name": "韩国出口（前10/20天）",
+     "status": "green",
+     "vtxt": "10月1–10日 出口 +102%，芯片 +170.9%"
+    },
+    {
+     "id": "tw_orders",
+     "name": "台湾外销订单",
+     "status": "green",
+     "vtxt": "8月 1,029.6亿美元，+71.4%"
+    },
+    {
+     "id": "dram_spot",
+     "name": "dram_spot",
+     "status": "grey",
+     "vtxt": null
+    },
+    {
+     "id": "key_cds",
+     "name": "关键名字 CDS（AI融资链）",
+     "status": "red",
+     "vtxt": "CoreWeave 5年CDS 约1,200bp"
+    },
+    {
+     "id": "real_yield",
+     "name": "美债10Y实际利率（TIPS）",
+     "status": "red",
+     "vtxt": "2.78%"
+    },
+    {
+     "id": "cu_au",
+     "name": "铜/金比（×1000）",
+     "status": "amber",
+     "vtxt": "1.561"
+    }
+   ]
+  }
+ ],
+ "alerts": [],
+ "sources": [
+  {
+   "id": "fred",
+   "name": "FRED（圣路易斯联储）",
+   "link": "https://fred.stlouisfed.org/",
+   "ok": true,
+   "last": "2026-10-20T03:06:39",
+   "note": "27/27 条序列"
+  },
+  {
+   "id": "cboe_vix",
+   "name": "CBOE VIX/VIX3M 历史",
+   "link": "https://www.cboe.com/tradable_products/vix/",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "cboe_pc",
+   "name": "CBOE 每日 Put/Call",
+   "link": "https://www.cboe.com/us/options/market_statistics/daily/",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "yahoo",
+   "name": "Yahoo Finance（非官方接口）",
+   "link": "https://finance.yahoo.com/",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "eastmoney",
+   "name": "东方财富 中美国债收益率",
+   "link": "https://data.eastmoney.com/cjsj/zmgzsyl.html",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "tushare",
+   "name": "Tushare Pro",
+   "link": "https://tushare.pro/",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "trendforce",
+   "name": "TrendForce DRAM 现货",
+   "link": "https://www.trendforce.com/price/dram/dram_spot",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "nyfed",
+   "name": "纽约联储（衰退概率/GSCPI）",
+   "link": "https://www.newyorkfed.org/research/capital_markets/ycfaq",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "fed_ebp",
+   "name": "美联储 EBP",
+   "link": "https://www.federalreserve.gov/econres/notes/feds-notes/ebp_csv.csv",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "finra",
+   "name": "FINRA 保证金统计",
+   "link": "https://www.finra.org/rules-guidance/key-topics/margin-accounts/margin-statistics",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "aaii",
+   "name": "AAII 情绪调查",
+   "link": "https://www.aaii.com/sentimentsurvey",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "multpl",
+   "name": "multpl（Shiller CAPE）",
+   "link": "https://www.multpl.com/shiller-pe/table/by-month",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "damodaran",
+   "name": "Damodaran 隐含 ERP",
+   "link": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/home.htm",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "bis",
+   "name": "BIS 信贷/GDP 缺口",
+   "link": "https://data.bis.org/topics/CREDIT_GAPS",
+   "ok": true,
+   "last": "2026-10-20T03:06:13",
+   "note": ""
+  },
+  {
+   "id": "manual",
+   "name": "人工维护（ISM/LEI/韩国出口/台湾订单/资本开支/CDS）",
+   "link": "https://github.com/JohnPENG-cn/chain-site",
+   "ok": true,
+   "last": "见各卡片数据日",
+   "note": "manual.json，由日报流程更新"
+  }
+ ],
+ "indicators": [
+  {
+   "id": "us_curve",
+   "cid": "us_curve",
+   "tier": "A",
+   "name": "美债曲线 10Y−3M",
+   "unit": "pp",
+   "srcs": [
+    "fred:T10Y3M",
+    "fred:T10Y2Y",
+    "nyfed"
+   ],
+   "link": "https://fred.stlouisfed.org/series/T10Y3M",
+   "layer": "宏观周期",
+   "grade": "强（但2022-24失灵）",
+   "why": "央行加息把短端抬到长端之上（倒挂）=市场押注未来要降息=预期经济会变差；同时银行'借短贷长'的利差被压缩，放贷意愿下降，信用收缩反过来促成衰退",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 0.82,
+   "vtxt": "+0.82pp",
+   "obs": "2026-10-15",
+   "pct": 30.6,
+   "pct_label": "1982年以来",
+   "danger": 0,
+   "ddir": "<=",
+   "dist": 0.82,
+   "dist_txt": "距危险线 0.82pp（危险线 <= 0.00pp）",
+   "extras": [
+    "解除倒挂后 18 个月警戒窗内（最后一次倒挂 2025-10-16）",
+    "10Y−2Y +0.33pp",
+    "纽约联储模型：至 2027-09 衰退概率 12.8%"
+   ],
+   "spark_label": "10Y−3M（pp）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "us_claims",
+   "cid": "us_claims",
+   "tier": "A",
+   "name": "美国初请失业金（4周均值）",
+   "unit": "%",
+   "srcs": [
+    "fred:ICSA",
+    "fred:CCSA"
+   ],
+   "link": "https://fred.stlouisfed.org/series/ICSA",
+   "layer": "宏观周期",
+   "grade": "强（拐点信号）",
+   "why": "企业裁员是衰退的'第一张多米诺骨牌'：裁员→收入降→消费降→再裁员",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 0.1261,
+   "vtxt": "19.85万",
+   "obs": "2026-10-10",
+   "pct": 14.1,
+   "pct_label": "1968年以来（较52周低点抬升幅度）",
+   "danger": 15,
+   "ddir": ">=",
+   "dist": 14.8739,
+   "dist_txt": "距危险线 14.9%（危险线 >= 15.0%）",
+   "extras": [
+    "较 52 周低点 +0.1%（单周 19.9万）",
+    "续请 171万（10-03）"
+   ],
+   "spark_label": "4周均值（万人）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "hy_oas",
+   "cid": "hy_oas",
+   "tier": "A",
+   "name": "美国高收益债利差 HY OAS",
+   "unit": "bp",
+   "srcs": [
+    "fred:BAMLH0A0HYM2"
+   ],
+   "link": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+   "layer": "信用与流动性",
+   "grade": "强",
+   "why": "信用市场由专业机构定价，且直接决定企业能否续借",
+   "ok": true,
+   "status": "amber",
+   "opp": "False",
+   "value": 323.0,
+   "vtxt": "323bp",
+   "obs": "2026-10-15",
+   "pct": 74.5,
+   "pct_label": "近3年（FRED 只给 3 年）",
+   "danger": 500,
+   "ddir": ">=",
+   "dist": 177.0,
+   "dist_txt": "距危险线 177bp（危险线 >= 500bp）",
+   "extras": [
+    "1个月 +53bp（月扩≥50bp 警戒，≥100bp 危险）",
+    "投资级 IG 84bp"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "real_yield",
+   "cid": "real_yield",
+   "tier": "A",
+   "name": "美债10Y实际利率（TIPS）",
+   "unit": "%",
+   "srcs": [
+    "fred:DFII10",
+    "fred:DGS10",
+    "fred:T5YIE"
+   ],
+   "link": "https://fred.stlouisfed.org/series/DFII10",
+   "layer": "跨资产",
+   "grade": "强（作为全球资产定价锚）",
+   "why": "所有资产价格≈未来现金流/(1+利率)",
+   "ok": true,
+   "status": "red",
+   "opp": false,
+   "value": 2.78,
+   "vtxt": "2.78%",
+   "obs": "2026-10-15",
+   "pct": 99.3,
+   "pct_label": "2003年以来",
+   "danger": 2.5,
+   "ddir": ">=",
+   "dist": -0.28,
+   "dist_txt": "已越过危险线 0.28%（危险线 >= 2.50%）",
+   "extras": [
+    "名义10Y 5.10%",
+    "5年通胀预期 2.33%",
+    "3个月 +43bp"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "dollar",
+   "cid": "dollar",
+   "tier": "A",
+   "name": "美元（广义贸易加权，6个月涨幅）",
+   "unit": "%",
+   "srcs": [
+    "fred:DTWEXBGS",
+    "yahoo"
+   ],
+   "link": "https://fred.stlouisfed.org/series/DTWEXBGS",
+   "layer": "信用与流动性",
+   "grade": "强（全球金融周期）",
+   "why": "全球大量债务以美元计价",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 2.7095,
+   "vtxt": "121.6",
+   "obs": "2026-10-15",
+   "pct": 73.3,
+   "pct_label": "2006年以来（6个月涨幅）",
+   "danger": 8,
+   "ddir": ">=",
+   "dist": 5.2905,
+   "dist_txt": "距危险线 5.3%（危险线 >= 8.0%）",
+   "extras": [
+    "6个月 +2.7%",
+    "DXY 102.00"
+   ],
+   "spark_label": "广义美元指数",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "vix_ts",
+   "cid": "vix_ts",
+   "tier": "A",
+   "name": "VIX 期限结构（VIX/VIX3M）",
+   "unit": "",
+   "srcs": [
+    "cboe_vix"
+   ],
+   "link": "https://www.cboe.com/tradable_products/vix/",
+   "layer": "估值与情绪",
+   "grade": "中（危机识别好，择时弱）",
+   "why": "期权是保险价格",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 0.8902,
+   "vtxt": "0.89",
+   "obs": "2026-10-15",
+   "pct": 54.1,
+   "pct_label": "2009年以来",
+   "danger": 1.0,
+   "ddir": ">=",
+   "dist": 0.1098,
+   "dist_txt": "距危险线 0.11（危险线 >= 1.00）",
+   "extras": [
+    "VIX 16.46 / VIX3M 18.49",
+    "比值>1=近月保险更贵（风暴进行时）"
+   ],
+   "spark_label": "VIX",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "move",
+   "cid": "move",
+   "tier": "A",
+   "name": "MOVE 美债波动率",
+   "unit": "",
+   "srcs": [
+    "yahoo"
+   ],
+   "link": "https://finance.yahoo.com/quote/%5EMOVE/",
+   "layer": "跨资产",
+   "grade": "中-强",
+   "why": "美债是全球抵押品",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 102.49,
+   "vtxt": "102.5",
+   "obs": "2026-10-15",
+   "pct": 74.8,
+   "pct_label": "2016年以来",
+   "danger": 130,
+   "ddir": ">=",
+   "dist": 27.51,
+   "dist_txt": "距危险线 28（危险线 >= 130）",
+   "extras": [
+    "1个月 +22%"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "oil",
+   "cid": "oil",
+   "tier": "A",
+   "name": "原油（WTI 同比）",
+   "unit": "%",
+   "srcs": [
+    "fred:DCOILWTICO",
+    "yahoo"
+   ],
+   "link": "https://fred.stlouisfed.org/series/DCOILWTICO",
+   "layer": "跨资产",
+   "grade": "强（作为衰退触发器）",
+   "why": "油价暴涨=对消费者和企业的一笔'税'，挤压其他支出；同时推高通胀，迫使央行不敢降息甚至加息",
+   "ok": true,
+   "status": "red",
+   "opp": false,
+   "value": 71.2198,
+   "vtxt": "101.9美元",
+   "obs": "2026-10-14",
+   "pct": 93.7,
+   "pct_label": "1987年以来（同比）",
+   "danger": 50,
+   "ddir": ">=",
+   "dist": -21.2198,
+   "dist_txt": "已越过危险线 21%（危险线 >= 50%）",
+   "extras": [
+    "同比 +71%",
+    "Brent 期货 105.9（10-15）"
+   ],
+   "spark_label": "WTI 现货（美元）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "funding",
+   "cid": "funding",
+   "tier": "A",
+   "name": "短端融资压力 SOFR−IORB",
+   "unit": "bp",
+   "srcs": [
+    "fred:SOFR",
+    "fred:IORB",
+    "fred:CPFF"
+   ],
+   "link": "https://fred.stlouisfed.org/series/SOFR",
+   "layer": "信用与流动性",
+   "grade": "中-强（危机时）",
+   "why": "当准备金稀缺或对手方风险上升，回购利率会跳到美联储利率走廊上方（如2019年9月），这是'水管堵了'的直接信号",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": -1.0,
+   "vtxt": "-1bp",
+   "obs": "2026-10-15",
+   "pct": 84.7,
+   "pct_label": "2021年以来",
+   "danger": 10,
+   "ddir": ">=",
+   "dist": 11.0,
+   "dist_txt": "距危险线 11bp（危险线 >= 10bp）",
+   "extras": [
+    "商业票据−国债 0.20pp"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cn_10y",
+   "cid": "cn_10y",
+   "tier": "A",
+   "name": "中国10Y国债 与 中美利差",
+   "unit": "bp",
+   "srcs": [
+    "eastmoney"
+   ],
+   "link": "https://data.eastmoney.com/cjsj/zmgzsyl.html",
+   "layer": "中国",
+   "grade": "强（中国名义增长与资金价格的锚）",
+   "why": "中国10Y≈市场对中国名义GDP增速和通胀的长期判断；利率持续走低=通缩预期/资产荒",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 344.2,
+   "vtxt": "1.648%",
+   "obs": "2026-10-16",
+   "pct": 99.8,
+   "pct_label": "2004年以来（利差）",
+   "danger": 400,
+   "ddir": ">=",
+   "dist": 55.8,
+   "dist_txt": "距危险线 56bp（危险线 >= 400bp）",
+   "extras": [
+    "中美利差 344bp（美高中低）",
+    "中国10Y 20日 -4bp（单月上行≥30bp=债市调整）"
+   ],
+   "spark_label": "中国10Y（%）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "csi300_erp",
+   "cid": "csi300_erp",
+   "tier": "A",
+   "name": "沪深300 股债性价比（3年滚动z）",
+   "unit": "σ",
+   "srcs": [
+    "tushare",
+    "eastmoney"
+   ],
+   "link": "https://tushare.pro/document/2?doc_id=128",
+   "layer": "中国",
+   "grade": "强（中期择时，国内回测最充分）",
+   "why": "当股票相对债券便宜到极端（恐慌、去杠杆），后续回报靠估值修复；昂贵到极端（泡沫）时相反",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 0.233,
+   "vtxt": "6.02%",
+   "obs": "2026-10-16",
+   "pct": 43.8,
+   "pct_label": "2009年以来（z值）",
+   "danger": -1.5,
+   "ddir": "<=",
+   "dist": 1.733,
+   "dist_txt": "距危险线 1.73σ（危险线 <= -1.50σ）",
+   "extras": [
+    "3年滚动 z = +0.23（>+2 为历史强底部信号）",
+    "PE_TTM 13.04，10Y 1.648%",
+    "全样本分位 80%"
+   ],
+   "spark_label": "ERP（%）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cn_margin",
+   "cid": "cn_margin_turnover",
+   "tier": "A",
+   "name": "A股融资余额（20日变化）",
+   "unit": "%",
+   "srcs": [
+    "tushare"
+   ],
+   "link": "https://tushare.pro/document/2?doc_id=58",
+   "layer": "中国",
+   "grade": "中（顶部识别较好，底部滞后）",
+   "why": "A股散户与杠杆主导，成交与融资余额同步放大=情绪与杠杆螺旋（索罗斯反身性）；去杠杆时强平造成踩踏",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": -6.0173,
+   "vtxt": "2.460万亿",
+   "obs": "2026-10-16",
+   "pct": 7.5,
+   "pct_label": "2014年以来（20日变化）",
+   "danger": -10,
+   "ddir": "<=",
+   "dist": 3.9827,
+   "dist_txt": "距危险线 4.0%（危险线 <= -10.0%）",
+   "extras": [
+    "20日 -6.0%",
+    "较一年内峰值 -18.3%（2026-06-25 3.01万亿）"
+   ],
+   "spark_label": "融资余额（万亿）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "dram_spot",
+   "ok": false,
+   "status": "grey",
+   "err": "AttributeError: 'NoneType' object has no attribute 'iloc'",
+   "last_good": null,
+   "name": "dram_spot"
+  },
+  {
+   "id": "cu_au",
+   "cid": "cu_au",
+   "tier": "A",
+   "name": "铜/金比（×1000）",
+   "unit": "",
+   "srcs": [
+    "yahoo"
+   ],
+   "link": "https://finance.yahoo.com/quote/HG%3DF/",
+   "layer": "跨资产",
+   "grade": "中（作为增长vs避险的风向标）/ 弱（预测美债利率——被高估）",
+   "why": "铜反映工业需求（增长），金反映避险与货币信用",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 1.5615,
+   "vtxt": "1.561",
+   "obs": "2026-10-15",
+   "pct": 7.5,
+   "pct_label": "2000年以来（月度）",
+   "danger": null,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "铜 6.511美元/磅，金 4,170美元/盎司",
+    "分位<10%=增长预期弱（只作风向标，不预测利率）"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "sahm",
+   "cid": "sahm",
+   "tier": "B",
+   "name": "萨姆规则",
+   "unit": "pp",
+   "srcs": [
+    "fred:SAHMREALTIME"
+   ],
+   "link": "https://fred.stlouisfed.org/series/SAHMREALTIME",
+   "layer": "宏观周期",
+   "grade": "强（实时识别，非预测）",
+   "why": "失业率一旦开始上升就会自我加速（失业→消费降→更多失业），0.5pp 是'刹不住车'的临界点",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 0.0,
+   "vtxt": "0.00pp",
+   "obs": "2026-09-01",
+   "pct": 33.1,
+   "pct_label": "1959年以来",
+   "danger": 0.5,
+   "ddir": ">=",
+   "dist": 0.5,
+   "dist_txt": "距危险线 0.50pp（危险线 >= 0.50pp）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "ebp",
+   "cid": "ebp",
+   "tier": "B",
+   "name": "超额债券溢价 EBP",
+   "unit": "",
+   "srcs": [
+    "fed_ebp"
+   ],
+   "link": "https://www.federalreserve.gov/econres/notes/feds-notes/ebp_csv.csv",
+   "layer": "信用与流动性",
+   "grade": "强",
+   "why": "当金融中介风险承受能力下降，EBP上升，信贷供给收缩，随后实体经济放缓",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": -0.3919,
+   "vtxt": "-0.39",
+   "obs": "2026-09-01",
+   "pct": 9.5,
+   "pct_label": "1973年以来",
+   "danger": 0.5,
+   "ddir": ">=",
+   "dist": 0.8919,
+   "dist_txt": "距危险线 0.89（危险线 >= 0.50）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "nfci",
+   "cid": "nfci",
+   "tier": "B",
+   "name": "芝加哥联储金融条件 NFCI",
+   "unit": "",
+   "srcs": [
+    "fred:NFCI"
+   ],
+   "link": "https://fred.stlouisfed.org/series/NFCI",
+   "layer": "信用与流动性",
+   "grade": "中-强",
+   "why": "把'钱好不好借、贵不贵'汇总成一个数，比单一利差稳健",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": -0.499,
+   "vtxt": "-0.499",
+   "obs": "2026-10-09",
+   "pct": 39.0,
+   "pct_label": "1971年以来",
+   "danger": 0,
+   "ddir": ">=",
+   "dist": 0.499,
+   "dist_txt": "距危险线 0.499（危险线 >= 0.000）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "sloos",
+   "cid": "sloos",
+   "tier": "B",
+   "name": "银行放贷标准 SLOOS（净收紧%）",
+   "unit": "%",
+   "srcs": [
+    "fred:DRTSCILM"
+   ],
+   "link": "https://fred.stlouisfed.org/series/DRTSCILM",
+   "layer": "信用与流动性",
+   "grade": "强（信贷渠道）",
+   "why": "银行收紧放贷→中小企业拿不到钱→投资和就业下降，领先数个季度",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 0.0,
+   "vtxt": "0.0%",
+   "obs": "2026-07-01",
+   "pct": 46.6,
+   "pct_label": "1990年以来",
+   "danger": 20,
+   "ddir": ">=",
+   "dist": 20.0,
+   "dist_txt": "距危险线 20.0%（危险线 >= 20.0%）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cape",
+   "cid": "cape",
+   "tier": "B",
+   "name": "席勒市盈率 CAPE",
+   "unit": "",
+   "srcs": [
+    "multpl"
+   ],
+   "link": "https://www.multpl.com/shiller-pe/table/by-month",
+   "layer": "估值与情绪",
+   "grade": "强（10年回报）/ 弱（择时）",
+   "why": "买贵的资产，未来回报低（均值回归）",
+   "ok": true,
+   "status": "red",
+   "opp": false,
+   "value": 40.81,
+   "vtxt": "40.8",
+   "obs": "2026-10-01",
+   "pct": 98.9,
+   "pct_label": "1871年以来",
+   "danger": 30,
+   "ddir": ">=",
+   "dist": -10.81,
+   "dist_txt": "已越过危险线 10.8（危险线 >= 30.0）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "erp_us",
+   "cid": "erp_us",
+   "tier": "B",
+   "name": "美股隐含 ERP（Damodaran）",
+   "unit": "%",
+   "srcs": [
+    "damodaran"
+   ],
+   "link": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/home.htm",
+   "layer": "估值与情绪",
+   "grade": "中",
+   "why": "ERP 低=投资者为承担股票风险要的补偿少，安全垫薄",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 4.2,
+   "vtxt": "4.20%",
+   "obs": "2026-10-01",
+   "pct": null,
+   "pct_label": "自建序列（月度）",
+   "danger": 3.0,
+   "ddir": "<=",
+   "dist": 1.2,
+   "dist_txt": "距危险线 1.20%（危险线 <= 3.00%）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "gscpi",
+   "cid": "gscpi",
+   "tier": "B",
+   "name": "全球供应链压力 GSCPI",
+   "unit": "σ",
+   "srcs": [
+    "nyfed"
+   ],
+   "link": "https://www.newyorkfed.org/research/policy/gscpi",
+   "layer": "跨资产",
+   "grade": "中",
+   "why": "供应链紧=成本推动型通胀+交付延迟；2021年的峰值领先了随后的通胀高峰",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 1.284,
+   "vtxt": "1.28σ",
+   "obs": "2026-09-01",
+   "pct": 90.4,
+   "pct_label": "1998年以来",
+   "danger": 1.5,
+   "ddir": ">=",
+   "dist": 0.216,
+   "dist_txt": "距危险线 0.22σ（危险线 >= 1.50σ）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cn_pmi",
+   "cid": "cn_pmi",
+   "tier": "B",
+   "name": "中国官方制造业 PMI",
+   "unit": "",
+   "srcs": [
+    "tushare"
+   ],
+   "link": "https://tushare.pro/document/2?doc_id=325",
+   "layer": "中国",
+   "grade": "中",
+   "why": "企业订单与生产的月度快照",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 50.1,
+   "vtxt": "50.1",
+   "obs": "2026-09-01",
+   "pct": 32.8,
+   "pct_label": "2010年以来",
+   "danger": 49,
+   "ddir": "<=",
+   "dist": 1.1,
+   "dist_txt": "距危险线 1.1（危险线 <= 49.0）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "bis_gap",
+   "cid": "bis_gap",
+   "tier": "B",
+   "name": "BIS 信贷/GDP 缺口（中国）",
+   "unit": "pp",
+   "srcs": [
+    "bis"
+   ],
+   "link": "https://data.bis.org/topics/CREDIT_GAPS",
+   "layer": "结构性规律",
+   "grade": "强（银行危机最佳单一预警，跨国几十年）",
+   "why": "信贷增长远快于收入=未来偿债能力不足，最终以银行危机/长期衰退收场",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": -5.1412,
+   "vtxt": "-5.1pp",
+   "obs": "2026-03-31",
+   "pct": 27.0,
+   "pct_label": "1995年以来",
+   "danger": 10,
+   "ddir": ">=",
+   "dist": 15.1412,
+   "dist_txt": "距危险线 15.1pp（危险线 >= 10.0pp）",
+   "extras": [],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "netliq",
+   "cid": "netliq",
+   "tier": "B",
+   "name": "美联储\"净流动性\"",
+   "unit": "十亿美元",
+   "srcs": [
+    "fred:WALCL",
+    "fred:WTREGEN",
+    "fred:RRPONTSYD"
+   ],
+   "link": "https://fred.stlouisfed.org/series/WALCL",
+   "layer": "信用与流动性",
+   "grade": "弱（被高估）",
+   "why": "理论上准备金多=金融体系'水多'，利好风险资产",
+   "ok": true,
+   "status": "info",
+   "opp": false,
+   "value": 5872.065,
+   "vtxt": "5.87万亿",
+   "obs": "2026-10-14",
+   "pct": 80.9,
+   "pct_label": "2003年以来",
+   "danger": null,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "13周 -115十亿美元",
+    "被高估：周度变化与股市相关≈0，只作水管背景，不计分"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "buffett",
+   "cid": "buffett",
+   "tier": "B",
+   "name": "巴菲特指标（市值/GDP，FRED口径）",
+   "unit": "%",
+   "srcs": [
+    "fred:NCBEILQ027S",
+    "fred:GDP"
+   ],
+   "link": "https://fred.stlouisfed.org/series/NCBEILQ027S",
+   "layer": "估值与情绪",
+   "grade": "中（长期估值，择时弱）",
+   "why": "长期看企业利润不可能无限超越GDP增长，市值/GDP过高意味着未来回报低",
+   "ok": true,
+   "status": "red",
+   "opp": false,
+   "value": 255.0464,
+   "vtxt": "255%",
+   "obs": "2026-04-01",
+   "pct": 99.7,
+   "pct_label": "1947年以来",
+   "danger": 200,
+   "ddir": ">=",
+   "dist": -55.0464,
+   "dist_txt": "已越过危险线 55%（危险线 >= 200%）",
+   "extras": [
+    "口径为非金融企业股权市值/GDP，绝对水平高于 Wilshire 版，分位可比"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "margin_debt",
+   "cid": "margin_debt",
+   "tier": "B",
+   "name": "美国保证金债务同比（FINRA）",
+   "unit": "%",
+   "srcs": [
+    "finra"
+   ],
+   "link": "https://www.finra.org/rules-guidance/key-topics/margin-accounts/margin-statistics",
+   "layer": "估值与情绪",
+   "grade": "中（顶部背景）",
+   "why": "杠杆推涨→价格上涨→更多杠杆（反身性）；增速见顶回落=边际买盘枯竭",
+   "ok": true,
+   "status": "red",
+   "opp": "False",
+   "value": 31.3859,
+   "vtxt": "1.480万亿美元",
+   "obs": "2026-09-01",
+   "pct": 82.3,
+   "pct_label": "1998年以来（同比）",
+   "danger": 30,
+   "ddir": ">=",
+   "dist": -1.39,
+   "dist_txt": "已越过危险线 1.4%（危险线 >= 30.0%）",
+   "extras": [
+    "同比 +31.4%",
+    "同比>30%后从 54% 回落：历史顶部前形态"
+   ],
+   "spark_label": "余额（万亿美元）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "aaii",
+   "cid": "sentiment",
+   "tier": "B",
+   "name": "AAII 牛熊差（看多−看空）",
+   "unit": "pp",
+   "srcs": [
+    "aaii"
+   ],
+   "link": "https://www.aaii.com/sentimentsurvey",
+   "layer": "估值与情绪",
+   "grade": "弱-中（只在极端值有用）",
+   "why": "反向指标：人人看空时卖盘已出尽",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": -2.8902,
+   "vtxt": "-2.9pp",
+   "obs": "2026-10-15",
+   "pct": 30.1,
+   "pct_label": "1987年以来",
+   "danger": 30,
+   "ddir": ">=",
+   "dist": 32.8902,
+   "dist_txt": "距危险线 32.9pp（危险线 >= 30.0pp）",
+   "extras": [
+    "看多 38.7% / 看空 41.6%（反向指标，只看极端）"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "pc_equity",
+   "cid": "sentiment",
+   "tier": "B",
+   "name": "CBOE 个股 Put/Call（10日均）",
+   "unit": "",
+   "srcs": [
+    "cboe_pc"
+   ],
+   "link": "https://www.cboe.com/us/options/market_statistics/daily/",
+   "layer": "估值与情绪",
+   "grade": "弱-中（只在极端值有用）",
+   "why": "反向指标：人人看空时卖盘已出尽",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 0.594,
+   "vtxt": "0.59",
+   "obs": "2026-10-15",
+   "pct": null,
+   "pct_label": "历史不足（自建序列）",
+   "danger": 0.5,
+   "ddir": "<=",
+   "dist": 0.094,
+   "dist_txt": "距危险线 0.09（危险线 <= 0.50）",
+   "extras": [
+    "当日 0.62；低=过度乐观（反向指标），自建序列 12 天"
+   ],
+   "spark_label": "当日个股 P/C",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cn_m1m2",
+   "cid": "cn_m1m2",
+   "tier": "B",
+   "name": "中国 M1−M2 剪刀差",
+   "unit": "pp",
+   "srcs": [
+    "tushare"
+   ],
+   "link": "https://tushare.pro/document/2?doc_id=242",
+   "layer": "中国",
+   "grade": "中（国内实务广泛使用，2025年口径变更）",
+   "why": "企业愿意把定期转成活期=准备花钱（投资、备货），经济活化；剪刀差为负且扩大=钱'趴在账上'不动",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": -4.0,
+   "vtxt": "-4.0pp",
+   "obs": "2026-09-01",
+   "pct": 55.7,
+   "pct_label": "2010年以来",
+   "danger": -6,
+   "ddir": "<=",
+   "dist": 2.0,
+   "dist_txt": "距危险线 2.0pp（危险线 <= -6.0pp）",
+   "extras": [
+    "M1 3.2% / M2 7.2%",
+    "2025-01 起 M1 口径变更，前后不完全可比"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cn_credit",
+   "cid": "cn_credit",
+   "tier": "B",
+   "name": "中国信贷脉冲（社融12个月新增变化/GDP）",
+   "unit": "%GDP",
+   "srcs": [
+    "tushare"
+   ],
+   "link": "https://tushare.pro/document/2?doc_id=310",
+   "layer": "中国",
+   "grade": "中-强（全球商品/制造业的领先变量）",
+   "why": "中国是全球最大的信用创造者之一，信贷加速→基建地产开工→商品与全球制造业需求",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": -2.5756,
+   "vtxt": "-2.58%GDP",
+   "obs": "2026-09-01",
+   "pct": 8.5,
+   "pct_label": "2015年以来",
+   "danger": -3,
+   "ddir": "<=",
+   "dist": 0.4244,
+   "dist_txt": "距危险线 0.42%GDP（危险线 <= -3.00%GDP）",
+   "extras": [
+    "社融存量同比 7.11%",
+    "box 近似算法（月度社融 + 季度名义GDP）"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "cn_ppi_cpi",
+   "cid": "cn_ppi_cpi",
+   "tier": "B",
+   "name": "中国 PPI−CPI",
+   "unit": "pp",
+   "srcs": [
+    "tushare"
+   ],
+   "link": "https://tushare.pro/document/2?doc_id=245",
+   "layer": "中国",
+   "grade": "中",
+   "why": "PPI 决定上游工业企业利润与名义GDP；PPI−CPI 扩大=利润向上游集中、中下游被挤压（成本推动型）",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": 4.1,
+   "vtxt": "+4.1pp",
+   "obs": "2026-09-01",
+   "pct": 88.1,
+   "pct_label": "2010年以来",
+   "danger": 5,
+   "ddir": ">=",
+   "dist": 0.9,
+   "dist_txt": "距危险线 0.9pp（危险线 >= 5.0pp）",
+   "extras": [
+    "PPI +5.0% / CPI +0.9%（上游挤压中下游）"
+   ],
+   "spark_label": "PPI 同比（%）",
+   "err": null,
+   "manual": false
+  },
+  {
+   "id": "key_cds",
+   "cid": "key_cds",
+   "tier": "A",
+   "name": "关键名字 CDS（AI融资链）",
+   "unit": "bp",
+   "srcs": [
+    "manual"
+   ],
+   "link": "https://www.bloomberg.com/news/articles/2026-10-15/coreweave-risk-gauge-hits-record-pricing-60-odds-of-default",
+   "layer": "信用与流动性",
+   "grade": "中（个案，传染性需判断）",
+   "why": "周期的裂缝往往从最边缘、杠杆最高的玩家开始（明斯基的'庞氏融资'单位）",
+   "ok": true,
+   "status": "red",
+   "opp": false,
+   "value": 1194.5,
+   "vtxt": "CoreWeave 5年CDS 约1,200bp",
+   "obs": "2026-10-15",
+   "pct": null,
+   "pct_label": "",
+   "danger": 1000,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "10-15 盘中纪录 1,194.5bp，隐含5年违约概率>60%；2032债收益率>15%。危险线：边缘名字>1,000bp 且向次边缘蔓延。"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": true
+  },
+  {
+   "id": "ism_noi",
+   "cid": "ism_noi",
+   "tier": "B",
+   "name": "ISM 新订单−库存",
+   "unit": "点",
+   "srcs": [
+    "manual"
+   ],
+   "link": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/september/",
+   "layer": "宏观周期",
+   "grade": "中",
+   "why": "订单多、库存少=企业要补库扩产（基钦库存周期上行段）；反之要去库减产",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 6.7,
+   "vtxt": "新订单 55.3 − 库存 48.6 = +6.7",
+   "obs": "2026-09-30",
+   "pct": null,
+   "pct_label": "",
+   "danger": -5,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "9月 PMI 54.5；客户库存 41.6（太低第24个月）；价格 77.9。危险线：差值连续3个月 < −5。"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": true
+  },
+  {
+   "id": "lei",
+   "cid": "lei",
+   "tier": "B",
+   "name": "Conference Board LEI",
+   "unit": "%（6个月）",
+   "srcs": [
+    "manual"
+   ],
+   "link": "https://www.conference-board.org/topics/us-leading-indicators",
+   "layer": "宏观周期",
+   "grade": "中（2022-24 失灵）",
+   "why": "把多个领先指标合成以减少单一噪音",
+   "ok": true,
+   "status": "amber",
+   "opp": false,
+   "value": -0.1,
+   "vtxt": "99.5，6个月 −0.1%",
+   "obs": "2026-08-31",
+   "pct": null,
+   "pct_label": "",
+   "danger": -4.2,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "8月月环比 −0.1%，首个下降月；危险线：6个月年化 < −4.2% 且多数成分下降。"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": true
+  },
+  {
+   "id": "kr_exports",
+   "cid": "kr_exports",
+   "tier": "B",
+   "name": "韩国出口（前10/20天）",
+   "unit": "% 同比（芯片）",
+   "srcs": [
+    "manual"
+   ],
+   "link": "https://www.koreatimes.co.kr/economy/20261012/exports-double-in-first-10-days-of-october-on-chips",
+   "layer": "产业/科技周期",
+   "grade": "中-强（全球最早的贸易硬数据）",
+   "why": "韩国出口以芯片、化工、汽车、船舶为主，是全球制造业与电子周期的'煤矿金丝雀'，且每月21日就有前20天数据",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 170.9,
+   "vtxt": "10月1–10日 出口 +102%，芯片 +170.9%",
+   "obs": "2026-10-10",
+   "pct": null,
+   "pct_label": "",
+   "danger": 0,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "日均出口 +28.5%；芯片占 46.7%。前20天数据 10-21 发布。危险线：芯片日均出口同比连续两期回落且转负。"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": true
+  },
+  {
+   "id": "tw_orders",
+   "cid": "tw_orders",
+   "tier": "B",
+   "name": "台湾外销订单",
+   "unit": "% 同比",
+   "srcs": [
+    "manual"
+   ],
+   "link": "https://focustaiwan.tw/business/202609220025",
+   "layer": "产业/科技周期",
+   "grade": "中",
+   "why": "台湾是全球电子/服务器/晶圆代工中枢，订单直接反映AI与消费电子需求",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 71.4,
+   "vtxt": "8月 1,029.6亿美元，+71.4%",
+   "obs": "2026-08-31",
+   "pct": null,
+   "pct_label": "",
+   "danger": 0,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "连续19个月增长；经济部预测9月 +50.7%~55.1%。危险线：同比连续3个月回落且电子类转负。"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": true
+  },
+  {
+   "id": "capex",
+   "cid": "capex",
+   "tier": "B",
+   "name": "超大厂资本开支",
+   "unit": "十亿美元（2026中值）",
+   "srcs": [
+    "manual"
+   ],
+   "link": "https://www.tmtfinance.com/intel/2026-hyperscaler-capex-tops-us700bn-analysis",
+   "layer": "产业/科技周期",
+   "grade": "中-强（AI链最终需求的源头）",
+   "why": "AI 产业链（GPU、HBM、CoWoS、电力）的需求最终都来自这笔钱；指引变化领先上游订单1–3个季度",
+   "ok": true,
+   "status": "green",
+   "opp": false,
+   "value": 732.5,
+   "vtxt": "2026E 7,200–7,450亿美元；2027 一致预期约9,345亿",
+   "obs": "2026-09-30",
+   "pct": null,
+   "pct_label": "",
+   "danger": null,
+   "ddir": null,
+   "dist": null,
+   "dist_txt": "",
+   "extras": [
+    "下一检验点 10-28/29 财报。危险线：任一家下调指引或外部融资占比上升。"
+   ],
+   "spark_label": "",
+   "err": null,
+   "manual": true
+  }
+ ]
+}
