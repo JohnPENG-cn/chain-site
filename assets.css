@@ -133,3 +133,4 @@ table.watch td:nth-child(2)::before{content:"指标：";color:var(--mut)}table.w
 /* 页头：手机端按钮不换行，品牌名过长时省略 */
 header.top .btn{white-space:nowrap}header.top .brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}header.top .pill{white-space:nowrap}
 @media(max-width:420px){header.top .wrap{gap:8px;padding:0 12px}header.top .btn{padding:4px 8px}}
+@media(max-width:420px){header.top .pill{display:none}}
