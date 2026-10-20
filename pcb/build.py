@@ -1,0 +1,353 @@
+"""PCB 小链 v0.1 构建：模型（pcb/model.py）+ 手写研究内容 → data/pcb.json、pcb_data/model_out.json、pcb/pcb_model.xlsx、pcb/pcb_chain.md。
+确定性：只读本地 JSON（cowos.json / toc.json / hbm.json / pcb_data/*.json），重跑结果相同。回测数据由 pcb/backtest.py 生成（需联网，不在 build.sh 里）。"""
+import json, os, sys
+R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(R0, 'pcb'))
+from src import SRC, ID, n, s
+import model as M
+_P = lambda *a: os.path.join(R0, *a)
+A, X = M.accel(), M.xchain()
+R = M.calc(M.P0, A, X)
+BT = json.load(open(_P('pcb_data', 'backtest.json')))
+MG = json.load(open(_P('pcb_data', 'margins.json')))
+CW = json.load(open(_P('data', 'cowos.json')))
+HB = json.load(open(_P('data', 'hbm.json')))
+pc = lambda v: f'{v*100:.0f}%'
+E = '（估）'
+
+# ---------------- 需求：高盛 AI 服务器 PCB / CCL（2025–28）
+GS = dict(y=[2025, 2026, 2027, 2028], area=[0.9, 1.3, 2.6, 4.5], asp=[5833, 10258, 14405, 18549], sheets=[27, 42, 78, 131], usd_sh=[93, 165, 282, 362],
+          m9=[None, 7, 41, 58], l30=[12, 18, 46, 47], hdi=[10, 30, 35, 66])
+GS['pcb'] = [round(a * p / 1000, 2) for a, p in zip(GS['area'], GS['asp'])]          # 十亿美元 = 百万 m² × 美元/m² ÷ 1000
+GS['ccl'] = [round(a * p / 1000, 2) for a, p in zip(GS['sheets'], GS['usd_sh'])]
+PER = {y: round(GS['pcb'][i] * 1000 / A[y]) for i, y in enumerate(M.Y)}               # 每颗加速器 PCB 价值（美元，估）
+CUKG = {2025: round(M.CU['d25'] * 12 / A[2025] / 1000, 2), 2026: round(M.CU['d26'] * 12 / A[2026] / 1000, 2), 2027: round(M.CU['d27'] * 12 / A[2027] / 1000, 2)}   # kg/颗（估）
+
+# ---------------- M9 预期差（估）：台光电营收倒推
+FX = 32.63   # 新台币/美元，FinMind 2026-10-20 即期买卖中值
+EMC = dict(q3=192.07 + 201.46 + 215.32)                     # 7–9 月营收（亿新台币）[fm]
+EMC['run'] = EMC['q3'] * 4 / FX / 10                         # 十亿美元/年
+EMC['cap'] = (sum(M.CCL['cap'][4:]) / 4) / M.CCL['cap'][2]   # 2027 年均产能 ÷ 2026Q3
+EMC['y27'] = EMC['run'] * EMC['cap']
+M9 = dict(lo=EMC['y27'] * 0.10 / 0.70, hi=EMC['y27'] * 0.25 / 0.50, gs=9.046, ccl27=GS['ccl'][2])
+M9.update(lo_s=M9['lo'] / M9['ccl27'], hi_s=M9['hi'] / M9['ccl27'], mid_s=(M9['lo'] + M9['hi']) / 2 / M9['ccl27'])
+
+# ---------------- 毛利率迁移（2Q25 → 2Q26；A 股用半年报）
+NAME = {'2383': '台光电', '6274': '台燿', '6213': '联茂', '2368': '金像电', '8358': '金居', '1815': '富乔', '8021': '尖点'}
+SEG = {'2383': 'CCL', '6274': 'CCL', '6213': 'CCL', '2368': 'PCB 板厂', '8358': '铜箔', '1815': '玻纤布', '8021': '钻针'}
+gm = lambda k, d: next(x[2] for x in MG[k] if x[0] == d)
+DGM = [[f'{NAME[k]} {k}', SEG[k], gm(k, '2026-06-30'), gm(k, '2025-06-30'), '2Q26 vs 2Q25', n('fm')] for k in ['1815', '8021', '8358', '6274', '6213', '2383', '2368']]
+DGM += [['生益科技 覆铜板', 'CCL', 29.16, round(29.16 - 5.47, 2), '1H26 vs 1H25', n('sy')], ['沪电股份 PCB', 'PCB 板厂', 40.52, round(40.52 - 4.06, 2), '1H26 vs 1H25', n('hd')],
+        ['深南电路 PCB', 'PCB 板厂', 36.85, round(36.85 - 2.43, 2), '1H26 vs 1H25', n('sn')], ['胜宏科技', 'PCB 板厂', 33.2, 36.2, '1H26 vs 1H25', n('shhk')]]
+DGM.sort(key=lambda r: -(r[2] - r[3]))
+med = lambda a: sorted(a)[len(a) // 2] if len(a) % 2 else sum(sorted(a)[len(a) // 2 - 1:len(a) // 2 + 1]) / 2
+UPM = med([r[2] - r[3] for r in DGM if r[1] != 'PCB 板厂'])
+FBM = med([r[2] - r[3] for r in DGM if r[1] == 'PCB 板厂'])
+
+# ---------------- 回测摘要
+tp = BT['tp']['CCL→金像电']
+LEADS = [x[2] for x in tp]
+BTS = dict(n=len(LEADS), pos=sum(1 for x in LEADS if x > 0), med=med(LEADS), lo=min(x for x in LEADS if x > 0), hi=max(LEADS),
+           k=max(BT['xc']['CCL→金像电'].items(), key=lambda kv: kv[1][0]), now=BT['now'], m=BT['now_m'])
+
+# ---------------- 中国账本
+CNY = {r['y']: r for r in CW['cn']['bal']}
+HCN = {r['y']: r for r in HB['cn']['bal']}
+WHK27, WK27, WHK26, WK26 = CNY[2027]['hcards'], CNY[2027]['cards'], CNY[2026]['hcards'], CNY[2026]['cards']
+U27 = HCN[2027]['u'] + CW['cn']['model']['npr']['2027']       # 不缺货需求（百万张，含 950/960PR）
+CB = M.cnbal(WHK27, A27=A[2027], cu_kg=CUKG[2027])
+CBU = M.cnbal(U27, A27=A[2027], cu_kg=CUKG[2027])
+
+r27, r26 = R[2027], R[2026]
+OUT = dict(A=A, X=X, R={str(k): v for k, v in R.items()}, P0=M.P0, CU={k: round(v, 1) for k, v in M.CU.items()}, CCLg=round(M.CCL['g'], 4), GS=GS, PER=PER, CUKG=CUKG,
+           EMC={k: round(v, 3) for k, v in EMC.items()}, M9={k: round(v, 3) for k, v in M9.items()}, UPM=UPM, FBM=FBM, BTS=BTS,
+           CN=dict(WHK27=WHK27, WK27=WK27, WHK26=WHK26, WK26=WK26, U27=round(U27, 3), cb=CB, cbu=CBU, fab_usd=round(M.CN['fab_cny'] / M.CN['fx'] / 10, 2)))
+
+# ---------------- 环节表（第 4/5/7 步共用）：[key, 环节, 2025, 2026, 2027 基准, 依据, 来源]
+STAGES = [
+ ['cu', 'HVLP3+ 高端铜箔', f"{R[2025]['cu']:.2f}", pc(r26['cu']), pc(r27['cu']),
+  f"高盛 5 月：2025 年有效供给 803 ÷ 需求 679 吨/月；缺口 = （需求−有效供给）÷ 有效供给，2026/27 年 28%/39% {s('gscu')}。8 月上修到 45%–55% {s('gscu2')}，本页取 2026 年 45%、2027 年 50%（满足率 = 1 ÷ 1.5 = 67%）{E}；再加大陆 HVLP4（德福 8 月 HVLP4 约 70 吨/月 {s('defu')}、铜冠已量产 {s('tongguan')}），假设 2027 年合计 +150 吨/月通过认证 {E}，÷ 2027 年需求约 {M.CU['d27']:,.0f} 吨/月（2025→28 几何插值 {E}）= +{150/M.CU['d27']*100:.1f} 个百分点", n('gscu', 'gscu2', 'defu')],
+ ['gf', '二代 Low-Dk 玻纤布', '—', pc(r26['gf']), pc(r27['gf']),
+  f"没有统一口径：广发称 2027 年需求约 1.7 亿米、缺口超 40% {s('gf')}（满足率约 60%）；纪要称 2027 年二代布约 8,000 万米、大陆 2027Q4 起新增 4–5 亿米，有过剩风险 {s('jy')}（满足率 ≥ 100%）。取中间 80%、2026 年 90% {E}", n('gf', 'jy')],
+ ['ccl', 'M8/M9 高速覆铜板', '—', pc(r26['ccl']), pc(r27['ccl']),
+  f"2026 年按\"全产全销、供需打平\"= 100% {E}；2027 年 = 台光电年均产能增速 ×{M.CCL['g']:.2f}（季末 585→615→735→855→930 万张 {s('emcir', 'udn1')}）× 高阶占比提升 ×1.15（M7 以上 50%+ → 60–65% {s('udn2')}，估）÷ 高盛 AI CCL 张数增速 ×{78/42:.2f}（4,200→7,800 万张 {s('gs')}）", n('emcir', 'udn1', 'udn2', 'gs')],
+ ['dr', 'PCB 钻针（全市场）', f"{R[2025]['dr']:.2f}", pc(r26['dr']), pc(r27['dr']),
+  f"优分析：有效供给 ÷ 需求 = 38.70/35.28、50.05/51.16、69.47/76.73 亿支 {s('uad')}；是全市场口径，AI 高阶针更紧（M9 主针寿命只有 M8 的约 1/3）", n('uad')],
+ ['abf', 'ABF 载板（读 CoWoS 页）', f"{X['abf'][2025]:.2f}", pc(X['abf'][2026]), pc(X['abf'][2027]),
+  f"不重复建模：直接读 CoWoS 页约束推导（同一 KGI 加速器口径）{s('cowos')}；2027 年 ABF 供给只 +27.5%（KGI +25–30%）", n('cowos')],
+ ['q', 'Q 布（石英布）', '—', '83–100%', '不在 2027 主路径',
+  f"群益：2026 年 Q 布需求 1,500 万米以上（最多 1,800 万米），有效产能不足 1,500 万米 {s('qy')}；Kyber 正交背板推迟到 2028 {s('kyber')}、2026Q1 起 Rubin 更多用二代布 {s('jy')}，Q 布放量窗口 2027–28 {s('gsq')}", n('qy', 'kyber', 'gsq')],
+ ['fab', 'PCB 板厂（高多层 / HDI）', '—', '数据缺口', '数据缺口',
+  f"没有可信的 AI 高多层产能统计；A 股 20 家年内扩产超 800 亿元、2–3 年后集中释放 {s('capex')}；Prismark：2026 年 18 层以上产值 +86.7% {s('prq2')}。只作定性", n('capex', 'prq2')],
+]
+
+# ---------------- 价格（第 5 步）
+PRICE = [
+ ['覆铜板 CCL', '1H26 陆资 CCL 涨约 15%，最缺料号 30–40%、个别 >50%；4Q 逐月续涨', '经济日报 2026-09-30', n('udn2')],
+ ['HVLP3+ 铜箔', '金居 3Q/4Q 价格季增 10–15%/5–10%（高盛）；大陆 HVLP4 加工费 17–20 万元/吨', '工商时报、钜亨网', n('gscu2', 'uacu')],
+ ['二代 Low-Dk 布 / Q 布', '二代布 17.9–22.4 美元/米；Q 布 38.7–44.7 美元/米（约为二代布 2 倍）', '钜亨网 2026-09-16', n('cq')],
+ ['T-glass（低 CTE）', '日东纺：不再计划提价，产能到 FY2029 扩 3 倍仍\"不够\"', 'TrendForce 2026-08-06', n('tfn')],
+ ['钻针', '普通针 0.95 → 约 1.2 元（+20%），高端 +35% 以上；钨钢棒翻倍', '财联社', n('cld')],
+]
+
+# ---------------- 要害变量文字
+TOR_NOTE = (f"基准：2027 年 PCB 链最紧的是 HVLP3+ 铜箔，按目标规格只够需求的约 {pc(r27['cu'])}；ABF 载板约 {pc(X['abf'][2027])}（CoWoS 页）。"
+            f"两者只差约 {(r27['cu']-X['abf'][2027])*100:.0f} 个百分点：只要大陆 HVLP4 没能通过认证、或高盛 8 月的缺口取上沿 55%，铜箔就比 ABF 更紧；"
+            "反过来，只要能用低一级材料吸收一半缺口（降级比例 50%），PCB 链就远松于 ABF。估")
+
+DEBATES = [
+ dict(q='Q1 2027 年 PCB 会卡住 AI 加速器出货吗？', view=f"不会成为头号约束。最紧的 HVLP3+ 铜箔按目标规格只够约 {pc(r27['cu'])}，和 ABF 载板（约 {pc(X['abf'][2027])}）打平；但 PCB 材料大多能降一级用（日东纺：客户把 NE 布当 NER 的替代），缺口主要变成涨价和规格让步（估）。",
+      falsify='2027 年英伟达、ODM 或云厂商明确把 PCB / 覆铜板 / 铜箔列为机柜出货限制；或 Rubin 机柜（不含 Kyber）因 PCB 良率推迟。'),
+ dict(q='Q2 增量利润去哪？', view=f'往扩得慢的上游材料迁移：一年里上游（铜箔、玻纤布、钻针、CCL）毛利率中位 +{UPM:.1f} 个百分点，板厂中位 +{FBM:.1f}；2027 年最耐久的是 HVLP4/5 铜箔，二代布和板厂扩产最集中、最先松（估）。',
+      falsify='2027 年上半年胜宏毛利率回到 ≥ 36%，同时金居 < 25%。'),
+ dict(q='Q3 M9 2027 年占 AI 覆铜板 41%（高盛）现实吗？', view=f"偏高。正交背板推迟到 2028、CPX 移除，Rubin 计算板用 M8；按台光电 M9 2027 年营收占比\"双位数\"倒推，M9 约占 AI CCL 的 {M9['lo_s']*100:.0f}–{M9['hi_s']*100:.0f}%（估）。",
+      falsify='台光电 2027 年 M9 营收占比 ≥ 30%，或第三方统计 2027 年 M9 占 AI CCL ≥ 35%。'),
+]
+
+VARIANTS = [
+ ['计算板（Compute tray）', 'GPU / CPU 所在主板', 'VR200：26 层 HDI，M7 → M8；每柜 36 块，单价 650 → 1,400 美元', 'M8 + 一代布（斗山几乎全拿）', '量产（Rubin）', n('ms', 'doosan')],
+ ['交换板（Switch tray）', 'NVLink 交换芯片', '24 → 32 层；每柜 9 块，800 → 1,450 美元', 'M8 + 二代布（生益、台光电）', '量产', n('ms', 'doosan')],
+ ['中板（Midplane）', '连接计算板与交换板，取代线缆', '44 层；每柜 18 块，约 1,500 美元', 'M9 + 二代布（台光电约 70%、斗山约 30%）', 'Rubin 新增', n('ms', 'doosan')],
+ ['CX / BlueField 模块板', '网卡、DPU', '每柜 72 块 × 270 美元、18 块 × 255 美元', '—', 'Rubin 新增', n('ms')],
+ ['ASIC 主板 / UBB', '谷歌 TPU、AWS、Meta 等', '谷歌 V7 36 层、V7P 44 层；Meta 38–40 层、亚马逊 26 层', '松下 M8 → M9', '量产', n('tpu', 'gscu')],
+ ['正交背板（Kyber）', 'Rubin Ultra NVL144，背板替代铜缆', '78 层（3 块 26 层压合）、约 1 m²、阻抗 ±5%', 'M9 + Q 布（原计划）', '推迟到 2028', n('kyber', 'hf')],
+ ['Rubin CPX 板', '推理用上下文处理卡', '原计划 M9 + Q 布', '—', 'GTC 2026 移除', n('cpx', 'hf')],
+ ['ABF 封装载板', '芯片封装底板', '不在本页重复（CoWoS 页：2027 年比需求少约 29%）', 'ABF 膜 + T-glass', '见 CoWoS 页', n('cowos')],
+]
+PROCESS = [
+ ['高端铜箔 HVLP3/4/5', '表面越平、信号损耗越小；HVLP4 是 Rubin 主流规格，HVLP5 从 2027 年起；良率 70–80%，新供应商认证 2–3 年', '三井金属、古河电工、金居、德福、铜冠', n('gscu', 'uacu')],
+ ['玻纤布：一代 / 二代 Low-Dk、Low-CTE、Q 布', '介电常数依次降低；二代布约 18–22 美元/米、Q 布约 39–45 美元/米；Low-CTE（T-glass）也用在 ABF 载板', '日东纺、旭化成、台玻、南亚、富乔、宏和、泰山、光远、中材、菲利华', n('cq', 'hh', 'tft')],
+ ['树脂：PPO/OPE、碳氢、PTFE', 'M8/M9 主要用碳氢 + PPO 体系；PTFE 主要用于射频，不会取代 CCL', '圣泉、东材、沙特基础（SABIC）等', n('sq', 'dc', 'udn2')],
+ ['覆铜板 CCL：M6 → M9', '铜箔 + 布 + 树脂压合；M9 = HVLP4/5 + 二代布或 Q 布 + 碳氢树脂', '台光电、斗山、松下、台燿、联茂、生益', n('gscu', 'emcir', 'doosan')],
+ ['钻孔：机械钻 + 激光钻', 'M9 主针寿命 100–200 孔（M8 400–500 孔），层数越高、长径比越大；进口开槽机交期 1–2 年', '大族数控、鼎泰、金洲、尖点、佑能', n('uad', 'dz')],
+ ['PCB 制造：高多层（HLC）、HDI', '压合、钻孔、电镀、背钻；26–78 层、6+N+6 HDI', '胜宏、沪电、深南、金像电、鹏鼎、TTM', n('prq2', 'gsx')],
+]
+
+PLAYERS = [
+ dict(who='英伟达', role='需求方·定规格', incentive='每代平台都要更高速的互连，所以层数、材料等级往上走（计算板 M7→M8、交换板 24→32 层）' + s('ms') + '。',
+      now='2026 年 GTC 移除 Rubin CPX ' + s('cpx') + '；Kyber 正交背板因 PCB 难做推迟到 2028，官方称"路线图不变" ' + s('kyber') + '。',
+      history='GB200 时 UBB 主要给胜宏（约 70%，媒体口径）' + s('shshare') + '；遇到良率问题宁可推迟产品，也不降规格量产（Kyber）。',
+      signal='GTC 2027 是否重新给出 Kyber / NVL576 时间表；Rubin Ultra 用 Oberon 机柜的比例。'),
+ dict(who='台光电（EMC）', role='CCL 龙头·定价者', incentive='高速无卤基板 2025 年市占 38.6% ' + s('emcir') + '，要守住份额又要涨价。',
+      now='月产能 615 万张（2026 年底）→ 930 万（2027 年底）→ 1,110 万（2028 年底）' + s('emcir') + '；M9 2026 下半年小量出货，2027 年营收占比"双位数" ' + s('udn1') + '；M7 以上已占 60–65% ' + s('udn2') + '。',
+      history='2Q26 毛利率 33.9%，一年前 30.3% ' + s('emcir') + '：涨价顺利。',
+      signal='法说会里的 M9 营收占比、2028 年后的扩产节奏；若开始降价抢份额，说明 CCL 转松。'),
+ dict(who='三井金属', role='HVLP 龙头', incentive='铜箔 ROIC 52% ' + s('mitsuiq1') + '，不愿意过度扩产压价。',
+      now='VSP 月产能 FY26/27/28 为 840/1,000/1,200 吨，FY32 2,600 吨，新建马来西亚厂 ' + s('mitsui') + '。',
+      history='2025 年起 HVLP4 是\"有价无货\"，加工费逐月上调 ' + s('gscu2') + '。',
+      signal='FY27 是否提前把 1,200 吨拉到 2027 年内；HVLP5 认证进度。'),
+ dict(who='日东纺', role='特种玻纤纱龙头', incentive='T-glass 约 90%、NER 60–70% ' + s('tft') + '，把扩产弹性优先给利润更高的 T-glass（ABF 载板用）' + s('nqa') + '。',
+      now='资本开支 450 亿日元，福岛织布新厂 2027 年 1–3 月投产；2027 年约两成布委托南亚代织 ' + s('post') + '；不再提价 ' + s('tfn') + '。',
+      history='日东纺称客户把 NE 布当作 NER 的可获得替代 ' + s('nqa') + '：这是\"材料缺了会降级\"的直接证据。',
+      signal='新纱线产能公告；若开始给 NER 扩产，说明二代布缺口比 T-glass 更赚钱。'),
+ dict(who='胜宏 / 沪电（A 股板厂）', role='AI 板厂·扩产最激进', incentive='抢英伟达、谷歌份额，产能先到先得。',
+      now='胜宏 2026 年投资上限 200 亿元，沪电累计 176 亿元 ' + s('capex') + '；沪电 32 层以上收入 +190.83% ' + s('hd') + '；胜宏 1H26 毛利率 33.2%（上年 36.2%），因人工和新产能爬坡 ' + s('shhk') + '。',
+      history='2024 年胜宏 +33.3%、沪电 +42.7%（Prismark 百强）' + s('prtop') + '。',
+      signal='季度毛利率是否连续下滑；在建工程转固速度；海外（泰国、越南）厂良率。'),
+ dict(who='谷歌 / ASIC 阵营', role='2027 年增量来源', incentive='自研芯片要更高层数的主板（TPU V7P 44 层）' + s('tpu') + '。',
+      now='高盛：2027 年 ASIC 服务器 PCB 187.3 亿美元，和 GPU（188.0 亿）几乎一样大 ' + s('gs') + '；法人称 ASIC 明年升级 M9 的机率高 ' + s('udn1') + '。',
+      history='谷歌 TPU 主板由沪电（约 30%）、深南等供应，CCL 来自松下 ' + s('tpu') + '（弱）。',
+      signal='TPU v8 主板层数和 CCL 等级；AWS Trainium3 / Meta MTIA 的 PCB 招标。'),
+]
+
+NECK = [
+ dict(name='HVLP3+ 高端铜箔（HVLP4/5）', now=f"2027 年按目标规格只够约 {pc(r27['cu'])}（估）；三井 FY27 1,000 吨/月，二供认证 2–3 年，良率 70–80%", months=30, verdict='PCB 链最紧（估）', src=n('gscu', 'gscu2', 'mitsui', 'uacu')),
+ dict(name='ABF 载板（跨链：见 CoWoS 页）', now=f"2027 年约 {pc(X['abf'][2027])}，T-glass 与 ABF 膜双重约束；不能降级", months=24, verdict='2027 出货总约束', src=n('cowos', 'tft')),
+ dict(name='二代 Low-Dk 玻纤布', now=f"2027 年 60–100%（基准 {pc(r27['gf'])}）；大陆 2027Q4 起新增 4–5 亿米；可用一代布 / NE 布降级", months=15, verdict='偏紧，2027Q4 后可能转松', src=n('gf', 'jy', 'nqa')),
+ dict(name='M8/M9 覆铜板（压合产能）', now=f"台光电年均产能 +{(M.CCL['g']-1)*100:.0f}%，AI CCL 张数 +86%；靠产品组合补，基准 {pc(r27['ccl'])}", months=12, verdict='偏紧，靠涨价', src=n('emcir', 'gs')),
+ dict(name='钻针 / 钻孔设备', now=f"全市场 2027 年约 {pc(r27['dr'])}；M9 主针寿命 100–200 孔；进口开槽机交期 1–2 年、钨钢棒翻倍", months=18, verdict='偏紧', src=n('uad', 'cld')),
+ dict(name='PCB 板厂（高多层 / HDI）', now='没有可信产能统计；A 股扩产超 800 亿元，2–3 年后集中释放', months=24, verdict='数据缺口；2028 后可能过剩', src=n('capex')),
+ dict(name='Q 布 + 正交背板', now='Kyber 推迟到 2028；Q 布 2026 年仍以认证为主', months=36, verdict='2028 年的故事', src=n('kyber', 'gsq')),
+]
+
+HIST = dict(
+ rule='规律：每一代 AI 平台把 PCB 的瓶颈往上游推一层——GB200 时卡在板厂（高多层、HDI 良率），2026 年卡在覆铜板和玻纤布（涨价 30–40%），2027 年轮到 HVLP4 铜箔和钻针；2028 年若正交背板落地，轮到 Q 布和 78 层压合（估）。',
+ tl1=[['2023', '全球 PCB 产值 635 亿美元（下行年）', n('prtop')], ['2024', '736 亿美元（+5.8%）；胜宏 +33.3%、沪电 +42.7%', n('prtop')],
+      ['2025', '854 亿美元（+15.8%），中国大陆约 410.7 亿；高速无卤基板市场 26.6 → 45.2 亿美元', n('cninfo', 'emcir')],
+      ['2026E', '1,134 亿美元（+32.1%），18 层以上 +86.7%、HDI +39.8%', n('prq2')],
+      ['2026-03', 'GTC：Rubin CPX 移出路线图', n('cpx')], ['2026-05', '摩根士丹利：VR200 机柜 PCB 价值 +233%；高盛：HVLP3+ 缺口成\"新常态\"', n('ms', 'gscu')],
+      ['2026-07', 'Kyber 正交背板推迟到 2028；杰富瑞下调 2027 年 AI PCB/CCL TAM 5%/8%', n('kyber', 'jef')],
+      ['2026-08', '高盛上调 2027 年 AI PCB 38%、M9 占比 41%；铜箔缺口上修到 45–55%', n('gs', 'gscu2')]],
+ tl2=[['GB200', 'UBB 主要给胜宏（约 70%，媒体口径）：板厂是瓶颈', n('shshare')], ['1H26', 'CCL 涨价 15%，最缺料号 30–40%；钻针涨 20–35%', n('udn2', 'cld')],
+      ['2H26', 'M9 小量出货；HVLP4 短缺浮现；德福 HVLP4 月出货约 70 吨', n('udn1', 'gscu2', 'defu')],
+      ['2027', '台光电 +315 万张/月；日东纺福岛 1–3 月投产；德福 5 万吨 Q2 起投产；金居 HVLP4 700–800 吨/月', n('emcir', 'post', 'defu', 'uacu')],
+      ['2027Q4–28', '大陆二代布新增 4–5 亿米；A 股板厂扩产集中释放', n('jy', 'capex')],
+      ['2028', 'Kyber 正交背板 + Q 布放量窗口；三井 1,200 吨/月', n('kyber', 'gsq', 'mitsui')]])
+
+ccl_now, mat_now = BT['now']['ccl'], BT['now']['mat']
+LEAD = [
+ ['CCL 三家月营收（台光电 + 台燿 + 联茂）', '每月 10 日前', f"同比拐点比金像电营收同比早 {BTS['lo']}–{BTS['hi']} 个月（{BTS['n']} 次中 {BTS['pos']} 次领先，中位 {BTS['med']:.0f} 个月）；水平相关在 k=+{BTS['k'][0]} 最高（r={BTS['k'][1][0]:.2f}）", f"{BTS['m']} 3 个月合计同比 +{ccl_now:.0f}%，还在加速", n('fm')],
+ ['上游三家（金居铜箔 + 富乔玻纤布 + 尖点钻针）', '每月 10 日前', f"和 CCL 同步（最高在 k={BT['xc']['材料→CCL'] and max(BT['xc']['材料→CCL'].items(), key=lambda kv: kv[1][0])[0]}，r={max(v[0] for v in BT['xc']['材料→CCL'].values()):.2f}），不领先", f"+{mat_now:.0f}%", n('fm')],
+ ['台积电月营收', '每月 10 日前', f"反过来：CCL 领先台积电约 7 个月（r={BT['xc']['台积电→CCL']['-7'][0]:.2f}）——PCB 链是 AI 资本开支的早期信号", f"+{BT['now']['2330']:.0f}%", n('fm')],
+ ['金像电（2368）月营收', '每月 10 日前', 'AI 服务器板厂代表；被 CCL 领先', f"7 月 +81% → {BTS['m'][5:]} 月 +{BT['now']['2368']:.0f}%，可能在见顶", n('fm')],
+ ['CCL / 铜箔加工费 / 二代布报价', '周 / 月', '价格先于营收：涨价停了，营收同比会在 1–2 个季度后见顶（经验，估）', '4Q26 仍逐月续涨', n('udn2')],
+]
+
+PRED = [
+ dict(id='C1', text='高盛或任一主流券商在 2027-06-30 前把 2027 年 M9 及以上占 AI CCL 的比例下修到 ≤ 30%（2026-08 为 41%）', due='2027-06-30', check='券商报告公开转述（财联社、工商时报等）', status='pending'),
+ dict(id='C2', text='台光电 2027 年 M9 营收占比 < 30%', due='2028-03-31', check='台光电 4Q27 法说会', status='pending'),
+ dict(id='C3', text='2027-12-31 前英伟达没有量产出货 Kyber NVL144 机柜（正交背板）', due='2027-12-31', check='英伟达财报 / GTC、SemiAnalysis、供应链报道', status='pending'),
+ dict(id='C4', text='2027 年英伟达、鸿海、广达的财报会不把 PCB / 覆铜板 / 铜箔列为机柜出货的限制因素（只提 HBM、CoWoS、载板、电力等）', due='2028-02-28', check='三家 4Q27 财报会文字稿', status='pending'),
+ dict(id='C5', text='胜宏科技 2027 年全年毛利率 ≤ 34%（2026H1 33.2%）', due='2028-04-30', check='胜宏 2027 年报', status='pending'),
+ dict(id='C6', text='金居（8358）2027 年任一季毛利率 ≥ 35%（2Q26 27.4%）', due='2028-03-31', check='MOPS 季报', status='pending'),
+ dict(id='C7', text='CCL 三家 3 个月营收同比在 2027-06 前见顶（从峰值回落 ≥ 30 个百分点）后，金像电同比在之后 1–12 个月内见顶', due='2028-06-30', check='MOPS 月营收（本页回测脚本）', status='pending'),
+ dict(id='C8', text='2027 年内出现二代 Low-Dk 布报价环比下跌 ≥ 15% 的公开报道（大陆或台湾报价）', due='2027-12-31', check='券商周报、钜亨网、工商时报', status='pending'),
+ dict(id='M1', text='约束迁移：2027 年 PCB 链内最紧的是 HVLP4 铜箔（加工费涨幅在铜箔、CCL、二代布里最大）', due='2027-12-31', check='金居 / 德福加工费 vs CCL、二代布报价', status='pending'),
+ dict(id='M2', text='约束迁移：若 Kyber 2028 年量产，2028 年 PCB 链最紧换成 Q 布 / 低 CTE 纱和 78 层压合良率', due='2028-12-31', check='日东纺、菲利华产能与报价；正交背板良率报道', status='pending'),
+]
+
+FALS = [
+ dict(j='J1 2027 年 PCB 链不卡加速器出货（论点①）', counter=f"Kyber 确实因 PCB 中板/背板良率推迟了 {s('kyber')}；2026 年高盛估铜箔缺口 45–55% {s('gscu2')}。",
+      falsify='2027 年 Rubin / ASIC 机柜因 PCB、覆铜板或铜箔缺货而减产（不含 Kyber 这种新产品推迟）。', ind='ODM / 英伟达 / 云厂商财报会措辞', th='任一家明确把 PCB / CCL / 铜箔列为出货限制 ≥ 1 次', now='未见（Kyber 改用 Oberon 机柜）', st='watch'),
+ dict(j='J2 M9 2027 年只占 AI CCL 7–24%（论点③）', counter=f"台光电 M9 2026 下半年已量产 {s('udn1')}；法人称 ASIC 明年升级 M9 机率高 {s('udn1')}；联茂 M9 GPU 料号已认证 {s('ctccl')}。",
+      falsify='M9 2027 年渗透远超我们的区间上沿。', ind='台光电法说会 M9 营收占比；第三方 M9 占比统计', th='台光电 2027 年 M9 占比 ≥ 30%，或第三方 ≥ 35%', now='2026 年为小量出货', st='ok'),
+ dict(j='J3 利润往上游材料迁移（论点②）', counter=f"沪电 PCB 毛利率 +4.06pp 到 40.52% {s('hd')}、金像电 +5.1pp {s('fm')}：板厂也在涨。",
+      falsify='板厂毛利率涨幅追上并超过材料。', ind='胜宏 / 沪电 vs 金居 / 富乔季度毛利率', th='2027H1 胜宏毛利率 ≥ 36%，同时金居 < 25%', now='胜宏 1H26 33.2%；金居 2Q26 27.4%', st='ok'),
+ dict(j='J4 CCL 营收同比领先板厂约 5 个月（论点③）', counter='只有 15 对拐点、约 6 个周期；金像电 AI 占比上升改变了结构。',
+      falsify='CCL 同比见顶后 12 个月内，金像电同比没有见顶。', ind='MOPS 月营收（每月 10 日）', th='CCL 峰值后 12 个月金像电同比仍创新高', now=f"CCL +{ccl_now:.0f}% 仍在加速", st='ok'),
+ dict(j='J5 需求上一层：云厂商资本开支', counter='AWS 资产回报在下降（见 CoWoS 页需求一节）。', falsify='2027 年 AI 资本开支不增或下降，PCB 需求翻倍的前提不成立。',
+      ind='四大云厂商 2027 年首次资本开支指引', th='合计增速 < 10% 或任一家下降', now='见 CoWoS 页', st='ok'),
+]
+
+CO = dict(seg=['铜箔', '玻纤布 / 石英布', '树脂', '覆铜板 CCL', '钻针 / 钻孔设备', 'PCB 板厂', '客户 / 平台'],
+ co=[['三井金属', '5706.T', 'US', 0, f"VSP 月产能 840 → 1,000 → 1,200 吨（FY26–28）{s('mitsui')}", 22], ['古河电工', '5801.T', 'US', 0, f"HVLP 主要供应商之一 {s('uacu')}", 12],
+     ['金居', '8358', 'TW', 0, f"HVLP4 月产能 2H26 150 吨 → 2027 年 700–800 吨 {s('uacu')}；2Q26 毛利率 27.4% {s('fm')}", 16], ['德福科技', '301511.SZ', 'A', 0, f"8 月 HVLP 约 500 吨、HVLP4 约 70 吨 {s('defu')}", 14],
+     ['铜冠铜箔', '301217.SZ', 'A', 0, f"HVLP4 量产爬坡 {s('tongguan')}", 10],
+     ['日东纺', '3110.T', 'US', 1, f"T-glass 约 90%、NER 60–70% {s('tft')}", 22], ['旭化成', '3407.T', 'US', 1, f"2024 年低介电布份额 31% {s('hh')}", 12], ['台玻', '1802', 'TW', 1, f"低介电布份额 11% {s('hh')}", 10],
+     ['南亚塑胶', '1303', 'TW', 1, f"2027 年为日东纺代织约两成 {s('post')}", 10], ['富乔', '1815', 'TW', 1, f"2Q26 毛利率 40.0%（一年前 24.5%）{s('fm')}", 12],
+     ['宏和科技', '603256.SH', 'A', 1, f"2027 年低介电布 2,281 万米 {s('hh')}", 12], ['中材科技（泰山玻纤）', '002080.SZ', 'A', 1, f"泰山规划新增 9,400 万米 {s('hh')}；中材 Q 布约 1.5 万米/月 {s('cq')}", 12],
+     ['菲利华', '300395.SZ', 'A', 1, f"Q 布通过生益、台光电、松下认证 {s('cq')}", 12],
+     ['圣泉集团', '605589.SH', 'A', 2, f"PPO 2,000 吨/年满产，新增 2,000 吨 {s('sq')}", 10], ['东材科技', '601208.SH', 'A', 2, f"M9 碳氢树脂批量供货 {s('dc')}", 10],
+     ['台光电', '2383', 'TW', 3, f"月产能 615 → 930 万张（2026–27 年底）{s('emcir')}", 24], ['斗山电子', '000150.KS', 'US', 3, f"Rubin 计算板 M8 主力 {s('doosan')}（弱）", 14],
+     ['松下', '6752.T', 'US', 3, f"谷歌 TPU CCL {s('tpu')}（弱）", 12], ['台燿', '6274', 'TW', 3, f"2Q26 毛利率 29.7% {s('fm')}", 12], ['联茂', '6213', 'TW', 3, f"M9 GPU 料号认证 {s('ctccl')}", 10],
+     ['生益科技', '600183.SH', 'A', 3, f"1H26 CCL 营收 123.57 亿元、毛利率 29.16% {s('sy')}", 16],
+     ['鼎泰高科', '301377.SZ', 'A', 4, f"2025 年钻针份额 29.2% {s('uad')}；月产能 >1.6 亿支 {s('dt')}", 14], ['中钨高新（金洲）', '000657.SZ', 'A', 4, f"金洲份额 21.1% {s('uad')}", 10],
+     ['尖点', '8021', 'TW', 4, f"份额 9.9%；2Q26 毛利率 41.8% {s('uad')}", 10], ['大族数控', '301200.SZ', 'A', 4, f"1H26 营收 49.85 亿元（+109%）{s('dz')}", 12],
+     ['胜宏科技', '300476.SZ', 'A', 5, f"1H26 营收 116.29 亿元，毛利率 33.2% {s('sh1h', 'shhk')}", 18], ['沪电股份', '002463.SZ', 'A', 5, f"数据通讯 113.30 亿元（+73%）{s('hd')}", 18],
+     ['深南电路', '002916.SZ', 'A', 5, f"PCB 85.52 亿元，毛利率 36.85% {s('sn')}", 14], ['金像电', '2368', 'TW', 5, f"2Q26 毛利率 34.7% {s('fm')}", 14], ['鹏鼎控股', '002938.SZ', 'A', 5, f"淮安高端 PCB 110 亿元 {s('capex')}", 10],
+     ['英伟达', 'NVDA', 'US', 6, f"VR200 机柜 PCB 约 11.67 万美元 {s('ms')}", 20], ['谷歌', 'GOOGL', 'US', 6, f"TPU V7P 44 层 {s('tpu')}", 14]],
+ links=[['菲利华', '生益科技', 'Q 布认证', n('cq'), 'sup'], ['菲利华', '台光电', 'Q 布认证', n('cq'), 'sup'], ['宏和科技', '台光电', 'Q 布认证', n('cq'), 'sup'], ['宏和科技', '斗山电子', 'Q 布认证', n('cq'), 'sup'],
+        ['中材科技（泰山玻纤）', '台光电', 'Q 布认证', n('cq'), 'sup'], ['日东纺', '南亚塑胶', '2027 年约两成委托代织', n('post'), 'ord'],
+        ['台光电', '英伟达', 'Rubin 中板 M9 约 70%（纪要）', n('doosan'), 'sup'], ['斗山电子', '英伟达', 'Rubin 计算板 M8（纪要）', n('doosan'), 'sup'], ['生益科技', '英伟达', '交换板 M8（纪要）', n('doosan'), 'sup'],
+        ['松下', '谷歌', 'TPU CCL M8→M9（纪要）', n('tpu'), 'sup'], ['沪电股份', '谷歌', 'TPU 主板约 30%（纪要）', n('tpu'), 'sup'], ['深南电路', '谷歌', 'V7 44 层（纪要）', n('tpu'), 'sup'],
+        ['胜宏科技', '英伟达', 'GB200 UBB 约 70%（媒体口径）', n('shshare'), 'sup']])
+
+IFACE = [
+ ['统一单位：AI 加速器（百万颗）', f'{A[2026]:.2f}', f'{A[2027]:.2f}', f"读 CoWoS 页模型（KGI，不含 Vera / Venice CPU）{s('kgi')}"],
+ ['每颗加速器的 AI PCB 价值', f'约 {PER[2026]:,} 美元', f'约 {PER[2027]:,} 美元', f"高盛 AI PCB 市场 ÷ 加速器颗数（估）；交叉验证：摩根士丹利 GB300 约 488、VR200 约 1,621 美元/GPU {s('ms')}"],
+ ['每颗加速器的 HVLP3+ 铜箔', f'约 {CUKG[2026]} kg', f'约 {CUKG[2027]} kg', f"高盛需求插值 × 12 ÷ 加速器颗数（估，含交换机）{s('gscu')}"],
+ ['PCB 链最紧环节（满足率）', pc(r26['pmin']), pc(r27['pmin']), '按目标规格、不降级（估）'],
+ ['ABF 载板（CoWoS 页）', pc(X['abf'][2026]), pc(X['abf'][2027]), s('cowos')],
+ ['HBM（CoWoS 页 TOC）', pc(X['hbm'][2026]), pc(X['hbm'][2027]), s('cowos')],
+ ['CoWoS（CoWoS 页 TOC）', f"{pc(X['cwlo'][2026])}–{pc(X['cwhi'][2026])}", f"{pc(X['cwlo'][2027])}–{pc(X['cwhi'][2027])}", s('cowos')],
+]
+FORMULA = ('AI 加速器能出多少 = min（HBM，CoWoS，ABF 载板，PCB 链 × 降级系数，电力 …）。PCB 链 = min（HVLP 铜箔，二代布，覆铜板，钻针）；'
+           '每一环的满足率 = 来源口径的供给 ÷ 需求，乘以当年加速器颗数 = 能支撑的颗数（假设各环需求与加速器同比例，估）。')
+
+LIMITS = [
+ '没有任何公开来源直接给"PCB 链能支撑多少颗 AI 加速器"。本页用各环节来源自己的供需比 × KGI 加速器颗数，隐含假设是各环节需求和加速器出货同比例增长（估）；交换机、光模块用的高速材料也算在需求里。',
+ '高盛 2026-08 把铜箔缺口上修到 45–55%，但原报告没有拿到，只看到工商时报转述（区间、不分年）；缺口定义按 5 月报告（缺口 ÷ 有效供给）推定，若是 ÷ 需求口径，满足率会更低（45–55%）。',
+ '二代 Low-Dk 布的供需各方口径差一倍以上（广发缺 >40% vs 纪要 2027Q4 后过剩），本页只给区间，基准 80% 是取中间（估）。',
+ 'PCB 板厂（高多层 / HDI）的 AI 产能没有可信统计，只能定性；A 股 >800 亿元扩产的投产节奏来自媒体汇总。',
+ 'M9 渗透率的倒推链条很长（台光电营收 × 年均产能 × M9 占比 × 台光电份额），每一步都是估计，只用来说明高盛 41% 偏高，不是精确预测。',
+ '台湾公司毛利率来自 MOPS 季报（FinMind），A 股来自半年报；口径不完全可比（A 股是分产品毛利率）。胜宏 2Q26 单季 32.1% 来自自媒体，未用于结论。',
+ '中国账本里"每卡 PCB 价值"用摩根士丹利 VR200 每 GPU 1,621 美元作上限，国产卡实际 PCB 用量没有公开数据；国内产能用三家龙头的营收折算，没有扣除它们给英伟达、谷歌的份额。',
+ '河洛投研（高盛报告细项）只看到搜索摘要；纪要类、自媒体来源在来源表里标了"弱"。',
+]
+CHANGELOG = [['2026-10-20', 'v0.1', '首版：按 SOP v1.6 建 PCB 小链（逻辑层 + 金字塔 + 13 步底稿 + 中国账本）。统一单位接 CoWoS 页 KGI 加速器口径；ABF 载板只读 CoWoS 页，不重复建模。预测 C1–C8、M1–M2、N1–N4，证伪 J1–J5、CJ1–CJ3。']]
+
+# ---------------- 中国账本
+CNB = dict(
+ whk27=WHK27, u27=round(U27, 3),
+ dem=[['国产卡数', f'{WHK27:.2f} 百万张（HBM 能配的卡 + 950/960PR）', f"HBM 页 / CoWoS 页中国账本 {s('hbm', 'cowos')}"],
+      ['同上：不缺货需求', f'{U27:.2f} 百万张', f"HBM 页不缺货需求 + 950/960PR 约 100 万 {s('hbm')}"],
+      ['每卡 PCB 价值', '≤ 1,621 美元', f"上限：VR200 每 GPU（摩根士丹利）{s('ms')}；国产卡没有公开数据（估）"],
+      ['每卡 HVLP 铜箔', f'约 {CUKG[2027]} kg', '全球口径（高盛需求 ÷ KGI 颗数，估）'],
+      ['每卡二代布', f"{CB['ldk']['per'][0]:.1f}–{CB['ldk']['per'][1]:.1f} 米", f"二代布 2027 年全球需求 8,000 万 {s('jy')} ~ 1.7 亿米 {s('gf')} ÷ 加速器颗数（估）"]],
+ sup=[['PCB 板厂', f"三家龙头 1H26 年化约 {M.CN['fab_cny']:.0f} 亿元（≈ {M.CN['fab_cny']/M.CN['fx']/10:.1f} 十亿美元）", f"胜宏 116.29 + 沪电 PCB 129.94 + 深南 PCB 85.52 亿元 × 2 {s('sh1h', 'hd', 'sn')}；中国大陆 2025 年 PCB 产值 410.7 亿美元 {s('cninfo')}"],
+      ['HVLP 铜箔', '德福 HVLP 约 500 吨/月（8 月）', f"HVLP4 约 70 吨、良率 60%+，5 万吨基地 2027Q2 起投产 {s('defu')}；铜冠 HVLP4 量产 {s('tongguan')}"],
+      ['二代 Low-Dk 布', '宏和 2027 年 2,281 万米', f"宏和低介电布 2027-06 达产 {s('hh')}；泰山规划 +9,400 万米 {s('hh')}；大陆 2027Q4 起新增 4–5 亿米 {s('jy')}"],
+      ['钻针', '鼎泰月产能 >1.6 亿支', f"鼎泰 29.2% + 金洲 21.1% = 全球一半 {s('uad', 'dt')}"],
+      ['Q 布', '菲利华、中材、宏和', f"菲利华通过生益、台光电、松下认证；中材约 1.5 万米/月 {s('cq')}"],
+      ['Low-CTE（T-glass）', '依赖日东纺', f"日东纺低 CTE 布份额 85% {s('hh')}；主要用于 ABF 载板（CoWoS 页）"]],
+ toc=[['HBM（读 HBM 页）', f'{WHK27:.2f}', f"HBM 能配的卡 + 950/960PR {s('hbm')}", '约束'],
+      ['2.5D 封装（读 CoWoS 页）', f'{WK27:.2f}', f"国内 2.5D 能封的卡 {s('cowos')}", '不卡'],
+      ['PCB 板厂', f"{CB['fab']['up']:.1f}", f"三家龙头年化产值 ÷ 1,621 美元/卡（全给国产卡时的上限，估）；国产卡只需其 {CB['fab']['share']*100:.0f}%、中国大陆 PCB 产值的 {CB['fab']['share_cn']*100:.0f}%", '不卡'],
+      ['HVLP 铜箔', f"{CB['cu']['up']:.1f}", f"德福 500 吨/月 ÷ {CUKG[2027]} kg/卡（上限，估）；国产卡只需约 {CB['cu']['need']:.0f} 吨/月", '不卡（等级待认证）'],
+      ['二代 Low-Dk 布', f"{CB['ldk']['up'][0]:.1f}–{CB['ldk']['up'][1]:.1f}", f"只算宏和一家 2,281 万米 ÷ 每卡用量（上限，估）", '不卡'],
+      ['Low-CTE / ABF 膜', '—', f"日东纺 85%、味之素 95% 以上（CoWoS 页）{s('hh', 'cowos')}", '风险（不可量化）']],
+ timeline=[['2024', '低介电布份额：日东纺 55%、旭化成 31%、台玻 11%（国产几乎为零）', n('hh')], ['2025', '鼎泰 + 金洲占全球钻针一半；中国大陆 PCB 产值 410.7 亿美元', n('uad', 'cninfo')],
+           ['2026-06', 'A 股 20 家 PCB 企业年内扩产超 800 亿元', n('capex')], ['2026-08', '德福 HVLP4 约 70 吨/月、良率 60%+；铜冠 HVLP4 量产', n('defu', 'tongguan')],
+           ['2026-09', '菲利华 Q 布通过生益、台光电、松下认证', n('cq')], ['2027-06', '宏和 低介电布 2,281 万米达产', n('hh')], ['2027Q2', '德福 5 万吨高端铜箔基地分批投产', n('defu')],
+           ['2027Q4–28Q2', '大陆二代布新增 4–5 亿米（纪要）', n('jy')], ['未定', 'Low-CTE 纱、HVLP5、进口开槽机、超细钨钢棒仍靠进口', n('hh', 'uad')]],
+ players=[dict(who='华为 / 国产卡', role='需求方', incentive='昇腾超节点要高多层板和高速材料。', now='国产卡被 HBM 卡在约 ' + f'{WHK27:.2f}' + ' 百万张（2027）' + s('hbm') + '。', history='深南、沪电是昇腾 PCB 供应商（自媒体，弱）' + s('asc') + '。', signal=f"HBM 若放开到不缺货需求（约 {U27:.2f} 百万张），所需 PCB 约等于三家龙头年化产值的 {CBU['fab']['share']*100:.0f}%、德福 HVLP 当前出货的 {CBU['cu']['share']:.1f} 倍：那时铜箔和板厂会先紧（估）。"),
+          dict(who='胜宏 / 沪电 / 深南', role='板厂', incentive='主要客户是英伟达、谷歌和交换机，国产卡占比未披露。', now='扩产 800 亿元以上 ' + s('capex') + '。', history='2024–26 年份额快速上升 ' + s('prtop') + '。', signal='海外客户订单放缓时，产能会转向国产卡（板厂先过剩的信号）。'),
+          dict(who='德福 / 铜冠', role='HVLP 国产替代', incentive='高端铜箔毛利 40–60%，普通铜箔 0–10% ' + s('gscu') + '。', now='德福 HVLP4 约 70 吨/月、良率 60%+ ' + s('defu') + '。', history='HVLP4 二供认证需要 2–3 年 ' + s('uacu') + '。', signal='进入英伟达 / 台光电 M9 料号；HVLP4 月出货 ≥ 150 吨。'),
+          dict(who='菲利华 / 宏和 / 泰山', role='玻纤布国产替代', incentive='二代布、Q 布单价是一代布数倍 ' + s('cq') + '。', now='菲利华 Q 布已获三家 CCL 认证 ' + s('cq') + '；宏和 2027 年 2,281 万米 ' + s('hh') + '。', history='2024 年国产低介电布份额很小 ' + s('hh') + '。', signal='二代布降价 ≥ 15%（过剩）或 Q 布进入英伟达量产料号。')],
+ co=[['铜箔', '德福科技', '301511.SZ', 'HVLP4 约 70 吨/月，良率 60%+', '强（公司纪要 / 公告）', n('defu')], ['铜箔', '铜冠铜箔', '301217.SZ', 'HVLP4 量产爬坡', '中（媒体）', n('tongguan')],
+     ['覆铜板', '生益科技', '600183.SH', '1H26 CCL 毛利率 29.16%（+5.47pp）；英伟达交换板 M8（纪要）', '强（半年报）/ 弱（纪要）', n('sy', 'doosan')],
+     ['玻纤布', '宏和科技', '603256.SH', '低介电布 2027 年 2,281 万米；Q 布通过台光电、斗山', '强（问询函回复）', n('hh', 'cq')], ['玻纤布', '中材科技（泰山）', '002080.SZ', '规划新增 9,400 万米；Q 布约 1.5 万米/月', '中', n('hh', 'cq')],
+     ['石英布', '菲利华', '300395.SZ', 'Q 布通过生益、台光电、松下认证', '中（媒体）', n('cq')], ['树脂', '东材科技', '601208.SH', 'M9 碳氢树脂批量供货', '中（媒体）', n('dc')], ['树脂', '圣泉集团', '605589.SH', 'PPO 满产，新增 2,000 吨', '中', n('sq')],
+     ['钻针', '鼎泰高科', '301377.SZ', '份额 29.2%；月产能 >1.6 亿支', '强（中报）', n('uad', 'dt')], ['钻针', '中钨高新（金洲）', '000657.SZ', '份额 21.1%', '中', n('uad')], ['设备', '大族数控', '301200.SZ', '1H26 营收 +109%', '强（半年报）', n('dz')],
+     ['板厂', '胜宏科技', '300476.SZ', '1H26 毛利率 33.2%（−3.0pp）', '强（港股中报）', n('shhk')], ['板厂', '沪电股份', '002463.SZ', 'PCB 毛利率 40.52%（+4.06pp）', '强（半年报）', n('hd')], ['板厂', '深南电路', '002916.SZ', 'PCB 毛利率 36.85%（+2.43pp）', '强（半年报）', n('sn')]],
+ preds=[dict(id='N1', text='德福科技 HVLP4 单月出货在 2026 年 12 月 ≥ 150 吨（8 月约 70 吨）', due='2027-01-31', check='德福投资者关系纪要 / 公告', status='pending'),
+        dict(id='N2', text='生益科技 2027 年上半年覆铜板毛利率 ≥ 30%（1H26 29.16%）', due='2027-08-31', check='生益 2027 半年报', status='pending'),
+        dict(id='N3', text='鼎泰高科 2027 年中报披露钻针月产能 ≥ 2.0 亿支（2026 年中 >1.6 亿）', due='2027-08-31', check='鼎泰 2027 中报', status='pending'),
+        dict(id='N4', text='2027 年内没有国产 AI 卡 / 超节点因 PCB 或覆铜板缺货而延期的公开报道（卡点仍是 HBM）', due='2027-12-31', check='公开报道、HBM 页中国账本', status='pending')],
+ falsify=[dict(j='CJ1 国产卡不被 PCB 卡（中国论点❶）', counter='国产卡 PCB 规格和用量没有公开数据；龙头产能主要给英伟达、谷歌。', falsify='国产卡因 PCB / CCL 交付延期。', ind='公开报道', th='≥ 1 次可信报道', now='未见', st='ok'),
+          dict(j='CJ2 HVLP4 国产替代在推进（中国论点❷）', counter=f"二供认证要 2–3 年 {s('uacu')}；高盛只认金居是二供 {s('gscu')}。", falsify='德福 / 铜冠 HVLP4 良率停滞或客户退货。', ind='德福月出货、良率', th='2026-12 HVLP4 < 100 吨/月', now='8 月约 70 吨、良率 60%+', st='watch'),
+          dict(j='CJ3 二代布 2027Q4 后可能过剩（中国论点❸）', counter=f"广发：2027 年缺口超 40% {s('gf')}。", falsify='2027 年末二代布仍在涨价。', ind='二代布报价', th='2027Q4 报价环比 ≥ +5%', now='量价齐升', st='watch')])
+
+J = dict(meta=dict(updated='2026-10-20', version='v0.1'), A={str(k): v for k, v in A.items()}, X={k: ({str(a): b for a, b in v.items()} if isinstance(v, dict) else v) for k, v in X.items()},
+         model=dict(CU=OUT['CU'], CCLcap=M.CCL['cap'], CCLg=OUT['CCLg'], sh=[M.CCL['sh26'], M.CCL['sh27']], DR={str(k): v for k, v in M.DR.items()}, P0=M.P0, CN=M.CN, CUKG={str(k): v for k, v in CUKG.items()}),
+         stages=STAGES, price=PRICE, gs=GS, per={str(k): v for k, v in PER.items()}, m9=OUT['M9'], emc=OUT['EMC'],
+         judgment=dict(stats=[dict(n='260 万 m²', l='2027 年 AI PCB 面积（2026 年 130 万）', tag=n('gs')), dict(n='375 亿美元', l='2027 年 AI 服务器 PCB 市场', tag=n('gs')),
+                              dict(n='—', l='2027 年 PCB 链最紧环节（按目标规格）', tag='估', id='pcb-sMin'), dict(n=pc(X['abf'][2027]), l='2027 年 ABF 载板（CoWoS 页）', tag=n('cowos'))]),
+         debates=DEBATES, variants=VARIANTS, process=PROCESS, players=PLAYERS, neck=NECK, history=HIST, lead=dict(cards=LEAD),
+         bt=dict(series=BT['series'], xc=BT['xc'], tp=[[a, b, c] for a, b, c in tp], now=BT['now'], m=BT['now_m']),
+         profit=dict(dgm=DGM, margins=MG, names=NAME), predictions=PRED, falsify=FALS, companies=CO, interface=dict(rows=IFACE, formula=FORMULA),
+         tornado_note=TOR_NOTE, limits=LIMITS, changelog=CHANGELOG, cn=CNB,
+         sources=[dict(id=ID[k], t=t, u=u) for k, t, u in SRC], driver=CW['driver'])
+os.makedirs(_P('pcb_data'), exist_ok=True)
+json.dump(J, open(_P('data', 'pcb.json'), 'w'), ensure_ascii=False, separators=(',', ':'), sort_keys=True)
+json.dump(OUT, open(_P('pcb_data', 'model_out.json'), 'w'), ensure_ascii=False, indent=1, sort_keys=True, default=str)
+
+
+# ---------------- Excel 与 Markdown（给人复核）
+def xlsx():
+    try:
+        from openpyxl import Workbook
+    except ImportError:
+        print('openpyxl 未安装，跳过 Excel'); return
+    wb = Workbook(); ws = wb.active; ws.title = '说明'
+    ws.append(['PCB 小链模型 v0.1（2026-10-20）。统一单位：百万颗 AI 加速器（KGI，不含 CPU）。满足率 = 供给 ÷ 需求（目标规格）。']); ws.append(['公式与 pcb/model.py、pcb.js 一致；本表是导出值，改假设请用网页滑块或改 model.py。'])
+    w = wb.create_sheet('TOC'); w.append(['年', '加速器（百万颗）', 'HVLP 铜箔', '二代布', 'CCL', '钻针', 'ABF（CoWoS 页）', 'PCB 链最紧', '最紧环节'])
+    for y in M.Y:
+        r = R[y]; w.append([y, A[y], r['cu'], r['gf'], r['ccl'], r['dr'], r['abf'], r['pmin'], r['pbind']])
+    w = wb.create_sheet('环节依据'); w.append(['key', '环节', '2025', '2026', '2027', '依据', '来源'])
+    for row in STAGES: w.append(row)
+    w = wb.create_sheet('高盛需求'); w.append(['年', '面积 百万m²', 'ASP 美元/m²', 'PCB 十亿美元', 'CCL 百万张', '美元/张', 'CCL 十亿美元', 'M9%'])
+    for i, y in enumerate(GS['y']): w.append([y, GS['area'][i], GS['asp'][i], GS['pcb'][i], GS['sheets'][i], GS['usd_sh'][i], GS['ccl'][i], GS['m9'][i]])
+    w = wb.create_sheet('M9 倒推'); [w.append([k, v]) for k, v in list(OUT['EMC'].items()) + list(OUT['M9'].items())]
+    w = wb.create_sheet('毛利率迁移'); w.append(['公司', '环节', '现在', '一年前', '口径', '来源']); [w.append(r) for r in DGM]
+    w = wb.create_sheet('中国账本'); w.append(['环节', '能支撑（百万张，上限）', '依据', '判断']); [w.append(r) for r in CNB['toc']]
+    w = wb.create_sheet('来源'); [w.append([ID[k], t, u]) for k, t, u in SRC]
+    for x in wb.worksheets:
+        x.sheet_properties.tabColor = None
+    wb.properties.created = wb.properties.modified = __import__('datetime').datetime(2026, 10, 20)
+    wb.save(_P('pcb', 'pcb_model.xlsx'))
+
+
+def md():
+    L = ['# PCB 小链 v0.1（2026-10-20）', '', '> 由 pcb/build.py 生成，不要手改。网页：pcb.html。公开数据整理，不构成投资建议。', '',
+         '## 统一单位下的约束推导（2027，按目标规格）', '', '| 环节 | 2025 | 2026 | 2027 | 依据 |', '|---|---|---|---|---|']
+    L += [f'| {r[1]} | {r[2]} | {r[3]} | {r[4]} | {r[5]} |' for r in STAGES]
+    L += ['', f"加速器（百万颗）：{A}；PCB 链最紧 2027 = {pc(r27['pmin'])}（{r27['pbind']}），ABF = {pc(X['abf'][2027])}。", '', '## 预测', '']
+    L += [f"- **{p['id']}** {p['text']}（到期 {p['due']}；验证：{p['check']}）" for p in PRED + CNB['preds']]
+    L += ['', '## 证伪', ''] + [f"- **{f['j']}**：{f['falsify']} 阈值：{f['th']}" for f in FALS + CNB['falsify']]
+    L += ['', '## 局限', ''] + [f'- {x}' for x in LIMITS] + ['', '## 来源', ''] + [f'{ID[k]}. {t} {u}' for k, t, u in SRC]
+    open(_P('pcb', 'pcb_chain.md'), 'w', encoding='utf-8').write('\n'.join(L) + '\n')
+
+
+xlsx(); md()
+print(f"pcb: 2027 PCB 链最紧 {r27['pbind']} {pc(r27['pmin'])}，ABF {pc(X['abf'][2027])}；M9 {M9['lo_s']*100:.0f}–{M9['hi_s']*100:.0f}%；上游毛利率中位 +{UPM:.1f}pp vs 板厂 +{FBM:.1f}pp；CCL→金像电 {BTS}")

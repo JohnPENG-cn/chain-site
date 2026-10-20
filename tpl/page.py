@@ -186,7 +186,7 @@ def load(chain):
 
 if __name__ == '__main__':
     idx = open(os.path.join(R0, 'index.html'), encoding='utf-8').read()
-    for chain in ('hbm', 'cowos'):
+    for chain in ('hbm', 'cowos', 'pcb'):
         S = load(chain)
         open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(render(S))
         # 首页卡片 = 同一句中心思想
