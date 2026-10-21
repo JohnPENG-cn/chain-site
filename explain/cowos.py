@@ -1,0 +1,174 @@
+"""万物原理图 · CoWoS 是怎么封装的 —— 页面规格（文字、产品数据、来源、读后五问）。
+图形与模型在 explain/cowos.js；通用引擎在 explain/engine.js；页面由 explain/build.py 生成 explain-cowos.html。
+规则：每个数字带来源编号 {s:N}；自己算的标 {calc}（推算），示意数字标 {est}（估/示意）。
+研究判断（瓶颈、余量、每片颗数）一律引自本站 CoWoS 研究页 {s:16}，本页不改判断。
+"""
+
+META = dict(
+    id='cowos', file='explain-cowos.html', js='explain/cowos.js',
+    title='CoWoS 是怎么封装的', short='CoWoS 先进封装',
+    kicker='万物原理图 · 02', ver='v0.1', date='2026-10-21',
+    dek='一步一步把一颗 AI GPU 的“底盘”拆开再装回去：为什么芯片要拼着用、HBM 为什么必须贴在几毫米外，'
+        '从主板到芯片一共几层，CoWoS-S / R / L 差在哪，怎么一整片晶圆一起封、为什么越做越大，以及现在卡在哪一环。',
+    card='从“光罩上限”讲起，逐层搭出一颗 GPU 封装：载板 → C4 凸点 → 中介层（TSV / RDL / 硅桥）→ 微凸点 → GPU + HBM；S / R / L 三种滑块对比，H100 → Rubin Ultra 产品滑块。',
+    related=[('cowos.html', 'CoWoS 研究页（供需与判断）'), ('explain-hbm.html', 'HBM 原理图')],
+    nav=('cowos.html', 'CoWoS'), g0='B200', gen_label='产品', gen_aria='GPU 产品', spd=False,
+    howto='拖“产品”滑块，从 H100 换到 Rubin Ultra，图和数字一起变；第 3 步还有一个 S / R / L 滑块。',
+    caliber='口径：产品参数取英伟达官方公布值；没公布的（Rubin 功耗、Rubin Ultra 带宽等）标“报道”或“未公布”。图中芯片、HBM、中介层的尺寸与层厚是示意，不按比例；'
+            '晶圆能摆几个中介层是按矩形几何现算的上限（不含良率和边缘损失之外的工艺限制）；瓶颈余量、每片可封颗数来自 CoWoS 研究页的模型（估）。',
+    judge=('cowos.html', 'CoWoS 研究页'),
+    gen_src=('srcs',), gen_tok=('mem', 'bw', 'tgpT', 'ip', 'ppw', 'unlock', 'neck', 'note'),
+)
+
+# ---------- 产品数据：图、读数、卡片都从这里来 ----------
+# dies：计算芯片数；hbm：HBM 位置数；hbmOn：启用颗数；var：CoWoS 类型；tgp：官方最大功耗 W（None = 未公布）
+GENS = [
+    dict(name='H100', year='2022', arch='Hopper', var='S', dies=1, hbm=6, hbmOn=5, tgp=700, srcs=[5, 7, 13, 16],
+         mem='80GB HBM3（6 个 HBM 位置，启用 5 颗）{s:5} {s:7}', bw='3.35 TB/s {s:7}', tgpT='最高 700W {s:7}',
+         ip='CoWoS-S：整片硅中介层，S 型上限 3.3× 光罩（约 2,700 mm²）{s:1} {s:16}', ppw='每片约 28 颗 {s:16}',
+         unlock='一颗 814 mm² 的芯片 + 6 个 HBM 位置放在一块硅中介层上 {s:5}，把 HBM 带进主流 AI 训练',
+         neck='芯片已经 814 mm²、离光罩上限 858 mm² 只差一点 {s:5}：单颗芯片不能再大，只能拼两颗（→ B200）',
+         note='启用 5 颗是推算：80GB ÷ 每颗 16GB {calc}'),
+    dict(name='B200', year='2024', arch='Blackwell', var='L', dies=2, hbm=8, hbmOn=8, tgp=1200, srcs=[5, 6, 7, 13, 16],
+         mem='192GB HBM3E（8 × 24GB）{s:5}', bw='8 TB/s {s:5}', tgpT='最高 1,200W（Blackwell）{s:7}',
+         ip='CoWoS-L：有机中介层 + 局部硅桥；台积电首款 L 型 3.5× 光罩 2024 年量产 {s:1} {s:13}', ppw='每片约 16 颗 {s:16}',
+         unlock='两颗接近光罩上限的芯片用 10 TB/s 的片间连接合成一颗 GPU {s:6}；中介层第一次超过 S 型的 3.3× 上限 {s:1}',
+         neck='两颗大芯片 + 8 颗 HBM：封装更大、更容易翘；测试时间是 Hopper 的 3–4 倍 {s:13}',
+         note='B200 单颗芯片面积英伟达未公布，图中按“接近光罩上限”示意 {est}'),
+    dict(name='B300', year='2025', arch='Blackwell Ultra', var='L', dies=2, hbm=8, hbmOn=8, tgp=1400, srcs=[7, 16],
+         mem='288GB HBM3E（8 × 12 层）{s:7}', bw='8 TB/s {s:7}', tgpT='最高 1,400W {s:7}',
+         ip='CoWoS-L {s:16}，两颗芯片 + 8 颗 12 层 HBM3E {s:7}', ppw='每片约 12–13 颗 {est} {s:16}',
+         unlock='同样的两芯结构，HBM 换成 12 层、容量 192 → 288GB {s:7}',
+         neck='功耗 1,200 → 1,400W {s:7}：热和供电压力全落在封装和载板上',
+         note='每片颗数为研究页估算：封装更大、良率更低 {est}'),
+    dict(name='Rubin', year='2026', arch='Vera Rubin', var='L', dies=2, hbm=8, hbmOn=8, tgp=None, srcs=[2, 8, 9, 14, 16],
+         mem='288GB HBM4（8 × 12 层）{s:8} {s:14}', bw='22 TB/s {s:8}', tgpT='官方未公布；报道最初约 1,800W、后传上调到 2,300W {s:9}',
+         ip='CoWoS-L；台积电 2026 年 5.5× 光罩已量产 {s:2}（Rubin 具体用多大，台积电未公布）', ppw='每片约 9 → 10 颗 {est} {s:16}',
+         unlock='HBM 换成 HBM4（每颗 2048 根数据线），带宽 8 → 22 TB/s {s:8}',
+         neck='中介层上的走线更密、封装更大；研究页判断 2026 年最需盯的是 HBM {s:16}',
+         note='功耗为媒体报道，不是官方数据'),
+    dict(name='Rubin Ultra', year='2027（计划）', arch='Rubin Ultra', var='L', dies=4, hbm=16, hbmOn=16, tgp=None, srcs=[3, 10, 11, 15, 16, 25],
+         mem='1TB HBM4E（16 颗）{s:10}', bw='未公布', tgpT='未公布；Kyber 整柜约 600 kW {s:11}',
+         ip='四芯版封装约 7.5–8× 光罩（台媒）{s:15}；台积电 9.5× CoWoS 计划 2027 年量产 {s:3}', ppw='每片约 6 颗 {est} {s:16}',
+         unlock='GTC 2026 展示：4 颗约 800 mm² 的芯片 + 16 颗 HBM4E，计划 2027 下半年 {s:10}',
+         neck='封装太大：2026 年起多家报道四芯版取消、改为 2 芯 + 8 颗 HBM，英伟达未确认 {s:15} {s:25}',
+         note='图中按 GTC 展示的四芯版画；最终规格以英伟达公布为准'),
+]
+
+# ---------- 步骤 ----------
+STEPS = [
+dict(id='why', scene='why', t='为什么需要先进封装：一颗芯片装不下了', hint='拖带宽 · 比较两种连线的功耗',
+     parts=['reticle', 'die', 'pcb', 'si'], w='energy', body='''
+<p><b>一句话：</b>光刻机一次只能曝光一块固定大小的区域，叫<b>光罩上限</b>，理论最大约 858 mm²；H100 的芯片已经 814 mm²，几乎顶满 {s:5}。想要更多晶体管，就只能把几颗芯片放进同一个封装里，让它们“像一颗芯片一样”工作。B200 就是两颗接近光罩上限的芯片，用 10 TB/s 的片间连接合成一颗 GPU {s:6}。</p>
+<p><b>拆小还有一个好处：良率。</b>晶圆上的缺陷是随机撒的，芯片越大，中招的概率越高。用教科书里的简化公式（良率 ≈ e<sup>−缺陷密度×面积</sup>）、假设每平方厘米 0.1 个缺陷：814 mm² 的芯片良率约 44%，一半大小约 67% {est}。所以台积电的工程师也把“拼小芯片”的好处总结为：总面积可以远超光罩上限，而且良率和性能都好 {s:12}。</p>
+<p><b>为什么 HBM 必须贴在 GPU 几毫米外：</b>每颗 HBM 有 1024 或 2048 根数据线（见 <a href="explain-hbm.html#s-io">HBM 原理图第 7 步</a>），8 颗就是上万根。普通封装基板上的走线最长可到 25 mm，每传 1 位约耗 0.5–1 pJ；用硅中介层或硅桥的“先进封装”，线长压到 2 mm 以内，每位约 0.25–0.5 pJ，线还能排得更密 {s:12}。</p>
+<div class="ex-w" data-w="energy"></div>
+<p class="ex-ana"><b>打个比方：</b>两座城市之间修路，普通基板像郊区公路，车道少、路长；中介层像在两栋楼之间直接架上千座天桥。<b>落到芯片上：</b>“天桥”就是中介层里刻的细铜线，GPU 和 HBM 挨得越近、线越多越细，数据跑得越快、越省电。</p>'''),
+dict(id='stack', scene='stack', t='从主板往上：一颗 GPU 封装有几层', hint='点“展开 / 压紧” · 点每一层看说明',
+     parts=['pcb', 'bga', 'abf', 'c4', 'interp', 'ubump', 'gpu', 'hbm', 'uf', 'lid'], w='apart', body='''
+<p>CoWoS = Chip on Wafer on Substrate：<b>芯片</b>先贴到一整片<b>晶圆</b>（中介层）上，再整体贴到<b>基板</b>上。从下往上数：</p>
+<ol class="ex-keys">
+<li><b>主板 / 加速卡电路板（PCB）</b>：最底下的大板子，走电源和对外的高速线。</li>
+<li><b>BGA 焊球</b>：封装底部一排排锡球，把整个封装焊到电路板上。</li>
+<li><b>ABF 封装载板</b>：十几层有机材料 + 铜线的小电路板，把中介层上极密的连接“放大”成电路板能接的间距；绝缘膜叫 ABF（味之素做）{s:23}，芯层里有 T-glass 玻纤布（日东纺约占 90%）{s:22}。5.5× 光罩的封装要用超过 100×100 mm 的载板 {s:4}。</li>
+<li><b>C4 凸点</b>：中介层和载板之间的焊点，比 BGA 小、比微凸点大。</li>
+<li><b>中介层</b>：一块不做计算、只布线的“转接板”。硅中介层上有竖着打穿的 <b>TSV 硅通孔</b>（上下连通）和横着的多层 <b>RDL 布线</b>（左右连通），台积电还在里面埋了深沟槽电容稳住供电 {s:1}。S 型最大约 3.3× 光罩、约 2,700 mm² {s:1}。</li>
+<li><b>微凸点</b>：芯片和中介层之间极小的焊点，数量以万计。</li>
+<li><b>GPU 芯片 + HBM 堆栈</b>：并排贴在中介层上，GPU 在中间、HBM 围在两边。</li>
+<li><b>底部填充胶</b>：灌进芯片和中介层之间的缝里，把成千上万个微凸点包住，防止热胀冷缩把焊点扯断。</li>
+<li><b>盖板 + 导热材料 + 冷板</b>：芯片顶上涂导热材料、盖金属盖，再接散热器或液冷板。B300 最高 1,400W {s:7}，热全从这里走。</li>
+</ol>
+<div class="ex-w" data-w="apart"></div>'''),
+dict(id='variant', scene='variant', t='三种 CoWoS：S、R、L 差在哪', hint='拖 S / R / L 滑块 · 点中介层里的结构',
+     parts=['si', 'tsv', 'rdl', 'lsi', 'mold', 'c4', 'ubump'], w='variant', body='''
+<p>三种 CoWoS 的区别只在<b>中间那块中介层</b>，上面的芯片和下面的载板都一样。拖下面的滑块看结构怎么变：</p>
+<div class="ex-w" data-w="variant"></div>
+<div class="ex-bd" data-m="S"><p><b>CoWoS-S（整片硅）：</b>中介层是一整块硅，TSV 打穿、RDL 走线最细，信号最好。2012 年量产，最大约 3.3× 光罩（约 2,700 mm²）{s:1}。整片硅贵：研究页汇总的口径是每片中介层晶圆约 1 万美元 {s:16}。H100、MI300、谷歌 TPU 用它 {s:16}。</p></div>
+<div class="ex-bd" data-m="R"><p><b>CoWoS-R（有机 RDL）：</b>中介层换成聚合物 + 铜线做的 RDL 层，最细线宽 / 间距 2 µm（节距 4 µm），2023 年量产 {s:1}。它比硅软，能缓冲芯片和载板热胀冷缩不一样带来的应力，C4 焊点更可靠 {s:1}。线没有硅那么密，适合对带宽要求低一档的芯片（研究页：Trainium3、Vera CPU、交换芯片）{s:16}。</p></div>
+<div class="ex-bd" data-m="L"><p><b>CoWoS-L（RDL + 局部硅桥）：</b>主体是模塑料 + 正反两面的 RDL，只在<b>需要超密连线的接缝处</b>（芯片—芯片、芯片—HBM）埋一小块硅，叫 LSI 局部硅互连；还可以在 GPU 下面埋独立电容稳压 {s:1}。台积电首款 3.5× 光罩的 L 型 2024 年量产 {s:1}，研究页口径每片中介层约 1.5 万美元 {s:16}。</p></div>
+<p class="ex-ana"><b>英伟达为什么换到 L：</b>B200 是两颗接近光罩上限的芯片 + 8 颗 HBM {s:5}，已经超过 S 型 3.3× 的上限；台积电自己也建议超过 3.3× 用 L 或 R {s:1}。L 只在接缝处用硅，硅面积省了，还能继续往 5.5×、9× 做大 {s:2} {s:4}；而 R 的线不够密，撑不住两颗 GPU 之间 10 TB/s 的连接 {s:6}——这一句是按 R 的 2 µm 线宽推断 {est}。</p>'''),
+dict(id='flow', scene='flow', t='怎么做出来：先上晶圆，再上基板', hint='拖工序滑块 · 看良率连乘',
+     parts=['wafer', 'site', 'gpu', 'hbm', 'abf', 'probe'], w='flow', body='''
+<p><b>CoWoS 的名字就是工序：</b>先 Chip-on-Wafer（把芯片贴到整片中介层晶圆上），再 on-Substrate（切开后贴到载板上）。拖动滑块走一遍（工序和分工来自研究页的工艺表 {s:16}）：</p>
+<div class="ex-w" data-w="flow"></div>
+<p><b>风险集中在第 ② 步之后：</b>芯片一旦焊到中介层上，就拆不下来了。一颗 HBM 或一颗 GPU 芯片坏了，整颗封装（含另外几颗好芯片）一起报废。B200 这样的封装，研究页汇总的封装成本约 1,000–1,100 美元 / 颗 {s:16}，还不算上面芯片和 HBM 的价钱。</p>
+<p><b>所以要“已知良品芯片”（KGD）：</b>每颗芯片、每摞 HBM 在贴上去之前先单独测好；贴的过程中还要多次测。Advantest 的 CEO 说 Blackwell 的测试时间是 Hopper 的 3–4 倍，因为要在不同机台上测几十次 {s:13}。</p>'''),
+dict(id='size', scene='size', t='越做越大：光罩倍数、每片能切几个', hint='拖光罩倍数 · 切换圆片 / 方形面板',
+     parts=['wafer', 'site', 'panel', 'reticle'], w='size', body='''
+<p><b>中介层用“几倍光罩”来量大小</b>：2016 年约 1.5×，之后 3.3×（放 8 颗 HBM3），再到 5.5×（最多 12 颗 HBM4）和 9×（约 7,722 mm²）{s:4}。台积电 2026 年说 5.5× 已在量产，14×（约 10 颗大芯片 + 20 颗 HBM）计划 2028 年，更大的 2029 年 {s:2}；9.5× 计划 2027 年 {s:3}。载板也跟着长：5.5× 要超过 100×100 mm，9× 要超过 120×120 mm {s:4}。</p>
+<div class="ex-w" data-w="size"></div>
+<p><b>所以“产能多少片/月”≠“能出多少颗 GPU”。</b>一片 300 mm 晶圆约 70,686 mm² {calc}，中介层越大，一片切出来的越少：研究页的口径是 H100 每片约 28 颗、B200 约 16 颗 {s:16}，B300 约 12–13 颗、Rubin 约 9–10 颗、Rubin Ultra 约 6 颗（估）{s:16}。同样 1 万片，从 H100 换到 Rubin，能封的颗数少了大约 2/3 {calc}。</p>
+<p><b>圆片换方片：CoPoS。</b>圆片边缘切不出完整的大矩形，浪费越来越多。台积电的 CoPoS 用 310×310 mm 的方形面板 {s:17}，面积 96,100 mm²，是 300 mm 圆片的约 1.36 倍 {calc}，而且大矩形摆得更满。嘉义试产线已建成、良率约需一年稳定 {s:17}；研究页口径 2028 年起量 {s:16}。</p>'''),
+dict(id='hard', scene='hard', t='为什么难：现在卡在哪一环', hint='点每一根条 · 看研究页的判断',
+     parts=['b_ip', 'b_cw', 'b_hbm', 'b_abf', 'test', 'pwr'], w='neck', body='''
+<p>把一颗 GPU 封装需要的东西排成一条链：中介层 → CoWoS 封装产能 → HBM → 载板 → 测试 → 电和热。哪一环最少，整条链就只能出那么多（研究页用的是约束理论，见 <a href="cowos.html#cw-toc">TOC 图</a>）。上图是研究页模型里 2027 年各环相对需求的余量 {est} {s:16}：</p>
+<div class="ex-w" data-w="neck"></div>
+<p class="ex-ana"><b>研究页的核心判断：</b>2027 年 CoWoS 只略紧、不再是头号瓶颈，最紧的是载板；利润往载板迁移，设备景气还没见顶 {s:16}。约束一直在搬家：2023–24 年是 CoWoS，2026 年要看 HBM，2027 年换成载板，2028 年可能轮到数据中心电力（估）{s:16}。</p>'''),
+dict(id='ladder', scene='ladder', t='一代一代：H100 → Blackwell → Rubin → Rubin Ultra', hint='拖产品滑块 · 对照下面的卡片',
+     parts=['gpu', 'hbm', 'interp', 'lsi', 'abf'], w='ladder', body='''
+<p>每一代都在拧同样几个旋钮：<b>几颗计算芯片、几颗 HBM、中介层多大、功耗多少</b>，然后撞上下一个瓶颈。拖上面的滑块，或点下面的卡片：</p>
+<div class="ex-w" data-w="ladder"></div>
+<p class="note">功耗为英伟达公布的“最大 TGP”；Rubin 功耗官方未公布，只列报道值。每片颗数为研究页口径，H100 / B200 有券商来源，其余为估。</p>'''),
+dict(id='alt', scene='alt', t='下一步与替代路线', hint='切换路线看结构',
+     parts=['soic', 'panel', 'glass', 'cpo', 'cn'], w='alt', body='''
+<div class="ex-w" data-w="alt"></div>
+<div class="ex-bd" data-m="soic"><p><b>SoIC / 3D 堆叠：</b>不再并排放，而是芯片叠芯片，铜对铜直接键合（和 <a href="explain-hbm.html#s-bond">HBM 的混合键合</a>同一类）。台积电计划 2026 年 SoIC 月产能约 1–1.5 万片，2027 年起继续扩，Rubin Ultra 和 Feynman 是主要推手 {s:19}；A14 叠 A14 计划 2029 年 {s:2}。它不替代 CoWoS，而是叠好的芯片再放到 CoWoS 上。</p></div>
+<div class="ex-bd" data-m="panel"><p><b>CoPoS 方形面板：</b>把中介层从 300 mm 圆片换成 310×310 mm 方片 {s:17}，一次能摆更多大矩形（见第 5 步）。难点是方片更容易翘、设备和材料都要重做；台积电嘉义线已建成，良率约需一年稳定 {s:17}。</p></div>
+<div class="ex-bd" data-m="glass"><p><b>玻璃基板：</b>载板的芯层从玻纤 + 树脂换成玻璃，更平、更不怕热胀冷缩，能做更大的封装，也绕开 T-glass 玻纤布的短缺。TrendForce 预计 2027 年起步、2030 年前后放量 {s:18}；SK 旗下 Absolics 目标 2027 年量产 {s:17}。</p></div>
+<div class="ex-bd" data-m="cpo"><p><b>共封装光学（CPO）：</b>把光收发引擎直接放进封装里，电信号只走几毫米就变成光。台积电的 COUPE 2026 年量产，比可插拔光模块能效约高 2 倍、延迟约降到 1/10 {s:2}。这会让封装里多出光引擎这一类芯片。</p></div>
+<div class="ex-bd" data-m="cn"><p><b>中国的路：</b>台积电 2024-11 起停止给中国大陆 AI 芯片客户供应 7nm 及以下芯片 {s:20}，所以国产 AI 芯片的 2.5D 封装只能在大陆做。华为昇腾 910C 是把两颗 910B 合封在一个封装里 {s:21}。研究页的中国账本：国产 2.5D 产能 2025 年底约 1.3 万片/月、2026 年底约 2.3 万、2027 年底约 5 万（估，来源较弱）；盛合晶微 2024 年约占大陆 2.5D 收入 85%，通富、长电在扩，武汉新芯的硅转接板已量产；2027 年国产这边最紧的是 HBM，再下一个卡点是 ABF 膜 {s:16}。</p></div>
+<p><b>别家的同类做法：</b>Intel 的 EMIB 把小块硅桥直接埋进载板，思路和 CoWoS-L 的局部硅桥相近，谷歌第 9 代 TPU 传选用 {s:24}。</p>'''),
+dict(id='keys', scene='keys', t='下一次升级的关键（接回 CoWoS 研究页）', hint='红色 = 研究页判断最紧的环节',
+     parts=['abf', 'interp', 'hbm', 'gpu'], body='''
+<ol class="ex-keys">
+<li><b>载板（最紧）：</b>研究页模型里 2027 年 ABF 载板约比需求少 29%（估），约束从 CoWoS 搬到载板 {s:16}。观察项：载板厂（欣兴）毛利率若连续两季低于 20%，“利润往载板迁移”的判断就错了 → <a href="cowos.html#a2">论据 2</a>、<a href="cowos.html#neck">瓶颈表</a>。</li>
+<li><b>CoWoS 产能与设备：</b>台积电 CoWoS 年末产能约 12 万片/月（2026）→ 18.5 万（2027），封装设备交期 10–12 个月 {s:16}。观察项：2027 年缺口若 ≥ 25% 或年底产能 &lt; 16 万片/月，“CoWoS 不再是头号瓶颈”就错了；设备三家营收同比是台积电营收的领先指标（中位约 4 个月）→ <a href="cowos.html#a3">论据 3</a>、<a href="cowos.html#lead">领先指标</a>。</li>
+<li><b>硅中介层（只卡 S 型）：</b>2027 年余量约 +3%，台积电自制新增要 ≥ 16.1 千片/月才不缺；格罗方德 2028 上半年才放量 {s:16} → <a href="cowos.html#ip">中介层一环</a>。</li>
+<li><b>更大尺寸的良率与翘曲：</b>9×、14× 光罩意味着 120 mm 以上的载板 {s:4}、每片更少的颗数；Rubin Ultra 四芯版的传闻改版就是例子 {s:15}。“片数涨得比颗数快”要用每片颗数去折算 → <a href="cowos.html#cw-ppw">每片颗数</a>。</li>
+<li><b>国产 2.5D：</b>观察项“盛合 / 通富 / 长电 2026 年底合计 ≥ 2 万片/月” {s:16} → <a href="cowos.html#cn">中国账本</a>。</li>
+</ol>
+<p class="note">以上判断与观察项均引自 CoWoS 研究页，本页不作修改；不构成投资建议。</p>'''),
+dict(id='quiz', scene='ladder', t='读完你应该能回答这 5 个问题', hint='点问题看答案',
+     parts=['gpu', 'hbm', 'interp', 'abf'], w='quiz', body='''<div class="ex-w" data-w="quiz"></div>'''),
+]
+
+QUIZ = [
+    ('为什么 AI GPU 要用“拼芯片 + 先进封装”，而不是做一颗更大的芯片？',
+     '光刻机一次只能曝光约 858 mm²，H100 已经 814 mm²；再大只能拼。拼小芯片还能提高良率（缺陷随机撒，芯片越大越容易中招）。拼起来的芯片之间、芯片和 HBM 之间要几千上万根线，只有中介层 / 硅桥这种 2 mm 以内的短线才够密、够省电。'),
+    ('从主板往上，一颗 CoWoS 封装有哪几层？每层干什么？',
+     'PCB 主板 → BGA 焊球 → ABF 载板（把密的连接放大成主板能接的间距）→ C4 凸点 → 中介层（TSV 上下连、RDL 左右连）→ 微凸点 → GPU 芯片 + HBM → 底部填充胶包住焊点 → 导热材料 + 盖板 + 冷板。'),
+    ('CoWoS-S、R、L 的区别是什么？英伟达为什么从 S 换到 L？',
+     'S 是整片硅中介层，线最细但最大约 3.3× 光罩；R 是聚合物 + 铜的 RDL 中介层，便宜、能缓冲应力，但线较粗；L 是 RDL / 模塑主体 + 只在接缝处埋小块硅桥（LSI）。B200 两颗大芯片 + 8 颗 HBM 超过了 S 的上限，L 用更少的硅就能做到 3.5×、5.5×，还能继续变大。'),
+    ('为什么“CoWoS 产能 X 万片/月”不能直接换成“X 万颗 GPU”？',
+     '每片 300 mm 晶圆能切几个中介层取决于中介层多大：H100 约 28 颗、B200 约 16 颗、Rubin 约 9–10 颗（研究页口径，后两者为估）。产能片数要乘每片颗数、再乘良率，才是颗数；中介层越做越大，片数涨得比颗数快。'),
+    ('2027 年最紧的是哪一环？研究页怎么判断，什么情况下判断会错？',
+     '研究页模型里 2027 年最紧的是 ABF 载板（约 −29%，估），HBM 约 −11%，CoWoS 只略紧，硅中介层大致打平。判断是“CoWoS 不再是头号瓶颈，利润往载板迁移”。如果 2027 年 CoWoS 缺口 ≥ 25% 或年底产能 < 16 万片/月，或载板厂毛利率连续两季低于 20%，判断就要改。'),
+]
+
+SOURCES = [
+    (1, '台积电：CoWoS 技术页（S ≤ 3.3× 约 2,700 mm²、2012 年量产；R 2023 年量产、2 µm 线宽；L 3.5× 2024 年量产、LSI、eDTC）', 'https://3dfabric.tsmc.com/english/dedicatedFoundry/technology/cowos.htm'),
+    (2, '台积电：2026 北美技术论坛（5.5× CoWoS 量产、14× 2028 年、SoW-X 40× 2029 年、COUPE 2026 年、A14 SoIC 2029 年，2026-04-22）', 'https://pr.tsmc.com/english/news/3302'),
+    (3, 'TrendForce：台积电 9.5× 光罩 CoWoS 2027 年量产（2025-04-24）', 'https://www.trendforce.com/news/2025/04/24/news-tsmc-tech-symposium-highlights-a14-set-for-2028-launch-9-5-reticle-cowos-arriving-in-2027/'),
+    (4, "Tom's Hardware：台积电 Super Carrier（1.5× → 3.3× → 5.5× → 9×、7,722 mm²、载板 >100 / >120 mm，2024-11）", 'https://www.tomshardware.com/tech-industry/tsmc-super-carrier-cowos-interposer-gets-bigger-enabling-massive-ai-chips-to-reach-9-reticle-sizes-with-12-hbm4-stacks'),
+    (5, "Tom's Hardware：Blackwell B200 解析（H100 814 mm²、光罩上限 858 mm²、192GB、8 TB/s，2024-03-18）", 'https://www.tomshardware.com/pc-components/gpus/nvidias-next-gen-ai-gpu-revealed-blackwell-b200-gpu-delivers-up-to-20-petaflops-of-compute-and-massive-improvements-over-hopper-h100'),
+    (6, '英伟达新闻稿：Blackwell 平台（两颗光罩上限芯片、10 TB/s 片间连接）', 'https://nvidianews.nvidia.com/news/nvidia-blackwell-platform-arrives-to-power-a-new-era-of-computing'),
+    (7, '英伟达技术博客：Inside Blackwell Ultra（TGP 700 / 1,200 / 1,400W、288GB = 8 × 12-Hi）', 'https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/'),
+    (8, '英伟达：HGX 平台页（Rubin GPU 288GB HBM4、22 TB/s）', 'https://www.nvidia.com/en-us/data-center/hgx/'),
+    (9, 'TweakTown：Rubin TGP 报道（1,800W → 2,300W，非官方）', 'https://www.tweaktown.com/news/107939/amds-next-gen-instinct-mi450x-forced-nvidia-to-increase-tgp-memory-bandwidth-on-rubin-gpus/index.html'),
+    (10, 'heise：GTC 2026 Kyber 与 Rubin Ultra（4 × 800 mm²、16 颗 HBM4E、1TB、2027 下半年，2026-03-17）', 'https://www.heise.de/en/news/Kyber-Rack-Nvidia-Shows-Rubin-Ultra-Boards-11213103.html'),
+    (11, 'DCD：Rubin Ultra NVL576 整柜约 600 kW', 'https://www.datacenterdynamics.com/en/news/nvidias-rubin-ultra-nvl576-rack-expected-to-be-600kw-coming-second-half-of-2027/'),
+    (12, 'UCIe 联盟博客（台积电 Stefan Rusu）：标准封装 ≤25 mm、0.5–1 pJ/bit；先进封装 ≤2 mm、0.25–0.5 pJ/bit（2023-03-31）', 'https://www.uciexpress.org/post/how-ucie-will-enable-broad-chiplet-adoption'),
+    (13, "Tom's Hardware：Blackwell 测试时间是 Hopper 的 3–4 倍（CoWoS-L、H100 六颗 HBM3，2024-12-27）", 'https://www.tomshardware.com/pc-components/gpus/blackwell-gpu-reportedly-takes-3x-to-4x-longer-to-test-than-hopper'),
+    (14, 'Korea Herald：Rubin 用 8 颗 12 层 HBM4（2025-09-12）', 'https://www.koreaherald.com/article/10574552'),
+    (15, "igor'sLAB：Rubin Ultra 四芯版传取消（汇总 SemiAnalysis、TrendForce/工商时报：四芯版约 7.5–8× 光罩；未获英伟达确认，2026-07-01）", 'https://www.igorslab.de/en/nvidia-rubin-ultra-four-die-scrapped-reversal/'),
+    (16, '本站 CoWoS 研究页（判断、TOC 瓶颈模型、每片颗数、工艺表、中国账本、观察项；其中模型数为估）', 'cowos.html'),
+    (17, '首尔经济日报：台积电 CoPoS 310×310 mm 线建成、良率约一年稳定；Absolics 2027 年玻璃基板量产目标（2026-08-11）', 'https://en.sedaily.com/international/2026/08/11/tsmc-completes-line-for-next-gen-copos-packaging-sees-year'),
+    (18, 'TrendForce：玻璃基板 2027 年起步、2030 年前后放量（2026-06-05）', 'https://www.trendforce.com/news/2026/06/05/news-glass-substrates-eye-2027-launch-scale-toward-2030-as-cowos-costs-rise-and-hyperscaler-demand-grows/'),
+    (19, 'TrendForce：台积电 SoIC 2026 年月产能约 1–1.5 万片（2026-03-18）', 'https://www.trendforce.com/news/2026/03/18/news-nvidia-rubin-ultra-and-feynman-reportedly-to-boost-tsmc-soic-besi-applied-materials-tel-to-benefit/'),
+    (20, 'TechNode：台积电停止向中国大陆 AI 客户供应 7nm 及以下芯片（2024-11-11）', 'https://technode.com/2024/11/11/tsmc-halts-supply-of-7nm-and-below-ai-chips-to-mainland-china-report/'),
+    (21, 'The Business Times / 路透：昇腾 910C 由两颗 910B 合封（2025-04-21）', 'https://www.businesstimes.com.sg/companies-markets/telcos-media-tech/huawei-readies-new-ai-chip-mass-shipment-china-seeks-nvidia-alternatives-sources'),
+    (22, "Tom's Hardware：T-glass 玻纤布短缺，日东纺约占 90%", 'https://www.tomshardware.com/tech-industry/shortages-of-crucial-chip-packaging-material-threatens-ai-accelerator-supply-chains-nittobos-fukushima-plant-is-tripling-capacity-but-itll-take-years-before-market'),
+    (23, 'Wccftech：味之素 ABF 膜提价，供需缺口延续到 2027 年', 'https://wccftech.com/msg-maker-ajinomoto-to-raise-prices-as-abf-substrate-supply-demand-gap-extends-to-2027/'),
+    (24, "Tom's Hardware：Intel EMIB 封装受关注，谷歌第 9 代 TPU 传选用", 'https://www.tomshardware.com/tech-industry/semiconductors/intels-emib-packaging-gains-traction-as-chip-designers-look-to-skirt-tsmcs-cowos-constraints-googles-reported-decision-for-9th-gen-tpus-highlights-intels-attractive-alternative'),
+    (25, "Tom's Hardware：Rubin Ultra 传测试更低内存配置，英伟达回应（2026-08-12）", 'https://www.tomshardware.com/pc-components/gpus/nvidia-reportedly-testing-lower-memory-configs-of-rubin-ultra-as-memory-shortage-bites-back-designs-tested-include-as-little-as-192-gb-and-step-back-to-hbm4'),
+]

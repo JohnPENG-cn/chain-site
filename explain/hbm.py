@@ -79,7 +79,7 @@ dict(id='pkg', scene='pkg', t='贴到 GPU 旁边：硅中介层与 2.5D 封装',
      parts=['gpu', 'stackp', 'interp', 'subs'], body='''
 <p><b>HBM 不插在主板上</b>，而是和 GPU 并排放在一块<b>硅中介层</b>（interposer）上。中介层里刻着几千根极细的线，把每颗 HBM 的底座直接连到 GPU，距离只有几毫米；中介层再放到封装基板上。两颗芯片“并排 + 一层硅桥”，叫 2.5D 封装，台积电的版本就是 <a href="cowos.html">CoWoS</a>。</p>
 <p><b>为什么非这样不可：</b>每颗 HBM 有 1024 或 2048 根数据线，普通电路板上根本走不了这么密。图里是 8 颗：Rubin GPU 配 8 颗 12 层 HBM4 {s:18}，合计 288GB、22 TB/s {s:17}。</p>
-<p><b>所以 HBM 能出多少货，不只看内存厂</b>，还要看 CoWoS 中介层和封装基板的产能 → 见 <a href="cowos.html">CoWoS 页</a>。</p>'''),
+<p><b>所以 HBM 能出多少货，不只看内存厂</b>，还要看 CoWoS 中介层和封装基板的产能 → 见 <a href="cowos.html">CoWoS 页</a>；中介层、硅桥、载板一层层怎么搭，见 <a href="explain-cowos.html">CoWoS 原理图</a>。</p>'''),
 dict(id='io', scene='io', t='数据线：1024 位到 2048 位，带宽怎么算', hint='拖速率 · 切 1024 / 2048 位',
      parts=['strand', 'phy', 'gpu'], w='calc', body='''
 <p><b>公式只有一行：带宽 = 线数 × 每根线每秒传的位数 ÷ 8</b>（8 位 = 1 字节）。HBM3：1024 × 6.4 ÷ 8 = 819 GB/s {s:1}；HBM4：2048 × 8 ÷ 8 = 2,048 GB/s ≈ 2 TB/s {s:2}。</p>
