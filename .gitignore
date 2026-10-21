@@ -17,3 +17,4 @@ cowos_data/raw/
 # 日报栏目的图片需要入库
 !daily/img/*.png
 pcb_data/raw/
+cu_data/raw/

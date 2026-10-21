@@ -1,4 +1,5 @@
-"""统一页面模板（SOP 页面规范 v1.4）。hbm.html、cowos.html 都由这里生成，不要手改这两个 HTML。
+"""统一页面模板（SOP 页面规范 v1.4）。hbm.html、cowos.html、pcb.html、cu.html 都由这里生成，不要手改这些 HTML。
+大宗商品页（cu 起）用同一模板；spec 可选 cons_sub 覆盖"主流 vs 我们"的说明句（不给则与芯片页完全相同）。
 结构：最上 = 逻辑层（v1.6：三个问题 + 三句话逻辑 + 一张图 + 主流观点 vs 我们 + 我们重点盯什么，手机第一屏）；
      其下 = 结论层（金字塔：SCQA → 中心思想 → 3 条论点卡 → 每条论点的证据块 → 可能错在哪 → 预测台账）；
      下半 = 底稿（SOP 13 步，按 SOP 顺序全部展开）；只有来源、更新记录折叠。
@@ -92,7 +93,7 @@ def render(S):
         w(f'<div class="qa"><div class="qn">{q}</div><p class="ag"><i>全球</i>{g}</p><p class="ac"><i>中国</i>{c}</p></div>')
     w(f'</div>\n<p class="note terms">{L["terms"]}</p>\n<div class="grid g2 lg2"><div class="card"><b>三句话逻辑</b><ol class="three">' + ''.join(f'<li>{x}</li>' for x in L['three']) + '</ol></div>')
     w('<div class="card"><b>一张图看懂</b><div class="keys">' + ''.join(f'<div><b>{v}</b><span>{k}</span></div>' for v, k in L['keys']) + f'</div>{flow(L["fig"])}<div class="note">{L["fig_note"]}</div></div></div>\n')
-    w('<h3>主流观点 vs 我们</h3><p class="sub">左边是券商、研究机构、韩媒的公开说法（带来源）；"差距"一栏就是预期差。</p><div class="tbl"><table class="stack cons"><thead><tr><th>主流观点</th><th>我们</th><th>差距</th><th>证据</th><th>什么能确认</th></tr></thead><tbody>'
+    w('<h3>主流观点 vs 我们</h3><p class="sub">' + S.get('cons_sub', '左边是券商、研究机构、韩媒的公开说法（带来源）；"差距"一栏就是预期差。') + '</p><div class="tbl"><table class="stack cons"><thead><tr><th>主流观点</th><th>我们</th><th>差距</th><th>证据</th><th>什么能确认</th></tr></thead><tbody>'
       + ''.join('<tr>' + ''.join(f'<td>{x}</td>' for x in r) + '</tr>' for r in L['cons']) + '</tbody></table></div>\n')
     w('<h3>我们重点盯什么</h3><div class="tbl"><table class="stack watch"><thead><tr><th>盯什么</th><th>指标</th><th>阈值 → 含义</th><th>日期</th></tr></thead><tbody>'
       + ''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td style="white-space:nowrap">{d}</td></tr>' for a, b, c, d in L['watch']) + '</tbody></table></div>\n</section>\n')
@@ -186,7 +187,7 @@ def load(chain):
 
 if __name__ == '__main__':
     idx = open(os.path.join(R0, 'index.html'), encoding='utf-8').read()
-    for chain in ('hbm', 'cowos', 'pcb'):
+    for chain in ('hbm', 'cowos', 'pcb', 'cu'):   # cu = 大宗商品系列（铜），同一模板
         S = load(chain)
         open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(render(S))
         # 首页卡片 = 同一句中心思想
