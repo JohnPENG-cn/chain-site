@@ -159,7 +159,9 @@
 
     /* 步骤切换：滚动到哪一步，图就切到哪一步（滚动叙事）；也可点按钮、圆点、键盘左右键 */
     function figBottom() { var r = root.getBoundingClientRect(); return getComputedStyle(root).position === 'sticky' && innerWidth < 900 ? r.bottom : 60; }
+    var lockT = 0, lockI = -1;
     function onScroll() {
+      if (Date.now() < lockT) return;
       var y = innerWidth < 900 ? figBottom() + (innerHeight - figBottom()) * 0.35 : innerHeight * 0.45, cur = 0;
       secs.forEach(function (el, k) { if (el.getBoundingClientRect().top < y) cur = k; });
       setStep(cur);
@@ -171,17 +173,20 @@
       i = Math.max(0, Math.min(steps.length - 1, i));
       var el = secs[i], off = innerWidth < 900 ? figBottom() + 8 : 80;
       var top = el.getBoundingClientRect().top + scrollY - off;
+      lockT = Date.now() + 1000; lockI = i;
       scrollTo({ top: top, behavior: still.matches ? 'auto' : 'smooth' });
       setStep(i);
+      setTimeout(onScroll, 1050);
     }
     api.go = go;
-    root.querySelector('.ex-prev').addEventListener('click', function () { go(st.i - 1); });
-    root.querySelector('.ex-next').addEventListener('click', function () { go(st.i + 1); });
+    function cur() { return Date.now() < lockT ? lockI : st.i; }
+    root.querySelector('.ex-prev').addEventListener('click', function () { go(cur() - 1); });
+    root.querySelector('.ex-next').addEventListener('click', function () { go(cur() + 1); });
     document.querySelectorAll('.ex-dots a').forEach(function (a, k) { a.addEventListener('click', function (e) { e.preventDefault(); go(k); }); });
     addEventListener('keydown', function (e) {
       var tg = e.target.tagName; if (tg === 'INPUT' || tg === 'TEXTAREA' || e.metaKey || e.ctrlKey) return;
-      if (e.key === 'ArrowRight' || e.key === 'j') { go(st.i + 1); e.preventDefault(); }
-      else if (e.key === 'ArrowLeft' || e.key === 'k') { go(st.i - 1); e.preventDefault(); }
+      if (e.key === 'ArrowRight' || e.key === 'j') { go(cur() + 1); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'k') { go(cur() - 1); e.preventDefault(); }
       else if (e.key === 'Escape') select(null);
     });
     /* 左右轻扫图卡也能翻步（触屏） */
@@ -189,7 +194,7 @@
     stage.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
     stage.addEventListener('touchend', function (e) {
       if (sx == null) return; var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
-      if (Math.abs(dx) > 60 && Math.abs(dx) > 2 * Math.abs(dy)) go(st.i + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 60 && Math.abs(dx) > 2 * Math.abs(dy)) go(cur() + (dx < 0 ? 1 : -1));
     }, { passive: true });
 
     /* 步内小部件 */
