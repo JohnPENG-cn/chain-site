@@ -120,7 +120,7 @@ function drawIf(r){$('#cu-ifT').innerHTML=J.interface.rows.map(x=>`<tr><td><b>${
 window.cuNet=()=>CH.net('cu-cNet','#cu-nodeInfo',J.companies,mk);
 function render(){drawBal();drawCons();drawTc();drawBand();drawLong();drawLead();drawCn();window.cuNet()}
 window.redraw=render;
-fetch('data/cu.json').then(r=>r.json()).then(j=>{J=j;
+fetch('data/cu.json?v=2637524f9e').then(r=>r.json()).then(j=>{J=j;
  $('#cu-upd').textContent=J.meta.updated;CH.stats('#cu-stats',J.stats);
  $('#cu-deb').innerHTML=J.debates.map(x=>`<div class="card"><b>${x.q}</b><p style="margin:.4em 0;font-size:15px">观点：${CH.srcInline(x.view)}</p><div class="note">证伪：${x.falsify}</div></div>`).join('');
  CH.table('#cu-procT tbody',J.process,2);CH.table('#cu-prT tbody',J.price,2);

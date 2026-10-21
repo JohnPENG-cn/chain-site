@@ -38,7 +38,7 @@ function once(){CH.timeline('#cn-tl',N.timeline);CH.players('#cnPl',N.players);C
  $('#cn-coT tbody').innerHTML=N.co.map(c=>`<tr><td>${c[0]}</td><td><b>${c[1]}</b></td><td style="white-space:nowrap">${c[2]}</td><td>${c[3]}</td><td><span class="pill" style="color:${/^强/.test(c[4])?'var(--ok)':/^中/.test(c[4])?'var(--warn)':'var(--mut)'}">${c[4]}</span></td><td>${CH.tag(c[5])}</td></tr>`).join('');
  ['cns1','cns2','cns3','cns4'].forEach(id=>document.getElementById(id).addEventListener('input',draw))}
 window.cnReset=()=>{cns1.value=S0.g;cns2.value=S0.w27;cns3.value=S0.g27;cns4.value=S0.gray;draw()};
-fetch('data/hbm.json').then(r=>r.json()).then(m=>{M=m;N=m.cn;once();draw()});
-fetch('data/cowos.json').then(r=>r.json()).then(j=>{const b=j.cn.bal.find(x=>x.y==2026);CW={cards:b.cards,np:j.cn.model.npr['2026']};draw()}).catch(()=>{});
+fetch('data/hbm.json?v=8a4bbe97f9').then(r=>r.json()).then(m=>{M=m;N=m.cn;once();draw()});
+fetch('data/cowos.json?v=1f41496d73').then(r=>r.json()).then(j=>{const b=j.cn.bal.find(x=>x.y==2026);CW={cards:b.cards,np:j.cn.model.npr['2026']};draw()}).catch(()=>{});
 addEventListener('load',()=>setTimeout(()=>{const o=window.redraw;window.redraw=()=>{o&&o();draw()}},0));
 })();

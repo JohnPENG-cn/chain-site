@@ -159,6 +159,10 @@ def main():
         s2 = s[:i] + cards + s[j:]
         if s2 != s:
             open(p, 'w').write(s2)
+    # 资源加版本号（?v=内容哈希），防止手机 / CDN 缓存把新页面和旧 CSS/JS 混用
+    sys.path.insert(0, os.path.join(ROOT, 'tools'))
+    import cachebust
+    cachebust.main([M['file'] for M in metas] + ['explain.html', 'index.html'])
     print('explain: ' + ', '.join(M['file'] for M in metas) + ' + explain.html')
 
 

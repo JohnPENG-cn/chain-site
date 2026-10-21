@@ -88,7 +88,7 @@ function drawNet(){const dk=isDark(),cols=['#d9534f','#ff9900','#5b8def','#26a69
   (rel.length?'<table style="margin-top:8px">'+rel.map(l=>`<tr><td>${l[0]} → ${l[1]=='—'?'':l[1]}</td><td>${l[2]}</td><td>${/^\d/.test(l[3])?l[3].split(',').map(s=>`<a href="#src${s}">源${s}</a>`).join(' '):l[3]}</td></tr>`).join('')+'</table>':'')})}
 function render(){drawBal();drawCap();drawMix();drawMar();drawShare();drawPx();drawTier();drawCost();drawBt();drawXc();drawNet()}
 window.redraw=render;
-fetch('data/hbm.json').then(r=>r.json()).then(j=>{M=j;
+fetch('data/hbm.json?v=8a4bbe97f9').then(r=>r.json()).then(j=>{M=j;
  drawNeck();$('#tl1').innerHTML=tl(TL1,'');$('#tl2').innerHTML=tl(TL2,'h');
  $('#leadList').innerHTML=LEAD.map(l=>`<div class="card"><b>${l[0]}</b><div class="note">${l[1]} · ${l[2]}</div><p style="margin:.5em 0 0;font-size:15px">${l[3]} ${l[4]!='—'?`<span class="tag t-src">源${l[4]}</span>`:''}</p></div>`).join('');
  const now=new Date('2026-10-14');$('#predT tbody').innerHTML=PRED.map(p=>{const d=Math.round((new Date(p[2])-new Date())/864e5);return`<tr><td>${p[0]}</td><td>${p[1]}</td><td style="white-space:nowrap">${p[2]}<div class="note">${d>0?d+' 天后':'已到期'}</div></td><td>${p[3]}</td><td><span class="pill" style="color:var(--warn)">${d>0?'待验证':'待打分'}</span></td></tr>`}).join('');

@@ -118,7 +118,7 @@ function drawSeg(){const el=document.getElementById('pcb-cSeg');if(!el||!J.indus
    {name:'2026 增速（Q1 口径）',type:'line',yAxisIndex:1,data:G.map(g=>g[2]),color:'#8a5cf6',symbolSize:7,label:{show:!CH.mob(),formatter:p=>'+'+p.value+'%',color:'#8a5cf6',fontSize:10}}]})}
 function render(){drawSeg();drawBal();drawDem();drawSup();drawProfit();drawBt();drawCn();CH.driver('pcb-cDrv','#pcb-drvT tbody',J.driver,{srcHref:'cowos.html#src'});window.pcbNet()}
 window.redraw=render;
-fetch('data/pcb.json').then(r=>r.json()).then(j=>{J=j;
+fetch('data/pcb.json?v=5127511f03').then(r=>r.json()).then(j=>{J=j;
  $('#pcb-upd').textContent=J.meta.updated;CH.stats('#pcb-stats',J.judgment.stats);CH.debates('#pcb-deb',J.debates);$('#pcb-torNote').textContent=J.tornado_note;
  CH.table('#pcb-varT tbody',J.variants,5);CH.table('#pcb-procT tbody',J.process,3);CH.table('#pcb-prT tbody',J.price,3);
  CH.neck('#pcb-neck',J.neck);CH.players('#pcb-play',J.players);CH.timeline('#pcb-tl1',J.history.tl1,'');CH.timeline('#pcb-tl2',J.history.tl2,'h');$('#pcb-rule').textContent=J.history.rule;

@@ -184,3 +184,31 @@ a.sr{font-size:11px;vertical-align:1px;margin:0 1px;text-decoration:none;white-s
 .ex-svg .trace.sel{stroke:var(--acc)}
 .ex-gu i.nt{background:color-mix(in srgb,var(--mut) 18%,transparent);color:var(--mut)}
 .ex-o small{color:var(--mut)}
+/* ---------- 兼容：iOS 16.2 以前的 Safari 不支持 color-mix()，用“底色 + 透明度”近似（否则 SVG 填充会退成黑色） ---------- */
+@supports not (color:color-mix(in srgb,red 50%,blue)){
+.ex-svg .k-pcb{--c:var(--ok)}.ex-svg .k-mold{--c:var(--fg)}
+.ex-svg .b .ft,.ex-svg .b .fl,.ex-svg .b .fr{fill:var(--c)}
+.ex-svg .b .ft{fill-opacity:.08}.ex-svg .b .fl{fill-opacity:.18}.ex-svg .b .fr{fill-opacity:.28}
+.ex-svg .b polygon{stroke:var(--c);stroke-opacity:.6}
+.ex-svg .grv,.ex-svg .grv2,.ex-svg .sdl{stroke:var(--fg);stroke-opacity:.3}
+.ex-svg .tk,.ex-svg .trace{stroke:var(--warn);stroke-opacity:.65}
+.ex-svg .gapf{fill:var(--acc);fill-opacity:.12}
+.ex-svg .sd{fill:var(--fg);fill-opacity:.17;stroke:var(--fg);stroke-opacity:.6}
+.ex-svg .sd.base{fill:var(--mut);fill-opacity:.3}.ex-svg .sd.lg{fill:var(--acc2);fill-opacity:.35}.ex-svg .sd.gp{fill:var(--est);fill-opacity:.26}
+.ex-svg .sd.sel,.ex-svg g.sel .sd{fill:var(--acc);fill-opacity:.28;stroke:var(--acc)}
+.ex-svg .tsvr{fill:var(--warn)}.ex-svg .bumpr,.ex-svg .bmp{fill:var(--fg);fill-opacity:.5}.ex-svg .bmp.ub{fill:var(--warn);fill-opacity:1}
+.ex-svg .filmr{fill:var(--acc2);fill-opacity:.3}.ex-svg .moldr{fill:var(--ok);fill-opacity:.32}
+.ex-svg .press{fill:var(--mut);fill-opacity:.4}.ex-svg .ybg{fill:var(--fg);fill-opacity:.08}
+.ex-svg .sdie{fill:var(--est);fill-opacity:.3}.ex-svg .shbm{fill:var(--fg);fill-opacity:.22;stroke:var(--fg);stroke-opacity:.55}
+.ex-svg .pip,.ex-svg .wf1{fill:var(--mut);fill-opacity:.14}.ex-svg .si{fill:var(--mut);fill-opacity:.3}.ex-svg .wf0{fill:var(--mut);fill-opacity:.45}
+.ex-svg .rdlb{fill:var(--warn);fill-opacity:.14;stroke:var(--warn)}.ex-svg .moldb{fill:var(--fg);fill-opacity:.3;stroke:var(--fg);stroke-opacity:.55}
+.ex-svg .lsir{fill:var(--acc2);fill-opacity:.4}.ex-svg .subr{fill:var(--ok);fill-opacity:.2}
+.ex-svg .wfr.on,.ex-svg .pnl.on{fill:var(--mut);fill-opacity:.1}
+.ex-svg .tile{fill:var(--acc2);fill-opacity:.22}.ex-svg .tile.sel{fill:var(--acc);fill-opacity:.26}
+.ex-svg .weave{stroke:var(--ok)}.ex-svg .glsr{fill:var(--acc2);fill-opacity:.12}
+.ex-ana{background:transparent}.ex-gu i,.ex-gu.nk i{background:transparent}
+}
+.ex-svg{height:27svh}@media(min-width:900px){.ex-svg{height:min(56svh,520px)}}
+@supports not (height:1svh){.ex-svg{height:27vh}@media(min-width:900px){.ex-svg{height:min(56vh,520px)}}}
+/* 手机上图卡标题只占一行：粘性图卡高度不随步骤变化，避免 iOS 滚动中途跳动 */
+@media(max-width:560px){.ex-hd .ex-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto}}

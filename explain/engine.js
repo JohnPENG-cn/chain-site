@@ -169,14 +169,37 @@
     var ticking = false;
     addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; onScroll(); }); } }, { passive: true });
     addEventListener('resize', onScroll);
+    /* 图卡“粘住以后”的底边：从页面顶部跳转时图卡还没粘住，不能用它当前的位置算（否则会滚不到位、又跳回上一步） */
+    function stuckBottom() {
+      var cs = getComputedStyle(root);
+      if (cs.position !== 'sticky' || innerWidth >= 900) return 80;
+      return (parseFloat(cs.top) || 0) + root.getBoundingClientRect().height + 8;
+    }
+    /* 平滑滚动结束（滚动位置连续两次不变，或最多 3 秒）后再按位置校正步骤；iOS Safari 长距离平滑滚动可能超过 1 秒 */
+    var settleT = 0;
+    function settle() {
+      clearTimeout(settleT);
+      var last = -1, same = 0, t0 = Date.now();
+      (function poll() {
+        var y = scrollY;
+        same = Math.abs(y - last) < 1 ? same + 1 : 0; last = y;
+        if (same >= 2 || Date.now() - t0 > 3000) { lockT = 0; onScroll(); return; }
+        lockT = Date.now() + 400;
+        settleT = setTimeout(poll, 120);
+      })();
+    }
     function go(i) {
       i = Math.max(0, Math.min(steps.length - 1, i));
-      var el = secs[i], off = innerWidth < 900 ? figBottom() + 8 : 80;
-      var top = el.getBoundingClientRect().top + scrollY - off;
+      var el = secs[i];
       lockT = Date.now() + 1000; lockI = i;
-      scrollTo({ top: top, behavior: still.matches ? 'auto' : 'smooth' });
+      /* 先切步骤、等这一帧排版完成再滚动：WebKit（iOS Safari）里平滑滚动开始后若粘性图卡高度变化，滚动会被取消 */
       setStep(i);
-      setTimeout(onScroll, 1050);
+      requestAnimationFrame(function () {
+        var top = el.getBoundingClientRect().top + scrollY - stuckBottom();
+        lockT = Date.now() + 1000;
+        scrollTo({ top: Math.max(0, top), behavior: still.matches ? 'auto' : 'smooth' });
+        setTimeout(settle, 150);
+      });
     }
     api.go = go;
     function cur() { return Date.now() < lockT ? lockI : st.i; }

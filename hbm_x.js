@@ -5,7 +5,7 @@ function gap(o){const y=2027,d0=M.demand.filter(x=>x.y==y).reduce((a,x)=>a+x.uni
 function draw(){if(!M)return;const b=gap({}),R=[['每片有效 GB',{g:780},{g:980},'780','980','券商产量反推 880（源65）；HBM4E die 更大可能更低；估'],['DRAM 晶圆分给 HBM 的量',{wf:.9},{wf:1.1},'−10%','+10%','下：三星转产 DDR5（源65）；上：三星自报投片（源66）'],['稼动率',{u:.8},{u:.95},'80%','95%','估'],['加速器出货',{dem:.8},{dem:1.2},'−20%','+20%','估'],['每颗 HBM 容量',{gb:.8},{gb:1.1},'−20%（降规格）','+10%','KGI：英伟达下调规格 源55']]
  .map(a=>({n:a[0],lo:gap(a[1]),hi:gap(a[2]),l1:a[3],l2:a[4],src:a[5]}));
  CH.tornado('hx-cTor',b,R,{flip:0,flipLbl:'0：短缺消失'});if(CJ)CH.driver('hx-cDrv','#hx-drvT tbody',CJ.driver,{srcHref:'cowos.html#src'})}
-Promise.all([fetch('data/hbm.json').then(r=>r.json()),fetch('data/hbm_x.json').then(r=>r.json()),fetch('data/cowos.json').then(r=>r.json()),fetch('data/toc.json').then(r=>r.json())]).then(([m,x,cj,tj])=>{M=m;X=x;CJ=cj;tocDraw=TOC.render('hx','#hx-toc',cj,m,tj,{ledger:'#hx-tpred'});
+Promise.all([fetch('data/hbm.json?v=8a4bbe97f9').then(r=>r.json()),fetch('data/hbm_x.json?v=364be12598').then(r=>r.json()),fetch('data/cowos.json?v=1f41496d73').then(r=>r.json()),fetch('data/toc.json?v=4dd7367735').then(r=>r.json())]).then(([m,x,cj,tj])=>{M=m;X=x;CJ=cj;tocDraw=TOC.render('hx','#hx-toc',cj,m,tj,{ledger:'#hx-tpred'});
  CH.$('#hx-torNote').textContent=X.tornado_note;CH.players('#hx-play',X.players);CH.falsify('#hx-falT tbody',X.falsify);draw()});
 addEventListener('load',()=>setTimeout(()=>{const o=window.redraw;window.redraw=()=>{o&&o();draw();tocDraw&&tocDraw()}},0));
 })();
