@@ -6,7 +6,8 @@
 证据块 ↔ 底稿步骤的双向链接由模板根据 spec 自动生成，两页结构不会漂移。
 两本账（SOP v1.5）：spec 有 cn=dict(...) 时，结论层在全球论点后加平行的中国账本（#cn、#c1..），
      中心思想下加 ledgers 对照条；底稿 CN_REQ 6 步必须各有 steps[i]['cn'] 中国块（#cn-<步骤>），缺了构建报错。
-用法：python3 tpl/page.py（build.sh 最后一步）。spec 在 <链>/page.py。"""
+用法：python3 tpl/page.py（build.sh 最后一步）。spec 在 <链>/page.py。
+spec 带 layout='v2' 时改用 tpl/page_v2.py 的行业版结构（目前只有 pcb.html；旧版 pcb_v1.html 是冻结存档，不由这里生成）。"""
 import importlib.util, os, re, sys
 R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -189,9 +190,15 @@ if __name__ == '__main__':
     idx = open(os.path.join(R0, 'index.html'), encoding='utf-8').read()
     for chain in ('hbm', 'cowos', 'pcb', 'cu'):   # cu = 大宗商品系列（铜），同一模板
         S = load(chain)
-        open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(render(S))
+        if S.get('layout') == 'v2':   # 行业版结构（2026-10-21 起 pcb.html），见 tpl/page_v2.py
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from page_v2 import render_v2
+            html = render_v2(S, STEPS, SID, MID, CIRC, CNC)
+        else:
+            html = render(S)
+        open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(html)
         # 首页卡片 = 同一句中心思想
         idx, n = re.subn(rf'(<!--card:{chain}-->).*?(<!--/card-->)', lambda m: m.group(1) + S['card'] + m.group(2), idx, flags=re.S)
         assert n == 1, f'index.html 缺 card:{chain} 标记'
-        print(f'{S["file"]}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿' + (f'；中国账本 {len(S["cn"]["args"])} 条论点、{sum(len(a["ev"]) for a in S["cn"]["args"])} 个证据块、{sum(1 for x in S["steps"] if x.get("cn"))} 个中国块' if S.get('cn') else ''))
+        print(f'{S["file"]}{"（v2 行业版）" if S.get("layout") == "v2" else ""}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿' + (f'；中国账本 {len(S["cn"]["args"])} 条论点、{sum(len(a["ev"]) for a in S["cn"]["args"])} 个证据块、{sum(1 for x in S["steps"] if x.get("cn"))} 个中国块' if S.get('cn') else ''))
     open(os.path.join(R0, 'index.html'), 'w', encoding='utf-8').write(idx)

@@ -1,9 +1,12 @@
-"""PCB 页内容 spec（逻辑层 + 结论层 + 底稿 13 步 + 中国账本）。由 tpl/page.py 渲染成 pcb.html。
-数字全部来自 pcb/build.py 写出的 pcb_data/model_out.json（不手写）；来源编号来自 pcb/src.py。"""
+"""PCB 页内容 spec v0.2（行业版，layout='v2'）：一句话 → 行业地图 → 短缺检验 → 机制 + 价格分解 → 三条核心判断 → AI 下钻 → 一线校验 → 证伪 / 台账 → 底稿 13 步（折叠）→ 读后五问。
+由 tpl/page.py → tpl/page_v2.py 渲染成 pcb.html。行业层内容在 pcb/industry.py；模型数字来自 pcb/build.py 写出的 pcb_data/model_out.json；来源编号来自 pcb/src.py。
+旧版 v0.1（逻辑层 + 金字塔）冻结为 pcb_v1.html，不由本文件生成。"""
 import json, os, sys
 R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(R0, 'pcb'))
 from src import ID
+import re
+import industry as IND
 O = json.load(open(os.path.join(R0, 'pcb_data', 'model_out.json')))
 
 
@@ -20,64 +23,30 @@ M9L, M9H = f"{M9['lo_s']*100:.0f}", f"{M9['hi_s']*100:.0f}"
 CB, CBU = CN['cb'], CN['cbu']
 GAP = (R27['cu'] - X['abf']['2027']) * 100
 
-GOV = f'2027 年 PCB 链卡规格、不卡出货：HVLP4 铜箔最紧（约 {CU}，与 ABF 载板打平），利润往上游材料走'
+GOV = '2026 年 PCB 是"AI 景气 + 全行业成本通胀"两种行情：真缺的是 ABF/BT 载板和玻纤布，其次是设备；HVLP4/5 铜箔是认证与良率瓶颈，HVLP3+ 的缺口是预测，不是 2026 年的短缺'
 
-LOGIC = dict(
- title='PCB 一屏看懂：供需怎么走、卡在哪、预期差在哪',
- qa=[
-  (f'AI 服务器 PCB 2027 年面积翻倍（130 → 260 万 m²），市场约 375 亿美元 {S("gs")}；每颗加速器的 PCB 价值约 {PER["2026"]:,} → {PER["2027"]:,} 美元 {E}',
-   f'国产卡被 HBM 卡在约 {CN["WHK27"]*100:.0f} 万张（2027）{S("hbm")}，所需 PCB 只占三家龙头产值约 {CB["fab"]["share"]*100:.0f}% {E}'),
-  (f'PCB 链最紧的是 HVLP4 铜箔：2027 年按目标规格只够约 {CU}，和 ABF 载板（{ABF}）打平 {E}；材料能降一级用，卡的是规格和价格',
-   f'墙是 HBM，不是 PCB；国内 PCB 链的短板在 Low-CTE 纱（日东纺 85%）{S("hh")}、HVLP5 和进口开槽机 {S("uad")}'),
-  (f'主流按 M9 2027 年占 AI 覆铜板 41% 算 {S("gs")}；正交背板推迟、CPX 移除后，我们估只有 {M9L}–{M9H}% {E}；利润在往上游材料走',
-   f'主流把二代布、Q 布当国产替代主线；大陆二代布 2027Q4 起新增 4–5 亿米 {S("jy")}，可能先过剩，更稀缺的是高端铜箔'),
- ],
- terms='名词：<b>PCB</b> = 印制电路板；<b>CCL</b> = 覆铜板（铜箔 + 玻纤布 + 树脂压成，PCB 的基材），M6 → M9 是按松下 Megtron 分的等级，数字越大信号损耗越低；<b>HVLP</b> = 极低轮廓铜箔，表面越平损耗越小（HVLP4/5 最高）；<b>Low-Dk / Q 布</b> = 低介电玻纤布 / 石英布；<b>满足率</b> = 供给 ÷ 需求。',
- three=[f'AI 服务器的 PCB 越做越厚、材料越来越贵：VR200 每柜 PCB 价值是 GB300 的约 3.3 倍 {S("ms")}，2027 年 AI PCB 面积再翻倍 {S("gs")}。',
-        f'板厂和压机一两年就能扩（台光电 2027 年底产能 +51%）{S("emcir")}；扩不快的是上游材料——HVLP4 铜箔、二代布、钻针 2027 年只够需求的 72–90% {E}。但它们都能降一级用，所以缺口变成涨价和利润上移，真正卡出货的仍是 ABF 载板（CoWoS 页）。',
-        '中国是这条链的主产地（板厂、钻针、Q 布已在前列），国产卡被 HBM 卡住、用不完国内 PCB 产能；国内的短板在 Low-CTE 纱、HVLP5 和进口设备。'],
- keys=[(CU, '2027 年 HVLP 铜箔满足率（目标规格）'), (ABF, '2027 年 ABF 载板（CoWoS 页）'), (f'+{UPM:.1f}pp', f'上游毛利率一年中位变化（板厂 +{FBM:.1f}pp）')],
- fig=[('需求驱动', '云厂商资本开支 → AI 加速器（KGI）'), ('AI 服务器 PCB', '2027 年 260 万 m²、约 375 亿美元'), ('覆铜板 CCL', 'M8/M9；台光电 615 → 930 万张/月'),
-      ('上游材料', 'HVLP4 铜箔 · 二代布 · 钻针'), (f'约束：铜箔 ≈ ABF', f'2027 年 PCB 链最紧 {CU}，ABF {ABF}')],
- fig_note=f'需求与市场规模 {S("gs")}；台光电产能 {S("emcir")}；铜箔 {S("gscu", "gscu2")}；ABF 读 CoWoS 页 {S("cowos")}。满足率是 Kiko 按来源口径换算的 {E}。',
- cons=[
-  [f'2027 年 M9 及以上占 AI 覆铜板 41%（90 亿美元），背板约 2,000 套（高盛）{S("gs", "gsx")}',
-   f'只有约 {M9L}–{M9H}%（中值约 {M9["mid_s"]*100:.0f}%）{E}', 'M9 渗透节奏：主流按背板 / CPX 都上，我们按推迟算',
-   f'Kyber 推迟到 2028 {S("kyber")}；CPX 移除 {S("cpx")}；Rubin 计算板用 M8 {S("doosan")}；台光电 M9 2027 年营收占比只是"双位数" {S("udn1")}',
-   '台光电 2027 年 M9 占比 ≥ 30%，或第三方 M9 占比 ≥ 35% → 我们错（J2 / C2）'],
-  [f'高端铜箔 2027 年缺 39%，8 月上修到 45–55%；只有金居是合格二供（高盛）{S("gscu", "gscu2")}',
-   f'缺口差不多，略小：按目标规格满足约 {CU}（高盛口径约 67%）{E}', '小：差在大陆 HVLP4 能否通过认证',
-   f'德福 8 月 HVLP4 约 70 吨、良率 60%+ {S("defu")}；铜冠 HVLP4 量产 {S("tongguan")}；金居 2027 年 700–800 吨/月 {S("uacu")}',
-   '德福 2026-12 HVLP4 ≥ 150 吨/月（N1）；< 100 吨则大陆增量归零（CJ2）'],
-  [f'玻纤布最紧：二代布 2027 年缺口超 40%（广发）{S("gf")}；Kyber 推迟后上游玻纤布、CCL 最受益（杰富瑞）{S("jef")}',
-   f'二代布 2027 年偏紧但 2027Q4 后可能转松；最耐久的是 HVLP4/5 铜箔 {E}', '哪个材料先松',
-   f'大陆 2027Q4–2028Q2 新增 4–5 亿米 vs 2027 年总需求 2–3 亿米 {S("jy")}；日东纺称客户用 NE 布替代 NER {S("nqa")}；三井 HVLP 到 FY28 才 1,200 吨 {S("mitsui")}',
-   '2027 年内二代布报价环比跌 ≥ 15%（C8）→ 我们对'],
-  [f'AI 板厂量价齐升，扩产就是份额（A 股 20 家扩产超 800 亿元）{S("capex")}',
-   f'增量利润在往上游走：上游毛利率一年中位 +{UPM:.1f}pp，板厂 +{FBM:.1f}pp，胜宏 −3.0pp', '利润位置：主流看板厂，我们看材料',
-   f'富乔 24.5% → 40.0%、尖点 29.4% → 41.8%、金居 18.9% → 27.4% {S("fm")}；胜宏 36.2% → 33.2% {S("shhk")}',
-   '2027H1 胜宏毛利率 ≥ 36% 且金居 < 25% → 我们错（J3）'],
-  [f'<b>中国：</b>国产替代主线是 Q 布、二代布（菲利华、宏和等），2027–28 年放量 {S("gsq", "qy")}',
-   '国产卡被 HBM 卡住，PCB 链不是国产卡的约束；最稀缺的国产替代是 HVLP4/5 铜箔，二代布和板厂扩产最集中', '国产替代：主流看玻纤布，我们看铜箔',
-   f'国产卡 2027 年所需 PCB 只占三家龙头产值约 {CB["fab"]["share"]*100:.0f}% {E}；大陆二代布新增 4–5 亿米 {S("jy")}',
-   '2027 年国产卡因 PCB 缺货延期（CJ1）→ 我们错'],
- ],
- watch=[
-  ['CCL 景气见顶', 'CCL 三家（台光电 + 台燿 + 联茂）3 个月营收同比（每月 10 日）', f'从峰值回落 ≥ 30 个百分点并连降 3 个月 → 约 {BT["med"]:.0f} 个月后 AI 板厂营收同比见顶（回测）', '每月；C7'],
-  ['M9 节奏', '台光电法说会 M9 营收占比；GTC 2027 的 Kyber 时间表', 'M9 占比 ≥ 30% → 预期差错（J2）；Kyber 2027 年量产 → C3 错', '2027-03 / 2028-01'],
-  ['HVLP4 能否放量', '德福 / 金居月出货与良率；高盛缺口口径', '德福 ≥ 150 吨/月（2026-12）、金居 ≥ 500 吨/月（2027 年中）→ 铜箔缺口收窄', '2027-01 / 2027-07'],
-  ['板厂利润', '胜宏、沪电季度毛利率', '胜宏连续两季 < 30% → 板厂先被挤压；回到 ≥ 36% → 利润迁移判断错（J3）', '每季财报'],
-  ['二代布价格', '国内二代布 / Q 布报价', '2027 年内环比跌 ≥ 15% → 玻纤布先松（C8）', '每月'],
- ],
-)
+
+def T(t):
+    """industry.py / build.py 里的 [源N] → 页内来源标签；（估）→ 估标签"""
+    t = re.sub(r'\[源([\d,]+)\]', lambda m: '<span class="tag t-src">' + ' '.join(f'<a href="#src{x}">源{x}</a>' for x in m.group(1).split(',')) + '</span>', t)
+    return t.replace('（估）', ' ' + E)
+
+
+AI_TBL = [
+ ['ABF 载板（读 CoWoS 页）', f"{ABF}（CoWoS 页）", T(IND.AI_OBS['abf'][0]), IND.AI_OBS['abf'][1]],
+ ['HVLP3+ 铜箔', f"{CU}（我们对高盛 2026–28 年区间的分配）{E}", T(IND.AI_OBS['cu'][0]), IND.AI_OBS['cu'][1]],
+ ['二代 Low-Dk 玻纤布', f"{GF}（广发 ~ 纪要取中）{E}", T(IND.AI_OBS['gf'][0]), IND.AI_OBS['gf'][1]],
+ ['M8/M9 覆铜板', f"{CCL} {E}", T(IND.AI_OBS['ccl'][0]), IND.AI_OBS['ccl'][1]],
+ ['钻针（全市场）', f"{DR}（优分析）", T(IND.AI_OBS['dr'][0]), IND.AI_OBS['dr'][1]],
+]
 
 # ---------------- 第 7 步：TOC 推导块
 TOCBLOCK = f"""<div class="card"><b>推导过程（每一步都能在 Excel「TOC」「环节依据」表复核）</b><ol style="font-size:14px;margin:8px 0 0 18px;line-height:1.7">
 <li><b>定单位</b>：和 HBM、CoWoS 页用同一个分母——KGI 的 AI 加速器出货（不含 Vera / Venice CPU）：2025 / 2026 / 2027 年 {A['2025']:.2f} / {A['2026']:.2f} / {A['2027']:.2f} 百万颗，直接读 CoWoS 页模型 {S('kgi', 'cowos')}。</li>
 <li><b>每一环换算</b>：能支撑的加速器 = 该环节的满足率（来源自己的供给 ÷ 需求，按目标规格）× 当年加速器颗数。隐含假设：各环节的需求和加速器出货同比例（交换机、光模块用的高速材料也在需求里）{E}。交叉验证：高盛 AI PCB 市场 ÷ KGI 颗数 = 每颗约 {PER['2027']:,} 美元（2027），摩根士丹利自下而上 VR200 约 1,621 美元/GPU {S('ms')}，同一量级。</li>
-<li><b>铜箔</b>：高盛 5 月缺口 28% / 39%（2026 / 27）{S('gscu')}，8 月上修到 45–55% {S('gscu2')}；取 2027 年 50% → 1 ÷ 1.5 = 67%，加大陆 HVLP4 +150 吨/月 ÷ 需求约 {O['CU']['d27']:,.0f} 吨/月 → <b>{CU}</b> {E}。</li>
+<li><b>铜箔（预测口径）</b>：高盛 5 月缺口 28% / 39%（2026 / 27）{S('gscu')}，8 月把 2026–28 年区间上修到 45–55%（不分年）{S('gscu2')}；<b>本页自行</b>取 2027 年 50% → 1 ÷ 1.5 = 67%，加大陆 HVLP4 +150 吨/月 ÷ 需求约 {O['CU']['d27']:,.0f} 吨/月 → <b>{CU}</b> {E}。</li>
 <li><b>二代布</b> {GF}（广发 60% ~ 纪要 ≥ 100% 的中间）{S('gf', 'jy')}；<b>覆铜板</b> {CCL}（台光电年均产能 ×{O['CCLg']:.2f} × 高阶占比 ×1.15 ÷ 高盛张数 ×1.86）{S('emcir', 'gs')}；<b>钻针</b> {DR}（优分析供需表）{S('uad')}；<b>ABF 载板</b> {ABF}（读 CoWoS 页，不重复）{S('cowos')}。</li>
-<li><b>取最小值</b>：2027 年 PCB 链内最紧 = 铜箔 {CU}，比 ABF 高约 {GAP:+.0f} 个百分点——在误差内打平。<b>校准</b>：2026 年铜箔按同一算法只够约 {p(R26['cu'])}，但没有任何公开报道说 AI 机柜因铜箔减产 → 材料缺口在 2026 年是靠降级、涨价、库存消化的；所以"满足率 &lt; 1"在材料环节表示<b>规格和价格</b>受限，不直接等于少出货 {E}。ABF 不能降级，所以出货的约束仍是 ABF。</li>
+<li><b>取最小值（预测口径）</b>：2027 年 PCB 材料预测满足率最低 = HVLP3+ 铜箔 {CU}，比 ABF 高约 {GAP:+.0f} 个百分点。<b>但这是预测，不是观测</b>：2026 年铜箔按同一算法只够约 {p(R26['cu'])}，可既没有出货受限的报道，高阶加工费也只累计 +5–10% {S('ctcuf')}；三井产能没用满，是被马来西亚厂认证拖住 {S('mitqa')}。按<a href="#test">短缺检验</a>，HVLP4/5 是认证 / 良率瓶颈（1/4），ABF 是实缺（3/4）{E}。ABF 不能降级，所以出货的约束是 ABF。</li>
 <li><b>不在 2027 主路径的</b>：Q 布 2026 年约 83–100%（群益）{S('qy')}，但正交背板推迟到 2028 {S('kyber')}；PCB 板厂产能没有可信统计，只定性 {S('capex')}。</li>
 </ol></div>
 <div class="seg" id="pcb-fYr" style="margin-top:12px"><button data-m="2026">2026</button><button class="on" data-m="2027">2027</button></div>
@@ -87,41 +56,52 @@ TOCBLOCK = f"""<div class="card"><b>推导过程（每一步都能在 Excel「TO
 STAGE_TBL = '<div class="tbl"><table id="pcb-stT" class="stack"><thead><tr><th>环节</th><th>2025</th><th>2026</th><th>2027 基准</th><th>依据</th><th>来源</th></tr></thead><tbody></tbody></table></div>'
 
 SPEC = dict(
- logic=LOGIC,
- file='pcb.html', title='PCB 印制电路板', pill='PCB v0.1', other=('cowos.html', 'CoWoS ⇄'), scripts=['pcb.js'],
- ledgers=[('a1', 'gl', '全球账本', f'2027 年 PCB 链最紧的是 HVLP4 铜箔（约 {CU}），和 ABF 载板打平；材料能降级，缺口变成涨价，利润往上游走'),
+ layout='v2',
+ file='pcb.html', title='PCB 印制电路板', pill='PCB v0.2', other=('cowos.html', 'CoWoS ⇄'), archive=('pcb_v1.html', '旧版 v1'), scripts=['pcb.js'],
+ vbar='v0.2（2026-10-21）新结构：先看全行业，AI 是下钻。核心判断已改（理由见<a href="#log">更新记录</a>）· 对比旧版：<a href="pcb_v1.html">v1 存档（2026-10-20）→</a>',
+ ledgers=[('ai', 'gl', 'AI 下钻', f'出货约束是 ABF 载板（{ABF}）；PCB 材料里 HVLP3+ 铜箔约 {CU} 只是预测口径，市场信号只支持 HVLP4/5 认证瓶颈'),
           ('cn', 'cnl', '中国账本', f'国产卡被 HBM 卡在约 {CN["WHK27"]*100:.0f} 万张，PCB 链不是约束；国内短板在 Low-CTE 纱、HVLP5 和进口设备')],
- kicker='PCB 小链 · v0.1 · 更新 <span id="pcb-upd"></span> · 统一单位接 <a href="cowos.html">CoWoS</a> / <a href="hbm.html">HBM</a> 页',
- card=f'全球账本：2027 年 PCB 链最紧的是 HVLP4 铜箔（约 {CU}，与 ABF 载板打平），卡规格不卡出货，利润往上游材料走。中国账本：国产卡被 HBM 卡住，PCB 链不是约束{E}',
- scqa=[
-  f'AI 服务器把 PCB 变成了高端件：VR200 每柜 PCB 约 11.67 万美元，是 GB300 的约 3.3 倍 {S("ms")}；全球 PCB 2026 年预计 +32.1%，18 层以上 +86.7% {S("prq2")}。',
-  f'高盛预计 2027 年 AI PCB 面积翻倍、M9 占 AI 覆铜板 41% {S("gs")}，同时说高端铜箔缺 45–55% {S("gscu2")}、广发说二代布缺 40% 以上 {S("gf")}；可 Kyber 正交背板已推迟到 2028 {S("kyber")}，A 股板厂又在扩产 800 亿元以上 {S("capex")}。',
-  '2027 年 PCB 会不会卡住 AI 加速器？最紧的是哪一环、紧多少？钱流向谁？主流的 M9 / 玻纤布叙事哪里高估了？'],
+ kicker='PCB 小链 · v0.2 行业版 · 更新 <span id="pcb-upd"></span> · 统一单位接 <a href="cowos.html">CoWoS</a> / <a href="hbm.html">HBM</a> 页',
+ card=f'全行业：2026 年是"AI 景气 + 成本通胀"两种行情；真缺的是 ABF/BT 载板和玻纤布，其次是设备；HVLP4/5 铜箔是认证瓶颈，HVLP3+ 缺口只是预测。中国账本：国产卡被 HBM 卡住，PCB 链不是约束{E}',
+ keys=[('1,134 亿美元', f'2026E 全球 PCB（+32.1%，面积 +10.9%）{S("prq2")}'), ('3 / 4', f'ABF 载板短缺信号成立数（实缺）{S("mdjabf", "cnyabf")}'),
+       ('+5–10%', f'HVLP 高阶加工费累计涨幅（不是缺货式涨价）{S("ctcuf")}'), ('< 10%', f'2025 年多数板厂增速（AI 龙头 > 50%）{S("prtop25")}')],
  gov=GOV,
- mece='三条论点分别回答"量（卡在哪）""利润（钱去哪）""预期差与时点"，互不重叠。统一单位和 CoWoS / HBM 页相同（KGI 加速器颗数），ABF 载板只读 CoWoS 页结果，不重复。中国的账另算（见<a href="#cn">中国账本</a>）。',
+ mece='页面顺序：先看全行业（地图 → 短缺检验 → 机制），再给三条核心判断，最后下钻到 AI 与中国账本；13 步底稿折叠在后面。统一单位和 CoWoS / HBM 页相同（KGI 加速器颗数），ABF 载板读 CoWoS 页结果。',
+ heat=[[T(x) if isinstance(x, str) else x for x in r] for r in IND.HEAT], heat_note=T(IND.HEAT_NOTE),
+ seg_t='2026E 全球 PCB 分产品：规模（亿美元）与增速', seg_note=f'Prismark Q1 2026 口径 {S("mpbx")}；Q2 已上调：18 层以上 +86.7%、载板 +44.2%、HDI +39.8%、普通板 +13.6%、柔性 +9.6% {S("prq2")}。',
+ test=[[T(x) if isinstance(x, str) else x for x in r] for r in IND.TEST], test_rule=IND.TEST_RULE, test_note=T(IND.TEST_NOTE),
+ flow=IND.FLOW, mech=[[T(x) for x in r] for r in IND.MECH], pricebox=T(IND.PRICEBOX),
+ terms='名词：<b>CCL</b> = 覆铜板（铜箔 + 玻纤布 + 树脂压成，PCB 的基材），M6 → M9 按松下 Megtron 分级，数字越大损耗越低；<b>PP</b> = 半固化片；<b>HVLP</b> = 极低轮廓铜箔，HVLP4/5 最高；<b>T-glass / Low-CTE</b> = 低热膨胀玻纤（载板用）；<b>Low-Dk / Q 布</b> = 低介电玻纤布 / 石英布；<b>满足率</b> = 供给 ÷ 需求（预测口径）。',
+ claims=[dict(c, t=T(c['t']), ev=T(c['ev'])) for c in IND.CLAIMS],
+ ai_h='AI 服务器 PCB：出货约束是 ABF；PCB 材料要分清"可观测"和"预测"',
+ ai_sub='左列是卖方供需表 + 本页分配算出的预测满足率（底稿第 5、7 步的模型，可用滑块改）；右列是短缺检验里的市场信号。两列不一致时，以可观测为准，预测只用来看方向。',
+ ai_tbl=AI_TBL,
+ check_sub='这几个问题原本请 PCB 业内读者回答；目前没有内部数据，问题保持开放，改用公开数据替代，每周五的周报跟踪（HVLP 加工费、交期、月营收、配额新闻）。达到阈值就改判断，并记在更新记录里。',
+ checks=[[T(x) for x in r] for r in IND.CHECKS],
+ quiz=[(q, T(a)) for q, a in IND.QUIZ],
  args=[
-  dict(tag='量', claim=f'2027 年 AI PCB 面积翻倍；PCB 链最紧的是 HVLP4 铜箔，按目标规格只够约 {CU}，和 ABF 载板（{ABF}）打平。但材料能降一级用，所以卡的是规格和价格，出货的约束仍是 ABF',
-   key=f'2027 PCB 链最紧 <b data-from="pcb-min">—</b> · 最紧环节 <b data-from="pcb-bind">—</b> · ABF <b>{ABF}</b> {E}',
-   sub='每一环的满足率 = 来源自己的供给 ÷ 需求（目标规格），乘以 KGI 加速器颗数 = 能支撑多少颗；取最小值就是约束（TOC）。',
-   hero=dict(src='pcb-cToc', step='neck', t='能支撑多少 AI 加速器（百万颗，2027）：铜箔 ≈ ABF', h=340, note='跟随底稿第 5 步的滑块实时重算；灰柱读自 CoWoS 页。'),
+  dict(tag='量', claim=f'2027 年 AI PCB 面积翻倍；出货约束是 ABF 载板（{ABF}，市场信号 3/4）。PCB 材料里预测满足率最低的是 HVLP3+ 铜箔（约 {CU}，是我们对高盛 2026–28 年区间的分配），但市场信号只支持"HVLP4/5 认证瓶颈"，而且材料能降一级用',
+   key=f'ABF <b>{ABF}</b>（实缺）· PCB 材料预测最低 <b data-from="pcb-min">—</b>（<b data-from="pcb-bind">—</b>，预测口径）{E}',
+   sub='预测口径：每一环的满足率 = 来源自己的供给 ÷ 需求（目标规格），乘以 KGI 加速器颗数 = 能支撑多少颗；取最小值就是约束（TOC）。可观测口径见上表和<a href="#test">短缺检验</a>。',
+   hero=dict(src='pcb-cToc', step='neck', t='能支撑多少 AI 加速器（百万颗，2027，预测口径）', h=340, note='跟随底稿第 5 步的滑块实时重算；灰柱读自 CoWoS 页。铜箔柱是预测缺口，不是市场观测。'),
    ev=[
-    dict(t=f'铜箔：按目标规格只够约 {CU}', b=f'高盛 8 月把 HVLP3+ 缺口上修到 45–55% {S("gscu2")}；金居 HVLP3+ 良率 2Q26 才 50% 以上 {S("gscu2")}；三井 FY27 只有 1,000 吨/月 {S("mitsui")}。加上大陆 HVLP4 增量 {E}，满足率约 {CU}。', steps=['balance', 'neck']),
+    dict(t='铜箔：预测缺口 + 认证瓶颈，不是 2026 年的短缺', b=f'高盛 8 月把 HVLP3+ 的 2026–28 年缺口区间上修到 45–55%（不分年）{S("gscu2")}，按年分配是我们做的，得出 2027 年约 {CU} {E}；高盛 5 月口径下 2025 年反而过剩（803 vs 679 吨/月）{S("gscu")}。市场上：高阶加工费累计只 +5–10% {S("ctcuf")}；三井下半年销量预测因马来西亚厂认证延迟从 840 下调到 730 吨/月 {S("mitqa")}；德福 HVLP4 良率约 60% {S("dfir")}。卡的是合格产能，不是吨数。', steps=['balance', 'neck']),
     dict(t='需求：面积翻倍、每颗加速器的 PCB 价值翻倍', b=f'AI PCB 面积 130 → 260 万 m²、单价 10,258 → 14,405 美元/m² {S("gs")}；每颗加速器约 {PER["2026"]:,} → {PER["2027"]:,} 美元 {E}，与摩根士丹利 VR200 约 1,621 美元/GPU 同一量级 {S("ms")}。', steps=['demand']),
     dict(t='供给：板厂和压机扩得快，材料扩得慢', b=f'台光电年均产能 +{(O["CCLg"]-1)*100:.0f}%、年底 +51% {S("emcir")}；三井 HVLP FY26→27 只 +19% {S("mitsui")}；钻针有效供给 +39% vs 需求 +50% {S("uad")}。', steps=['supply']),
-    dict(t='降级是现实选项：缺口变成价格，不变成少出货', b=f'日东纺：客户把 NE 布当作 NER 的替代 {S("nqa")}；Rubin 计算板用 M8 + 一代布 {S("doosan")}；2026 年铜箔按同一算法只够约 {p(R26["cu"])}，没有出货因铜箔受限的报道 {E}。', steps=['balance']),
-    dict(t='TOC：和 HBM、CoWoS、ABF 放在同一张图', b=f'2027 年 ABF {ABF}、PCB 链最紧 {CU}、二代布 {GF}、覆铜板 {CCL}、钻针 {DR}、HBM {p(X["hbm"]["2027"])}（CoWoS 页口径）{E}。', steps=['neck']),
-    dict(t=f'要害变量："铜箔比 ABF 松"只领先约 {GAP:.0f} 个百分点', b='大陆 HVLP4 认证归零、高盛缺口取 55%、需求 +10%，任何一项都会让铜箔比 ABF 更紧；允许降级一半，PCB 链就远松于 ABF（见龙卷风图）。', steps=['key']),
+    dict(t='降级是现实选项：预测缺口没有变成市场短缺', b=f'日东纺：客户把 NE 布当作 NER 的替代 {S("nqa")}；Rubin 计算板用 M8 + 一代布 {S("doosan")}；2026 年铜箔按同一预测算法只够约 {p(R26["cu"])}，但既没有出货受限的报道，加工费也只涨 5–10% {S("ctcuf")} {E}。', steps=['balance']),
+    dict(t='TOC：和 HBM、CoWoS、ABF 放在同一张图（预测口径）', b=f'2027 年 ABF {ABF}、HVLP3+ 铜箔 {CU}、二代布 {GF}、覆铜板 {CCL}、钻针 {DR}、HBM {p(X["hbm"]["2027"])}（CoWoS 页口径）{E}。可观测排序见<a href="#test">短缺检验</a>：ABF、玻纤布 > 设备 > HVLP4。', steps=['neck']),
+    dict(t=f'要害变量：预测口径下铜箔和 ABF 只差约 {GAP:.0f} 个百分点，可观测口径下差得很远', b='预测口径里，大陆 HVLP4 认证归零、高盛缺口取 55%、需求 +10%，任何一项都会让铜箔比 ABF 更紧；但市场信号上 ABF 是 3/4、HVLP4 只有 1/4。允许降级一半，PCB 链就远松于 ABF（见龙卷风图）。', steps=['key']),
     dict(t='跨链对账：PCB 不改变 HBM / CoWoS 页的结论', b='三页同一个分母；PCB 链和 ABF 同属"基板与材料"，都比 HBM、CoWoS 紧，但 PCB 材料可降级。', steps=['map']),
    ]),
-  dict(tag='利润', claim=f'增量利润往扩得慢的上游走：一年里玻纤布（富乔）毛利率 +15.5pp、钻针（尖点）+12.4pp、铜箔（金居）+8.5pp，板厂中位只 +{FBM:.1f}pp（胜宏 −3.0pp）；2027 年最耐久的是铜箔',
+  dict(tag='利润', claim=f'增量利润往扩得慢的上游走：一年里玻纤布（富乔）毛利率 +15.5pp、钻针（尖点）+12.4pp、铜箔（金居）+8.5pp，板厂中位只 +{FBM:.1f}pp（胜宏 −3.0pp）；铜箔的利润集中在日台合格供应商，2027 年最耐久的是 ABF 和合格的高端材料',
    key=f'上游毛利率中位 <b>+{UPM:.1f}pp</b> · 板厂 <b>+{FBM:.1f}pp</b>（一年）{S("fm")}',
    sub='台湾公司用 MOPS 季报（2Q26 vs 2Q25），A 股用半年报（分产品毛利率）；口径不完全可比，但方向一致。',
    hero=dict(src='pcb-cDgm', step='profit', t='毛利率一年变化（百分点）：上游材料 > 覆铜板 > 板厂', h=360, note=f'富乔 24.5% → 40.0%，尖点 29.4% → 41.8%，金居 18.9% → 27.4%，胜宏 36.2% → 33.2% {S("fm", "shhk")}。'),
    ev=[
     dict(t='毛利率迁移：上游涨得最快', b=f'上游（铜箔、玻纤布、钻针、覆铜板）中位 +{UPM:.1f}pp；板厂（金像电、沪电、深南、胜宏）中位 +{FBM:.1f}pp {S("fm", "hd", "sn", "shhk")}。', steps=['profit']),
-    dict(t='价格：涨价在材料端', b=f'CCL 最缺料号涨 30–40% {S("udn2")}；金居价格 3Q 季增 10–15% {S("gscu2")}；钻针高端 +35% 以上、钨钢棒翻倍 {S("cld")}。', steps=['balance']),
+    dict(t='价格：涨得最多的是玻纤布和载板，铜箔加工费温和', b=f'电子布均价 +147.6% {S("jm")}；CCL 最缺料号涨 30–40% {S("udn2")}；钻针高端 +35% 以上 {S("cld")}；铜箔高阶加工费累计只 +5–10% {S("ctcuf")}（高盛估金居 3Q 季增 10–15% 是含铜价的预测 {S("gscu2")}）。', steps=['balance']),
     dict(t='扩产最多的是板厂', b=f'A 股 20 家板厂年内扩产超 800 亿元，2–3 年后集中释放 {S("capex")}；胜宏毛利率下滑的原因正是人工和新产能爬坡 {S("shhk")}。', steps=['supply', 'play']),
-    dict(t='谁最耐久：铜箔 > 钻针 > 覆铜板 > 二代布 > 板厂', b=f'铜箔 2028 年缺口仍 38–55% {S("gscu", "gscu2")}、认证 2–3 年 {S("uacu")}；二代布 2027Q4 起大陆新增 4–5 亿米 {S("jy")} {E}。', steps=['neck']),
+    dict(t='谁最耐久：ABF > T-glass / 玻纤布 > 设备 > HVLP4/5 合格产能 > 钻针 > 覆铜板 > 板厂', b=f'载板新厂 2029 年 {S("ctsub")}；玻纤布产线 18–24 个月 {S("jm")}；HVLP4/5 卡在认证，三井马来西亚、大陆 HVLP4 一旦通过，会比高盛预期松得快 {S("mitqa", "dfir")}；金居 2Q26 毛利率已环比回落 {S("ctcugm")}；二代布 2027Q4 起大陆新增 4–5 亿米 {S("jy")} {E}。', steps=['neck']),
    ]),
   dict(tag='预期差', claim=f'主流按 M9 2027 年占 AI 覆铜板 41% 定价；正交背板推迟到 2028、CPX 移除后，我们估只有 {M9L}–{M9H}%，增量更多来自 ASIC 的层数。CCL 营收同比领先板厂约 {BT["med"]:.0f} 个月，现在 +{BT["now"]["ccl"]:.0f}% 仍在加速',
    key=f'M9 2027：高盛 <b>41%</b> vs 我们 <b>{M9L}–{M9H}%</b> {E}',
@@ -161,26 +141,26 @@ SPEC = dict(
      dict(t='短板：材料与设备', b=f'低 CTE 布日东纺 85%、Unitika 14% {S("hh")}；进口开槽机交期 1–2 年 {S("uad")}；钨钢棒价格翻倍 {S("cld")}。', steps=['neck', 'supply']),
      dict(t='领先：板厂、钻针、Q 布', b=f'鼎泰 29.2% + 金洲 21.1% {S("uad")}；菲利华 Q 布通过生益、台光电、松下认证 {S("cq")}。', steps=['supply', 'play']),
     ]),
-   dict(tag='稀缺', claim='最稀缺的国产替代是 HVLP4/5 铜箔（德福、铜冠刚量产）；二代布和板厂是扩产最集中的地方，2027Q4–2028 可能先过剩',
+   dict(tag='稀缺', claim='最稀缺的国产替代是通过认证的 HVLP4/5 铜箔（德福 HVLP4 良率约 60%，铜冠出货仍以 HVLP2 为主）；二代布和板厂是扩产最集中的地方，2027Q4–2028 可能先过剩',
     key='德福 HVLP4 <b>约 70 吨/月</b>（8 月）· 大陆二代布 2027Q4 起 <b>+4–5 亿米</b>',
     sub='A 股按证据强度分级：强 = 公司公告 / 交易所文件；中 = 媒体或机构；弱 = 纪要或自媒体。',
     hero=dict(src='pcb-cnCu', step='neck', t='高端铜箔：国产卡需要多少 vs 国内供应（吨/月）', h=300, note='HBM 一旦放开（不缺货需求），国产卡要的 HVLP 超过德福目前全部 HVLP 出货（估）。'),
     ev=[
-     dict(t='铜箔：认证是门槛', b=f'德福 HVLP4 良率 60%+、5 万吨基地 2027Q2 起投产 {S("defu")}；高盛只认金居为合格二供 {S("gscu")}；二供认证要 2–3 年 {S("uacu")}。', steps=['play', 'map']),
+     dict(t='铜箔：认证是门槛', b=f'德福 HVLP4 良率约 60%、HVLP1–3 近 70% {S("dfir")}，5 万吨基地 2027Q2 起投产 {S("defu")}；铜冠出货以 HVLP2 为主 {S("tgh1")}；高盛只认金居为合格二供 {S("gscu")}；二供认证要 2–3 年 {S("uacu")}。', steps=['play', 'map']),
      dict(t='二代布：扩产最集中', b=f'大陆 2027Q4–2028Q2 新增 4–5 亿米 vs 2027 年总需求 2–3 亿米 {S("jy")}；宏和 2027 年 2,281 万米 {S("hh")}。', steps=['neck']),
      dict(t='A 股：按环节，证据强度分级', b=f'强：德福、生益、宏和、鼎泰、大族数控、胜宏、沪电、深南；中：铜冠、菲利华、东材、圣泉、中材、中钨高新 {S("defu", "sy", "hh", "dt", "dz")}。', steps=['map']),
     ]),
   ]),
- wrong='''<p class="sub">每条判断：现在已经看到的反方证据、什么情况算我错、看哪个公开指标、阈值多少。J1↔论点①、J3↔论点②、J2/J4↔论点③，J5 是需求的上一层。触发阈值就改判断，不辩护。</p>
+ wrong='''<p class="sub">每条判断：现在已经看到的反方证据、什么情况算我错、看哪个公开指标、阈值多少。J6–J8 ↔ 三条核心判断；AI 下钻：J1↔论点①、J3↔论点②、J2/J4↔论点③，J5 是需求的上一层。触发阈值就改判断，不辩护。</p>
 <div class="tbl"><table id="pcb-falT" class="fal"><thead><tr><th>判断</th><th>反方证据</th><th>证伪条件</th><th>观察指标与阈值</th><th>当前读数</th><th>状态</th></tr></thead><tbody></tbody></table></div>
 <h3>中国账本：CJ1–CJ3</h3><p class="sub">CJ1↔中国论点❶、CJ2↔❷、CJ3↔❸。</p>
 <div class="tbl"><table id="pcb-cnFalT" class="fal"><thead><tr><th>判断</th><th>反方证据</th><th>证伪条件</th><th>观察指标与阈值</th><th>当前读数</th><th>状态</th></tr></thead><tbody></tbody></table></div>''',
- pred='''<p class="sub" id="pcb-predSum"></p><p class="sub">2026-10-20 写入。到期后按公开数据打分，不改原文，只追加结果。C 系列是本链判断，M 系列是约束迁移，N 系列是中国账本。和 CoWoS 页 T 系列（约束迁移）对照：CoWoS 页说 2027 年最紧是载板，本页补上"PCB 材料与载板打平但可降级"。</p>
+ pred='''<p class="sub" id="pcb-predSum"></p><p class="sub">2026-10-20 写入；2026-10-21（v0.2）M1 作废（原文保留，见备注），新增 M3、C9、C10。到期后按公开数据打分，不改原文，只追加结果。C 系列是本链判断，M 系列是约束迁移，N 系列是中国账本。和 CoWoS 页 T 系列（约束迁移）对照：CoWoS 页说 2027 年最紧是载板，本页的可观测信号也指向载板。</p>
 <div class="tbl"><table id="pcb-predT" class="stack ledger"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody></tbody></table></div>
 <h3>中国账本：N 系列</h3><p class="note" id="pcb-cnPredS"></p>
 <div class="tbl"><table id="pcb-cnPredT" class="stack ledger"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody></tbody></table></div>''',
- base_title='PCB 产业链底稿',
- base_sub='上面的结论都从这里来。按 SOP 顺序：先找要害变量和争议，再定边界、算供需、看利润和约束，最后看玩家、历史、领先指标和公司。右侧圆圈 = 这一步支撑哪条论点。',
+ base_title='PCB 产业链底稿 · 13 步（点开）',
+ base_sub='模型与滑块、需求供给、利润池、约束推导、玩家、历史、回测、公司图谱都在这里；右侧圆圈 = 这一步支撑 AI 下钻的哪条论点',
  steps=[
   dict(id='key', h='哪个假设能把结论翻过来', body='''<p class="note" id="pcb-torNote"></p>
 <div class="grid g2"><div class="card"><b>2027 年 PCB 链最紧环节的满足率</b><div id="pcb-cTorA" class="chart" style="height:320px"></div><div class="note">每一行：只把这个变量调到低端（蓝）/ 高端（红），其他不动。虚线 = ABF 载板满足率（CoWoS 页）：越过它，PCB 链就比 ABF 更紧。</div></div>
@@ -212,7 +192,7 @@ SPEC = dict(
    h='平衡与价格：自己拖动假设', sub='满足率 = 供给 ÷ 需求（目标规格）。浏览器里实时重算，结论层的图跟着变。降级比例 = 缺口里能用低一级材料吸收的部分。', body=f'''<div class="grid g4" id="pcb-stats"></div>
 <div class="grid g2" style="margin-top:14px"><div class="card"><div class="ctl">
 <label>2027 AI 加速器需求（相对 KGI）<output id="pcb-o-dem"></output></label><input type="range" id="pcb-dem" min="80" max="120" step="5" value="100">
-<label>2027 高端铜箔缺口（高盛口径）<output id="pcb-o-g27"></output></label><input type="range" id="pcb-g27" min="25" max="60" step="5" value="50">
+<label>2027 HVLP3+ 铜箔缺口（高盛 2026–28 区间，本页分配）<output id="pcb-o-g27"></output></label><input type="range" id="pcb-g27" min="25" max="60" step="5" value="50">
 <label>2027 大陆 HVLP4 通过认证的增量（吨/月）<output id="pcb-o-cn"></output></label><input type="range" id="pcb-cn" min="0" max="400" step="25" value="150">
 <label>2027 二代布满足率<output id="pcb-o-gf"></output></label><input type="range" id="pcb-gf" min="60" max="110" step="5" value="80">
 <label>2027 覆铜板高阶占比提升（倍）<output id="pcb-o-mix"></output></label><input type="range" id="pcb-mix" min="100" max="135" step="5" value="115">
@@ -229,7 +209,7 @@ SPEC = dict(
 <h3>利润池（2027，按环节）</h3><div class="tbl"><table class="stack"><thead><tr><th>环节</th><th>市场规模</th><th>毛利率参照</th><th>判断</th></tr></thead><tbody>
 <tr><td><b>AI 服务器 PCB（板厂）</b></td><td>约 375 亿美元 {S("gs")}</td><td>沪电 PCB 40.5%、深南 36.9%、金像电 34.7%、胜宏 33.2% {S("hd", "sn", "fm", "shhk")}</td><td>盘子最大，扩产最多，毛利率涨得最慢</td></tr>
 <tr><td><b>AI 覆铜板 CCL</b></td><td>约 221 亿美元 {S("gs")}</td><td>台光电 33.9%、台燿 29.7%、生益 CCL 29.2% {S("fm", "sy")}</td><td>有定价权（龙头 >50% 份额 {S("emcir")}）</td></tr>
-<tr><td><b>HVLP3+ 铜箔</b></td><td>2025 年 2.16 亿 → 2028 年 24 亿美元（高盛）{S("gscu")}</td><td>高端 40–60% vs 普通 0–10% {S("gscu")}；三井铜箔 ROIC 52% {S("mitsuiq1")}</td><td>盘子小、利润率最高、最耐久</td></tr>
+<tr><td><b>HVLP3+ 铜箔</b></td><td>2025 年 2.16 亿 → 2028 年 24 亿美元（高盛）{S("gscu")}</td><td>高端 40–60% vs 普通 0–10% {S("gscu")}；三井铜箔 ROIC 52% {S("mitsuiq1")}；金居 2Q26 27.39%（1Q26 28.71%）{S("ctcugm")}；铜冠 PCB 铜箔 11.60% {S("tgh1")}</td><td>盘子小、利润集中在日台合格供应商；大陆铜箔毛利仍低</td></tr>
 <tr><td><b>低介电玻纤布</b></td><td>2025 年 3.92 亿美元，2026–27 年每年 >40% {S("cldk")}</td><td>富乔 40.0%（一年前 24.5%）{S("fm")}；日东纺电子材料营业利益 +44% {S("tfn")}</td><td>涨得最猛，2027Q4 后过剩风险</td></tr>
 <tr><td><b>钻针 / 钻孔设备</b></td><td>钻针 2027 年需求 76.7 亿支 {S("uad")}</td><td>尖点 41.8% {S("fm")}；大族数控营收 +109% {S("dz")}</td><td>耗材属性，跟层数和材料硬度走</td></tr>
 </tbody></table></div>'''),
@@ -265,9 +245,10 @@ SPEC = dict(
 <div class="card"><div class="tbl"><table><thead><tr><th>输出</th><th>2026</th><th>2027</th><th>说明</th></tr></thead><tbody id="pcb-ifT-b"></tbody></table></div></div></div>
 <p class="card" style="margin-top:12px"><b>约束公式</b><br><span id="pcb-formula"></span></p></div>'''),
  ],
- src_small='均于 2026-10-20 打开 · 局限',
- src='''<p class="sub">均于 2026-10-20 用 curl 或浏览器打开核对（标"只看到搜索摘要 / 摘要页"的除外）。券商数据多为二手转述，标在标题里；纪要、自媒体标"弱"。</p><ol class="src" id="pcb-srcL"></ol>
+ src_small='2026-10-20 / 10-21 打开 · 局限',
+ src='''<p class="sub">均于 2026-10-20（第 1–58 条）或 2026-10-21（第 59 条起）用 curl 或浏览器打开核对（标"只看到搜索摘要 / 摘要页"的除外）。券商数据多为二手转述，标在标题里；纪要、自媒体标"弱"。</p><ol class="src" id="pcb-srcL"></ol>
 <h3>局限（公开数据补不了的）</h3><ul style="font-size:14px" id="pcb-lim"></ul>''',
  log='''<div class="tbl"><table id="pcb-logT"><tbody></tbody></table></div>
-<p><a href="pcb/pcb_model.xlsx">下载模型 Excel</a> · <a href="pcb/pcb_chain.md">报告原文 (Markdown)</a> · <a href="SOP.md">小链研究 SOP</a> · 构建：<code>./build.sh</code>（页面 <code>tpl/page.py</code> + <code>pcb/page.py</code>，模型 <code>pcb/model.py</code>）</p>''',
+<p><b>版本对比</b>：<a href="pcb_v1.html">旧版 v1 存档（2026-10-20）</a> ⇄ 本页 v0.2。</p>
+<p><a href="pcb/pcb_model.xlsx">下载模型 Excel</a> · <a href="pcb/pcb_chain.md">报告原文 (Markdown)</a> · <a href="SOP.md">小链研究 SOP</a> · 构建：<code>./build.sh</code>（页面 <code>tpl/page_v2.py</code> + <code>pcb/page.py</code> + <code>pcb/industry.py</code>，模型 <code>pcb/model.py</code>）</p>''',
 )
