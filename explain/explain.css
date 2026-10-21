@@ -1,0 +1,142 @@
+/* 万物原理图 · 样式（配合 assets.css 的颜色变量；深浅色自动切换） */
+:root{--ex-pt:7%;--ex-pl:17%;--ex-pr:27%;--ex-pe:58%;--ex-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+@media(prefers-color-scheme:dark){:root{--ex-pt:30%;--ex-pl:19%;--ex-pr:12%;--ex-pe:62%}}
+html[data-t=light]{--ex-pt:7%;--ex-pl:17%;--ex-pr:27%;--ex-pe:58%}
+html[data-t=dark]{--ex-pt:30%;--ex-pl:19%;--ex-pr:12%;--ex-pe:62%}
+.ex-main section{padding:28px 0}
+.ex-hero{padding-top:22px!important}.ex-hero h1{margin-bottom:.2em}
+.ex-hero .dek{font-size:16px;margin:.2em 0 .6em}
+.ex-dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ex-dots a{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:15px;border:1px solid var(--line);background:var(--card);color:var(--mut);font-size:13px;text-decoration:none}
+.ex-dots a.act{background:var(--acc);border-color:var(--acc);color:#fff}
+/* 版式：手机上图卡粘在顶部、文字在下面滚；桌面左右两栏 */
+.ex-lay{position:relative}
+.ex-fig{position:sticky;top:52px;z-index:10;background:var(--bg);padding:6px 0 6px;margin:0 -18px;padding-left:10px;padding-right:10px;border-bottom:1px solid var(--line)}
+.ex-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 10px 8px;box-shadow:0 1px 2px #0000000d,0 6px 16px -8px #0000001f}
+.ex-hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px;color:var(--mut);line-height:1.3}
+.ex-n{font-family:var(--ex-mono);letter-spacing:.04em;white-space:nowrap}.ex-t{color:var(--fg);font-weight:600;text-align:right;font-size:13px}
+.ex-stage{touch-action:pan-y;margin:2px 0}
+.ex-svg{display:block;width:100%;height:27vh;max-height:300px;min-height:170px;overflow:visible;-webkit-tap-highlight-color:transparent}
+.ex-info{font-size:13px;line-height:1.5;color:var(--mut);min-height:3em;max-height:3em;overflow:auto;padding:2px 2px}
+.ex-info.on{color:var(--fg)}.ex-info b{color:var(--acc)}
+.ex-chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none}.ex-chips::-webkit-scrollbar{display:none}
+.ex-chips button,.ex-seg button,.ex-spd button,.ex-pg button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:5px 11px;white-space:nowrap;cursor:pointer;min-height:32px}
+.ex-chips button i{font-style:normal;font-family:var(--ex-mono);color:var(--mut);margin-right:5px;font-size:11px}
+.ex-chips button[aria-pressed=true],.ex-seg button[aria-pressed=true],.ex-spd button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+.ex-chips button[aria-pressed=true] i{color:#fff}
+.ex-ft{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--mut);padding-top:4px;line-height:1.35}
+.ex-ro{font-family:var(--ex-mono);color:var(--fg);text-align:right}
+.ex-ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.ex-gen{display:flex;align-items:center;gap:6px;flex:1 1 170px;font-size:12px;color:var(--mut)}
+.ex-gen input{flex:1;min-width:90px;accent-color:var(--acc);height:28px}
+.ex-gen output{font-family:var(--ex-mono);color:var(--fg);font-size:12px;min-width:46px}
+.ex-spd{display:flex;gap:4px}.ex-spd button{padding:4px 9px;font-size:12px;min-height:30px}
+.ex-pg{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;font-family:var(--ex-mono)}
+.ex-pg button{padding:2px 12px;font-size:16px;min-height:32px}
+.ex-gl{display:none}
+.ex-steps{padding:6px 0 30px}
+.ex-step{min-height:58vh;padding:22px 0 26px!important;border-bottom:1px dashed var(--line);scroll-margin-top:0;opacity:.55;transition:opacity .3s}
+.ex-step.act{opacity:1}
+.ex-step h2{font-size:21px;margin:.1em 0 .4em}
+.ex-step p{margin:.5em 0}
+.ex-k{font-size:12px;color:var(--acc);font-weight:600;letter-spacing:.08em}
+.ex-ana{background:color-mix(in srgb,var(--acc2) 7%,transparent);border-left:3px solid var(--acc2);padding:8px 12px;border-radius:0 8px 8px 0;font-size:15px}
+.ex-w{margin:12px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.ex-r{display:flex;align-items:center;gap:8px;font-size:14px;margin:4px 0}
+.ex-r input{flex:1;accent-color:var(--acc);height:30px}.ex-r output{font-family:var(--ex-mono);min-width:76px;text-align:right;font-size:13px}
+.ex-o{font-size:14px;margin:6px 0 0!important}
+.ex-seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}
+.ex-keys{padding-left:1.3em}.ex-keys li{margin:.6em 0}
+.ex-q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;background:var(--card)}
+.ex-q summary{cursor:pointer;font-weight:600}.ex-q p{color:var(--fg);font-size:15px}
+.ex-gl{display:none}
+.ex-w .ex-gl{display:flex;flex-direction:column;gap:8px}
+.ex-gc{all:unset;box-sizing:border-box;display:block;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);cursor:pointer;font-size:13.5px;line-height:1.55}
+.ex-gc.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.ex-gn{display:block;font-weight:700;font-size:15px}.ex-gn small{font-weight:400;color:var(--mut);margin-left:8px;font-size:12px}
+.ex-gm{display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--fg);margin:4px 0}
+.ex-gu{display:block;margin-top:3px}.ex-gu i{font-style:normal;font-size:11px;border-radius:4px;padding:0 5px;margin-right:6px;background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok);font-weight:600}
+.ex-gu.nk i{background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc)}
+.ex-src{padding-left:1.6em;font-size:14px}.ex-src li{margin:.3em 0}.ex-src li:target{background:color-mix(in srgb,var(--warn) 18%,transparent)}
+a.sr{font-size:11px;vertical-align:1px;margin:0 1px;text-decoration:none;white-space:nowrap}
+.ex-bd[hidden]{display:none}
+@media(min-width:900px){
+  .ex-lay{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:34px;align-items:start}
+  .ex-fig{top:64px;margin:0;padding:0;border:0;background:none}
+  .ex-card{padding:12px 16px}
+  .ex-svg{height:min(56vh,520px);max-height:none}
+  .ex-info{min-height:3.2em;font-size:14px}
+  .ex-step{min-height:78vh}
+  .ex-steps{padding-top:0}
+}
+/* ---------- SVG：等轴测实体（四档：顶面 / 左面 / 右面 / 描边） ---------- */
+.ex-svg .b{--c:var(--fg)}
+.ex-svg .b .ft{fill:color-mix(in srgb,var(--c) var(--ex-pt),var(--card))}
+.ex-svg .b .fl{fill:color-mix(in srgb,var(--c) var(--ex-pl),var(--card))}
+.ex-svg .b .fr{fill:color-mix(in srgb,var(--c) var(--ex-pr),var(--card))}
+.ex-svg .b polygon{stroke:color-mix(in srgb,var(--c) var(--ex-pe),var(--card));stroke-width:.6;stroke-linejoin:round}
+.ex-svg .k-dram2{--c:var(--mut)}
+.ex-svg .k-logic{--c:var(--acc2)}
+.ex-svg .k-gpu{--c:var(--est)}
+.ex-svg .k-interp{--c:var(--mut)}
+.ex-svg .k-sub{--c:var(--ok)}
+.ex-svg .k-cap{--c:var(--warn)}
+.ex-svg .k-cu,.ex-svg .k-phy{--c:var(--warn)}
+.ex-svg .k-sa{--c:var(--acc2)}
+.ex-svg .k-lit{--c:var(--acc)}
+.ex-svg .b.neck{--c:var(--acc)}
+.ex-svg .sel.b,.ex-svg .b.sel{--c:var(--acc)}
+.ex-svg .b.sel polygon{stroke-width:1.1}
+.ex-svg [data-p]{cursor:pointer}
+.ex-svg .grv{fill:none;stroke:color-mix(in srgb,var(--fg) 22%,var(--card));stroke-width:.5}
+.ex-svg .grv2{stroke:color-mix(in srgb,var(--fg) 40%,var(--card));stroke-width:.8}
+.ex-svg .tk{stroke:color-mix(in srgb,var(--warn) 70%,var(--card));stroke-width:.6}
+.ex-svg .tsvd{fill:var(--warn)}.ex-svg .tsvd.sel{fill:var(--acc);r:1.8px}
+.ex-svg .rl{stroke:var(--mut);stroke-width:.8}.ex-svg .rl.sel{stroke:var(--acc);stroke-width:1.4}
+.ex-svg .st{stroke:var(--warn);stroke-width:.9}.ex-svg .st2{stroke:var(--warn);stroke-width:2}
+.ex-svg .st.sel,.ex-svg .st2.sel{stroke:var(--acc)}
+.ex-svg .trace{stroke:color-mix(in srgb,var(--warn) 55%,var(--card));stroke-width:.6}.ex-svg .trace.sel{stroke:var(--acc)}
+.ex-svg .dt{fill:var(--fg)}
+.ex-svg .wire{fill:none;stroke:var(--mut);stroke-width:.8}
+.ex-svg .inset{fill:var(--bg);stroke:var(--line);stroke-width:1}
+.ex-svg .wl{stroke:var(--acc2);stroke-width:1.4}
+.ex-svg .sch{stroke:var(--fg);stroke-width:1.4;fill:none}.ex-svg .schc{stroke:var(--fg);stroke-width:2.2}
+.ex-svg g.sel .sch,.ex-svg g.sel .schc,.ex-svg g.sel .wl{stroke:var(--acc)}
+.ex-svg text{font-family:var(--ex-mono),-apple-system,"PingFang SC",sans-serif}
+.ex-svg .ax{fill:var(--mut);font-size:9px}
+.ex-svg .gl{stroke:var(--line);stroke-width:.6}
+.ex-svg .cv1{fill:none;stroke:var(--acc);stroke-width:2.2}.ex-svg .cv2{fill:none;stroke:var(--acc2);stroke-width:2.2}
+.ex-svg .gapf{fill:color-mix(in srgb,var(--acc) 12%,transparent)}.ex-svg .gapf.sel{fill:color-mix(in srgb,var(--acc) 26%,transparent)}
+.ex-svg .cv1.sel,.ex-svg .cv2.sel{stroke-width:3.4}
+.ex-svg .pt1{fill:var(--acc)}.ex-svg .pt2{fill:var(--acc2)}
+.ex-svg .cur{stroke:var(--mut);stroke-dasharray:2 3;stroke-width:.8}
+.ex-svg .lb1{fill:var(--acc);font-size:10px}.ex-svg .lb2{fill:var(--acc2);font-size:10px}
+/* 侧视图（键合 / 高度） */
+.ex-svg .sd{fill:color-mix(in srgb,var(--fg) var(--ex-pl),var(--card));stroke:color-mix(in srgb,var(--fg) var(--ex-pe),var(--card));stroke-width:.8}
+.ex-svg .sd.base{fill:color-mix(in srgb,var(--mut) 30%,var(--card))}.ex-svg .sd.lg{fill:color-mix(in srgb,var(--acc2) 35%,var(--card))}
+.ex-svg .sd.sel,.ex-svg g.sel .sd{fill:color-mix(in srgb,var(--acc) 28%,var(--card));stroke:var(--acc)}
+.ex-svg .sdl{stroke:color-mix(in srgb,var(--fg) 25%,var(--card));stroke-width:.6;stroke-dasharray:3 3}
+.ex-svg .tsvr{fill:color-mix(in srgb,var(--warn) 75%,var(--card))}.ex-svg .tsvr.sel{fill:var(--acc)}
+.ex-svg .bumpr{fill:color-mix(in srgb,var(--fg) 55%,var(--card))}.ex-svg .bumpr.dm{fill:color-mix(in srgb,var(--fg) 32%,var(--card))}.ex-svg .bumpr.sel{fill:var(--acc)}
+.ex-svg .padr{fill:var(--warn)}.ex-svg .padr.sel{fill:var(--acc)}
+.ex-svg .filmr{fill:color-mix(in srgb,var(--acc2) 30%,transparent)}.ex-svg .filmr.sel{fill:color-mix(in srgb,var(--acc) 40%,transparent)}
+.ex-svg .moldr{fill:color-mix(in srgb,var(--ok) 32%,transparent)}.ex-svg .moldr.sel{fill:color-mix(in srgb,var(--acc) 40%,transparent)}
+.ex-svg .bondl{stroke:var(--warn);stroke-width:1.2}
+.ex-svg .press{fill:color-mix(in srgb,var(--mut) 40%,var(--card));stroke:var(--mut)}.ex-svg g.sel .press{stroke:var(--acc)}
+.ex-svg .arr{fill:none;stroke:var(--mut);stroke-width:1.2}
+.ex-svg .heatw{fill:none;stroke:var(--acc);stroke-width:1.6;stroke-linecap:round;opacity:.8}
+.ex-svg .lim{stroke:var(--mut);stroke-dasharray:4 3;stroke-width:.8}.ex-svg .lim.on{stroke:var(--acc);stroke-dasharray:none;stroke-width:1.4}
+.ex-svg .limt{fill:var(--mut);font-size:9px}.ex-svg .limt.on{fill:var(--acc);font-weight:700}
+.ex-svg .ybg{fill:color-mix(in srgb,var(--fg) 8%,var(--card));stroke:var(--line)}.ex-svg .yfg{fill:var(--ok)}
+.ex-svg .yv{fill:var(--fg);font-size:11px;font-weight:700}
+@media(prefers-reduced-motion:reduce){.ex-step{transition:none}}
+
+.ex-hd .ex-pg{margin-left:0;gap:2px}.ex-hd .ex-pg button{padding:0 9px;min-height:26px;font-size:15px;line-height:1}
+.ex-hd .ex-pg b{font-weight:400;color:var(--mut);font-size:11px;min-width:34px;text-align:center}
+@media(max-width:560px){.ex-hint{display:none}.ex-ft{justify-content:flex-end}.ex-ro{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .ex-gen>span{display:none}.ex-ctl{flex-wrap:nowrap;margin-top:4px}.ex-gen{flex:1 1 auto}.ex-spd button{padding:3px 8px}}
+@media(min-width:561px){.ex-info{max-height:4.6em}}
+.ex-hd .ex-pg b{white-space:nowrap}
+.ex-svg[data-sc=next] .b.sel:not(.neck){--c:var(--acc2)}
+@media(max-width:560px){.ex-n{display:none}.ex-hd{align-items:center}}
+.ex-svg g.sel .b{--c:var(--acc)}.ex-svg[data-sc=next] g.sel .b:not(.neck){--c:var(--acc2)}

@@ -10,4 +10,5 @@ python3 cowos/build.py
 python3 pcb/build.py     # PCB 小链：读 CoWoS 页出货表与 TOC 汇总、HBM 页中国账本（回测数据由 pcb/backtest.py 单独联网生成）
 python3 cu/build.py      # 大宗商品系列：铜（回测数据由 cu/backtest.py 单独联网生成）
 python3 tpl/page.py      # 三页同一模板（结论层 + 底稿 13 步），见 SOP 页面规范；pcb.html 用 tpl/page_v2.py 行业版。pcb_v1.html / pcb_v1.js / data/pcb_v1.json 是 v1 冻结存档，构建不重写
+python3 explain/build.py # 万物原理图：explain/<专题>.py 规格 + explain/<专题>.js 图形 + explain/engine.js 通用引擎 → explain-<专题>.html、explain.html、首页卡片
 echo "构建完成。"
