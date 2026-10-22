@@ -55,3 +55,4 @@ ol.dl p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;ove
 .fs dd{margin:0;font-size:16px;line-height:1.6;overflow-wrap:anywhere}
 .fs-r:first-child dd{font-size:17px;font-weight:600}
 a.gid{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;padding:0 4px;border-radius:var(--r-tag,5px);background:var(--hig-fill,rgba(118,118,128,.12));text-decoration:none;white-space:nowrap}
+.errata{margin:10px 0 0;padding:9px 12px;border-radius:var(--r-card,12px);background:var(--hig-warn-fill,rgba(255,149,0,.14));font-size:14px;line-height:1.6}
