@@ -47,3 +47,11 @@ ol.dl .dh{display:flex;gap:8px;align-items:baseline}.dh b{font-size:17px;font-va
 ol.dl p{margin:6px 0 0;font-size:15px;line-height:1.65}
 ol.dl .lk{display:flex;gap:14px;font-size:13px;padding:6px 4px 0}
 ol.dl p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+/* 首屏卡片（2026-10-22 起；「## 首屏」5 行） */
+.fs{background:var(--hig-tint-fill,rgba(0,122,255,.10));border:1px solid var(--hig-tint-line,rgba(0,122,255,.35));border-radius:var(--r-card,12px);padding:12px 14px 6px;margin:6px 0 4px}
+.fs-h{font-size:12px;font-weight:700;color:var(--tint,#007AFF);letter-spacing:.06em;margin-bottom:6px}
+.fs dl{margin:0}.fs-r{padding:7px 0;border-top:.5px solid var(--line)}.fs-r:first-child{border-top:0;padding-top:2px}
+.fs dt{font-size:12px;font-weight:600;color:var(--mut);margin:0 0 2px}
+.fs dd{margin:0;font-size:16px;line-height:1.6;overflow-wrap:anywhere}
+.fs-r:first-child dd{font-size:17px;font-weight:600}
+a.gid{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;padding:0 4px;border-radius:var(--r-tag,5px);background:var(--hig-fill,rgba(118,118,128,.12));text-decoration:none;white-space:nowrap}

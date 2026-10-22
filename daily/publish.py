@@ -120,7 +120,48 @@ def parse(d):
         secs.append((hd.strip(), rest))
     if mm:
         intro = intro.replace(mm.group(0), '')
-    return dict(d=d, ver=ver, md=md, meta=meta, title=title, mainline=mainline, intro=intro, secs=secs, src=f)
+    # 首屏（2026-10-22 起）：「## 首屏」节里 5 行，不进正文
+    fs = []
+    for i, (hd, rest) in enumerate(secs):
+        if strip_md(hd).startswith('首屏'):
+            fs = parse_fs(rest)
+            secs.pop(i)
+            break
+    if fs and not mainline:
+        mainline = dict(fs).get('主线', '')
+    return dict(d=d, ver=ver, md=md, meta=meta, title=title, mainline=mainline, intro=intro, secs=secs, src=f, fs=fs,
+                zh=zh_count(secs))
+
+
+FS_KEYS = ['主线', '最重要变化点', '机制含义', '对总账影响', '下一个观察点']
+
+
+def parse_fs(text):
+    """首屏 5 行：每行「- **标签**：内容」或「标签：内容」；标签按 FS_KEYS 顺序。"""
+    out = []
+    for ln in text.splitlines():
+        ln = re.sub(r'^\s*(?:[-*]|\d+[.、])\s*', '', ln).strip()
+        m = re.match(r'^\*{0,2}([^*：:]{1,8})\*{0,2}\s*[：:]\s*\*{0,2}\s*(.+)$', ln)
+        if m and m.group(1).strip() in FS_KEYS:
+            out.append((m.group(1).strip(), m.group(2).strip()))
+    return out
+
+
+def zh_count(secs):
+    """正文汉字数（与 daily_report/check_len.py 同口径，不含 intro）：不含首屏、附录、下载节、引用块、免责声明、链接地址。"""
+    n = 0
+    for hd, body in secs:
+        if hd.startswith('附录') or hd.startswith('下载'):
+            continue
+        t = re.sub(r'\]\([^)]*\)', ']', hd + '\n' + body)
+        t = '\n'.join(l for l in t.splitlines() if not l.lstrip().startswith('>')).replace(DISC, '')
+        n += len(re.findall(r'[\u4e00-\u9fff]', t))
+    return n
+
+
+def link_ids(h):
+    """全局编号 G01 / P001 → 链到总账。"""
+    return re.sub(r'(?<![\w/#])([GP]\d{2,3})(?![\w])', lambda m: f'<a class="gid" href="../ledger.html#{m.group(1)}">{m.group(1)}</a>', h)
 
 
 def nav_label(hd):
@@ -145,7 +186,7 @@ def render_day(r, prev, nxt, pdf_ok):
     o = [HEAD.format(title=html.escape(f'日报 {ds}'), desc=html.escape(short(r['mainline'], 140)))]
     names = [s[0] for s in r['secs']]
     has = lambda k: any(k in n for n in names)
-    navs = [('top', '主线')]
+    navs = [('top', '首屏' if r['fs'] else '主线')]
     if not has('今日市场概况') and r['meta'].get('conclusion'):
         navs.append(('mkt', '市场概况'))
     if not has('变化点'):
@@ -156,7 +197,11 @@ def render_day(r, prev, nxt, pdf_ok):
     o.append('<nav class="sec"><div class="wrap">' + ''.join(f'<a href="#{i}">{html.escape(t)}</a>' for i, t in navs) + '</div></nav>\n<main class="wrap rpt">\n')
     o.append(f'<section id="top" class="hero"><div class="kicker">A股投研日报 · {ds} {wd}</div>')
     o.append(f'<h1 class="dt">{html.escape(strip_md(r["title"]))}</h1>')
-    if r['mainline']:
+    if r['fs']:
+        o.append('<div class="fs" role="region" aria-label="首屏"><div class="fs-h">首屏 · 五行读懂今天</div><dl>'
+                 + ''.join(f'<div class="fs-r"><dt>{html.escape(k)}</dt><dd>{link_ids(inline(v))}</dd></div>' for k, v in r['fs'])
+                 + '</dl></div>')
+    elif r['mainline']:
         o.append(f'<div class="ml"><span class="lb">一句话主线</span><p>{inline(r["mainline"])}</p></div>')
     o.append('<div class="acts">' + (f'<a class="btn" href="pdf/report_{d}.pdf" download>下载 PDF</a>' if pdf_ok else '') + '<a class="btn" href="./">全部日报</a></div>')
     o.append(f'<p class="disc">{DISC}</p></section>\n')
@@ -181,9 +226,12 @@ def render_day(r, prev, nxt, pdf_ok):
         o.append(f'<section id="{slug(i)}"{cls}>{h}</section>\n')
     if pdf_ok:
         o.append(f'<section id="pdf"><h2>下载</h2><p><a class="btn" href="pdf/report_{d}.pdf" download>下载当日 PDF</a></p></section>\n')
-    pn = '<nav class="pn">' + (f'<a href="{prev}.html">← {fmt_date(prev)[0]}</a>' if prev else '<span></span>') + '<a href="./">全部日报</a>' + (f'<a href="{nxt}.html">{fmt_date(nxt)[0]} →</a>' if nxt else '<span></span>') + '</nav>'
-    o.append(pn + '</main>\n' + FOOT)
+    o.append(pn_nav(prev, nxt) + '</main>\n' + FOOT)
     return ''.join(o)
+
+
+def pn_nav(prev, nxt):
+    return '<nav class="pn">' + (f'<a href="{prev}.html">← {fmt_date(prev)[0]}</a>' if prev else '<span></span>') + '<a href="./">全部日报</a>' + (f'<a href="{nxt}.html">{fmt_date(nxt)[0]} →</a>' if nxt else '<span></span>') + '</nav>'
 
 
 def render_index(items):
@@ -238,6 +286,10 @@ def main():
     for d in days:
         r, pdf_ok = build(d)
         built[d] = (r, pdf_ok)
+        if r['fs']:
+            miss = [k for k in FS_KEYS if k not in dict(r['fs'])]
+            print(f'  首屏 {len(r["fs"])} 行' + (f'（缺：{"、".join(miss)}）' if miss else ''))
+        print(f'  正文汉字 {r["zh"]}' + ('（超过 1500 上限，见 RUNBOOK Step 5b）' if r['fs'] and r['zh'] > 1500 else ''))
         man[d] = {'date': d, 'ver': 'v' + r['ver'], 'mainline': strip_md(r['mainline']), 'short': short(r['mainline']), 'pdf': pdf_ok}
     order = sorted(man)
     # 重写本次的页面 + 相邻页（上一篇/下一篇链接），源还在才重写
@@ -248,6 +300,13 @@ def main():
     for d in sorted(todo):
         if d not in built:
             if not pick_md(d):
+                # 源已不在（如 box 重置）：只就地更新已发布页面的上一篇/下一篇链接
+                pf = f'{OUT}/{d}.html'; i = order.index(d)
+                if os.path.exists(pf):
+                    t = open(pf, encoding='utf-8').read()
+                    t2 = re.sub(r'<nav class="pn">.*?</nav>', lambda m: pn_nav(order[i - 1] if i else None, order[i + 1] if i + 1 < len(order) else None), t, count=1, flags=re.S)
+                    if t2 != t:
+                        open(pf, 'w', encoding='utf-8').write(t2); print('  翻页链接', f'daily/{d}.html')
                 continue
             built[d] = build(d)
         i = order.index(d)
@@ -265,6 +324,14 @@ def main():
     assert n == 1, 'index.html 缺 <!--daily:latest--> 标记'
     open(idx_f, 'w', encoding='utf-8').write(idx)
     print('索引', f'daily/index.html（{len(items)} 期）')
+    # 缓存版本号（?v=<哈希>）：只处理本次写过的页面；cachebust 幂等，必须在所有写入之后跑
+    cb = os.path.join(SITE, 'tools', 'cachebust.py')
+    if os.path.exists(cb):
+        pages = [f'{OUT}/{d}.html' for d in sorted(todo) if os.path.exists(f'{OUT}/{d}.html')] + [f'{OUT}/index.html', idx_f]
+        r = subprocess.run([sys.executable, cb, *pages], cwd=SITE, capture_output=True, text=True)
+        print((r.stdout or r.stderr).strip() or 'cachebust 完成')
+    else:
+        print('⚠️ 缺 tools/cachebust.py，跳过版本号')
     if nogit:
         return
     g = lambda *c: subprocess.run(['git', '-C', SITE, *c], check=True, capture_output=True, text=True).stdout
