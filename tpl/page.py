@@ -165,7 +165,7 @@ def render(S):
       f'<details class="apx" id="apxSrc"><summary>来源与局限 <small>{S["src_small"]}</small></summary><div class="body" id="src">{S["src"]}</div></details>\n'
       f'<details class="apx" id="apxLog"><summary>更新记录与下载 <small>每次改判都记在这里</small></summary><div class="body" id="log">{S["log"]}</div></details>\n</section>\n')
     w(f'</main><footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="{S["other"][0]}">{S["other"][1].replace(" ⇄","")}</a></footer>\n')
-    w(''.join(f'<script src="{x}"></script>' for x in ['chain.js'] + S['scripts']) + '\n</body></html>\n')
+    w(''.join(f'<script src="{x}"></script>' for x in ['ledger_ids.js', 'chain.js'] + S['scripts']) + '\n</body></html>\n')
     html = ''.join(o)
     assert not re.search(r'<a\b(?:(?!</a>).)*<a\b', html, re.S), f'{S["file"]}: 有嵌套 <a>'
     # 自检：id 不重复；所有页内锚点存在（#srcN 由脚本生成，跳过）

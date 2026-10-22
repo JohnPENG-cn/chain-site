@@ -23,7 +23,7 @@ CH.leadCards=(el,a)=>{CH.$(el).innerHTML=a.map(l=>`<div class="card"><b>${l[0]}<
 /* 预测台账：status = pending | hit | miss | void；到期自动变成"待打分" */
 CH.ledger=(tb,sumEl,P,today=new Date())=>{const st={hit:['命中','var(--ok)'],miss:['未中','var(--acc)'],void:['作废','var(--mut)']};let due=0,hit=0,miss=0;
  CH.$(tb).innerHTML=P.map(p=>{const d=Math.ceil((new Date(p.due)-today)/864e5);let s;if(st[p.status]){s=st[p.status];if(p.status=='hit')hit++;if(p.status=='miss')miss++}else if(d<=0){s=['待打分','var(--warn)'];due++}else s=['待验证','var(--mut)'];
-  return`<tr><td>${p.id}</td><td>${p.text}${p.note?`<div class="note">${p.note}</div>`:''}</td><td style="white-space:nowrap">${p.due}<div class="note">${d>0?d+' 天后':'已到期'}</div></td><td>${p.check}</td><td><span class="pill" style="color:${s[1]}">${s[0]}</span></td></tr>`}).join('');
+  return`<tr><td>${p.id}${CH.gtag(p.text)}</td><td>${p.text}${p.note?`<div class="note">${p.note}</div>`:''}</td><td style="white-space:nowrap">${p.due}<div class="note">${d>0?d+' 天后':'已到期'}</div></td><td>${p.check}</td><td><span class="pill" style="color:${s[1]}">${s[0]}</span></td></tr>`}).join('');
  const sc=hit+miss;CH.$(sumEl).innerHTML=`共 ${P.length} 条 · 已打分 ${sc} 条${sc?` · 命中率 ${(hit/sc*100).toFixed(0)}%`:''} · 待打分 ${due} 条。规则：到期后按"验证来源"的公开数据判定命中/未中，不改原文，只追加结果。`};
 CH.sources=(el,S)=>{CH.$(el).innerHTML=S.map(s=>`<li id="src${s.id}" value="${s.id}">${s.t} <a href="${s.u}" target="_blank" rel="noopener">${s.u}</a></li>`).join('')};
 CH.list=(el,a)=>{CH.$(el).innerHTML=a.map(x=>`<li>${x}</li>`).join('')};
@@ -61,7 +61,9 @@ CH.players=(el,P)=>{CH.$(el).innerHTML=P.map(p=>`<div class="card"><div style="d
  <div class="note" style="margin-top:6px"><b>动机</b>　${CH.srcInline(p.incentive)}</div><div class="note"><b>现在在做</b>　${CH.srcInline(p.now)}</div><div class="note"><b>历史上周期里怎么做</b>　${CH.srcInline(p.history)}</div>
  <div class="note" style="color:var(--fg)"><b>行为改变的信号</b>　${CH.srcInline(p.signal)}</div></div>`).join('')};
 /* 反方证据/证伪条件：[{j, counter, falsify, ind, th, now, st}]，st = ok | watch | hit */
-CH.falsify=(tb,F)=>{const S={ok:['未触发','var(--ok)'],watch:['需盯紧','var(--warn)'],hit:['已触发','var(--acc)']};CH.$(tb).innerHTML=F.map(x=>{const s=S[x.st]||S.ok;return`<tr><td><b>${x.j}</b></td><td>${CH.srcInline(x.counter)}</td><td>${CH.srcInline(x.falsify)}</td><td>${CH.srcInline(x.ind)}<div class="note">阈值：${x.th}</div></td><td>${CH.srcInline(x.now)}</td><td><span class="pill" style="color:${s[1]}">${s[0]}</span></td></tr>`}).join('')};
+/* 全局编号小标签：ledger_ids.js 给出 原文→G01/P001，链到总账；没有该文件（如 v1 存档）就不显示 */
+CH.gtag=t=>{const g=(window.LEDGER_IDS||{})[t];return g?` <a class="gtag" href="ledger.html#${g}" title="全局判断总账">${g}</a>`:''};
+CH.falsify=(tb,F)=>{const S={ok:['未触发','var(--ok)'],watch:['需盯紧','var(--warn)'],hit:['已触发','var(--acc)']};CH.$(tb).innerHTML=F.map(x=>{const s=S[x.st]||S.ok;return`<tr><td><b>${x.j}</b>${CH.gtag(x.j)}</td><td>${CH.srcInline(x.counter)}</td><td>${CH.srcInline(x.falsify)}</td><td>${CH.srcInline(x.ind)}<div class="note">阈值：${x.th}</div></td><td>${CH.srcInline(x.now)}</td><td><span class="pill" style="color:${s[1]}">${s[0]}</span></td></tr>`}).join('')};
 /* ===== 统一模板（SOP 页面规范 v1.4）共用组件 ===== */
 /* 镜像图：结论层的"主证据图"是底稿里原图的只读副本。原图每次 setOption 后，把完整 option 复制过去（含滑块、深浅色重画）。 */
 CH._mir={};CH._mi={};CH._mt={};

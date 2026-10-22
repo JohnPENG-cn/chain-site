@@ -91,7 +91,7 @@ window.redraw=render;
 fetch('data/hbm.json?v=8a4bbe97f9').then(r=>r.json()).then(j=>{M=j;
  drawNeck();$('#tl1').innerHTML=tl(TL1,'');$('#tl2').innerHTML=tl(TL2,'h');
  $('#leadList').innerHTML=LEAD.map(l=>`<div class="card"><b>${l[0]}</b><div class="note">${l[1]} · ${l[2]}</div><p style="margin:.5em 0 0;font-size:15px">${l[3]} ${l[4]!='—'?`<span class="tag t-src">源${l[4]}</span>`:''}</p></div>`).join('');
- const now=new Date('2026-10-14');$('#predT tbody').innerHTML=PRED.map(p=>{const d=Math.round((new Date(p[2])-new Date())/864e5);return`<tr><td>${p[0]}</td><td>${p[1]}</td><td style="white-space:nowrap">${p[2]}<div class="note">${d>0?d+' 天后':'已到期'}</div></td><td>${p[3]}</td><td><span class="pill" style="color:var(--warn)">${d>0?'待验证':'待打分'}</span></td></tr>`}).join('');
+ const now=new Date('2026-10-14');$('#predT tbody').innerHTML=PRED.map(p=>{const d=Math.round((new Date(p[2])-new Date())/864e5);return`<tr><td>${p[0]}${CH.gtag(p[1])}</td><td>${p[1]}</td><td style="white-space:nowrap">${p[2]}<div class="note">${d>0?d+' 天后':'已到期'}</div></td><td>${p[3]}</td><td><span class="pill" style="color:var(--warn)">${d>0?'待验证':'待打分'}</span></td></tr>`}).join('');
  $('#coT tbody').innerHTML=CO.filter(c=>c[3]<7).map(c=>`<tr><td>${c[0]}</td><td style="white-space:nowrap">${c[1]}</td><td>${SEG[c[3]]}</td><td>${c[4]}</td><td>${M.exposure[c[0]]?M.exposure[c[0]]+` <span class="tag t-src">源${/台积电/.test(c[0])?47:/ASMPT/.test(c[0])?41:50}</span>`:'<span class="note">未披露</span>'}</td></tr>`).join('');
  fillStatic();$('#srcL').innerHTML=M.sources.map(s=>`<li id="src${s.id}" value="${s.id}">${s.t} <a href="${s.u}" target="_blank" rel="noopener">${s.u}</a></li>`).join('');
  ['s1','s2','s3','s4'].forEach(i=>document.getElementById(i).addEventListener('input',drawBal));
