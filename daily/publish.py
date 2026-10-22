@@ -347,5 +347,28 @@ def main():
         print('已推送：https://johnpeng-cn.github.io/chain-site/daily/' + days[-1] + '.html')
 
 
+def _steplog(step, fn, d):
+    """逐步日志 → /workspace/daily_report/logs/<D>.log（与 daily_report/steplog.py 同格式）。"""
+    import time, traceback, datetime as _dt
+    logdir = os.path.join(os.environ.get('DAILY_SRC') or os.environ.get('DAILY_DIR') or '/workspace/daily_report', 'logs')
+    tz = _dt.timezone(_dt.timedelta(hours=8))
+    def w(m):
+        try:
+            os.makedirs(logdir, exist_ok=True)
+            with open(os.path.join(logdir, f'{d}.log'), 'a', encoding='utf-8') as f:
+                f.write(f'{_dt.datetime.now(tz):%Y-%m-%d %H:%M:%S} +08 [{step}] {m}\n')
+        except Exception:
+            pass
+    t0 = time.time(); w('START args=' + ' '.join(sys.argv[1:]))
+    try:
+        fn()
+    except SystemExit as e:
+        c = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
+        w(('OK' if c == 0 else f'FAIL exit={c} {str(e.code)[:300]}') + f' ({time.time() - t0:.0f}s)'); raise
+    except BaseException as e:
+        w(f'ERROR {type(e).__name__}: {str(e)[:300]} ({time.time() - t0:.0f}s)\n' + traceback.format_exc()[-1500:]); raise
+    w(f'OK ({time.time() - t0:.0f}s)')
+
+
 if __name__ == '__main__':
-    main()
+    _steplog('publish', main, next((x for x in sys.argv[1:] if re.fullmatch(r'\d{8}', x)), datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime('%Y%m%d')))
