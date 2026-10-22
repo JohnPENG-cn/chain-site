@@ -134,8 +134,8 @@ HEAD = '''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta na
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="format-detection" content="telephone=no">
 <!-- 由 daily/publish.py 生成，不要手改 -->
 <title>{title} · 产业链情报研究中心</title><meta name="description" content="{desc}">
-<link rel="stylesheet" href="../assets.css"><link rel="stylesheet" href="daily.css"><script src="../theme.js"></script></head><body class="daily">
-<header class="top"><div class="wrap"><a class="brand" href="../"><b>●</b> 产业链情报</a><span class="sp"></span><a class="btn" href="./">日报</a><a class="btn" href="../hbm.html">HBM</a><a class="btn" href="../world/">世界</a><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
+<link rel="stylesheet" href="../assets.css"><link rel="stylesheet" href="daily.css"><script src="../theme.js"></script><link rel="stylesheet" href="../assets/hig.css"></head><body class="daily">
+<header class="top"><div class="wrap"><a class="brand back" href="../" aria-label="返回首页">首页</a><span class="sp"></span><a class="btn" href="./">日报</a><a class="btn" href="../hbm.html">HBM</a><a class="btn" href="../world/">世界</a><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
 '''
 FOOT = '<footer class="wrap">Kiko 产业笔记 · 公开数据整理 · <b>' + DISC + '</b></footer></body></html>\n'
 

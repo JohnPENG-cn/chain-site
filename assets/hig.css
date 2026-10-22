@@ -1,0 +1,169 @@
+/* hig.css — 全站唯一的设计系统（参照 Apple Human Interface Guidelines）。
+   加载顺序：assets.css → 各页自有样式（explain.css / daily.css / 页内 <style>）→ 本文件最后加载，统一覆盖。
+   1 令牌（Apple 系统色，浅/深色）  2 语义别名  3 排版  4 导航栏  5 分组卡片  6 标签按钮  7 表格  8 语义色  9 日报  10 原理图  11 行情面板
+   规则：不用 color-mix()（iOS 16.2 以前不支持），半透明一律写成 rgba 令牌；改颜色只改第 1 节。 */
+/* ---------- 1. 令牌：Apple 系统色（iOS 标准值；文字用 Increase Contrast 变体） ---------- */
+:root{--hig-blue:#007AFF;--hig-green:#34C759;--hig-red:#FF3B30;--hig-orange:#FF9500;--hig-yellow:#FFCC00;--hig-purple:#AF52DE;--hig-indigo:#5856D6;--hig-teal:#30B0C7;--hig-pink:#FF2D55;--hig-gray:#8E8E93;--hig-tx-blue:#007AFF;--hig-tx-green:#248A3D;--hig-tx-red:#D70015;--hig-tx-orange:#C93400;--hig-tx-yellow:#A05A00;--hig-tx-purple:#8944AB;--hig-tx-indigo:#3634A3;--hig-label:#000000;--hig-label2:#6E6E73;--hig-label3:rgba(60,60,67,.3);--hig-sep:rgba(60,60,67,.18);--hig-sep-op:#C6C6C8;--hig-bg:#F2F2F7;--hig-card:#FFFFFF;--hig-card2:#F2F2F7;--hig-fill:rgba(118,118,128,.12);--hig-fill2:rgba(118,118,128,.08);--hig-seg-on:#FFFFFF;--hig-bar:rgba(249,249,249,.92);--hig-bar-solid:#F9F9F9;--hig-tint-fill:rgba(0,122,255,.10);--hig-tint-line:rgba(0,122,255,.35);--hig-ok-fill:rgba(52,199,89,.14);--hig-warn-fill:rgba(255,149,0,.14);--hig-risk-fill:rgba(255,59,48,.10);--hig-est-fill:rgba(175,82,222,.12);--hig-cn-fill:rgba(255,149,0,.10);--hig-cn-line:rgba(201,52,0,.40);--hig-gray-fill:rgba(142,142,147,.16);--hig-shadow:0 1px 2px rgba(0,0,0,.04);color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--hig-blue:#0A84FF;--hig-green:#30D158;--hig-red:#FF453A;--hig-orange:#FF9F0A;--hig-yellow:#FFD60A;--hig-purple:#BF5AF2;--hig-indigo:#5E5CE6;--hig-teal:#40C8E0;--hig-pink:#FF375F;--hig-gray:#8E8E93;--hig-tx-blue:#0A84FF;--hig-tx-green:#30D158;--hig-tx-red:#FF453A;--hig-tx-orange:#FF9F0A;--hig-tx-yellow:#FFD60A;--hig-tx-purple:#BF5AF2;--hig-tx-indigo:#7D7AFF;--hig-label:#FFFFFF;--hig-label2:#98989D;--hig-label3:rgba(235,235,245,.3);--hig-sep:rgba(84,84,88,.65);--hig-sep-op:#38383A;--hig-bg:#000000;--hig-card:#1C1C1E;--hig-card2:#2C2C2E;--hig-fill:rgba(118,118,128,.24);--hig-fill2:rgba(118,118,128,.18);--hig-seg-on:#636366;--hig-bar:rgba(22,22,23,.9);--hig-bar-solid:#161617;--hig-tint-fill:rgba(10,132,255,.20);--hig-tint-line:rgba(10,132,255,.50);--hig-ok-fill:rgba(48,209,88,.18);--hig-warn-fill:rgba(255,159,10,.18);--hig-risk-fill:rgba(255,69,58,.18);--hig-est-fill:rgba(191,90,242,.20);--hig-cn-fill:rgba(255,159,10,.12);--hig-cn-line:rgba(255,159,10,.50);--hig-gray-fill:rgba(142,142,147,.24);--hig-shadow:none;color-scheme:dark}}
+html[data-t=light]{--hig-blue:#007AFF;--hig-green:#34C759;--hig-red:#FF3B30;--hig-orange:#FF9500;--hig-yellow:#FFCC00;--hig-purple:#AF52DE;--hig-indigo:#5856D6;--hig-teal:#30B0C7;--hig-pink:#FF2D55;--hig-gray:#8E8E93;--hig-tx-blue:#007AFF;--hig-tx-green:#248A3D;--hig-tx-red:#D70015;--hig-tx-orange:#C93400;--hig-tx-yellow:#A05A00;--hig-tx-purple:#8944AB;--hig-tx-indigo:#3634A3;--hig-label:#000000;--hig-label2:#6E6E73;--hig-label3:rgba(60,60,67,.3);--hig-sep:rgba(60,60,67,.18);--hig-sep-op:#C6C6C8;--hig-bg:#F2F2F7;--hig-card:#FFFFFF;--hig-card2:#F2F2F7;--hig-fill:rgba(118,118,128,.12);--hig-fill2:rgba(118,118,128,.08);--hig-seg-on:#FFFFFF;--hig-bar:rgba(249,249,249,.92);--hig-bar-solid:#F9F9F9;--hig-tint-fill:rgba(0,122,255,.10);--hig-tint-line:rgba(0,122,255,.35);--hig-ok-fill:rgba(52,199,89,.14);--hig-warn-fill:rgba(255,149,0,.14);--hig-risk-fill:rgba(255,59,48,.10);--hig-est-fill:rgba(175,82,222,.12);--hig-cn-fill:rgba(255,149,0,.10);--hig-cn-line:rgba(201,52,0,.40);--hig-gray-fill:rgba(142,142,147,.16);--hig-shadow:0 1px 2px rgba(0,0,0,.04);color-scheme:light}
+html[data-t=dark]{--hig-blue:#0A84FF;--hig-green:#30D158;--hig-red:#FF453A;--hig-orange:#FF9F0A;--hig-yellow:#FFD60A;--hig-purple:#BF5AF2;--hig-indigo:#5E5CE6;--hig-teal:#40C8E0;--hig-pink:#FF375F;--hig-gray:#8E8E93;--hig-tx-blue:#0A84FF;--hig-tx-green:#30D158;--hig-tx-red:#FF453A;--hig-tx-orange:#FF9F0A;--hig-tx-yellow:#FFD60A;--hig-tx-purple:#BF5AF2;--hig-tx-indigo:#7D7AFF;--hig-label:#FFFFFF;--hig-label2:#98989D;--hig-label3:rgba(235,235,245,.3);--hig-sep:rgba(84,84,88,.65);--hig-sep-op:#38383A;--hig-bg:#000000;--hig-card:#1C1C1E;--hig-card2:#2C2C2E;--hig-fill:rgba(118,118,128,.24);--hig-fill2:rgba(118,118,128,.18);--hig-seg-on:#636366;--hig-bar:rgba(22,22,23,.9);--hig-bar-solid:#161617;--hig-tint-fill:rgba(10,132,255,.20);--hig-tint-line:rgba(10,132,255,.50);--hig-ok-fill:rgba(48,209,88,.18);--hig-warn-fill:rgba(255,159,10,.18);--hig-risk-fill:rgba(255,69,58,.18);--hig-est-fill:rgba(191,90,242,.20);--hig-cn-fill:rgba(255,159,10,.12);--hig-cn-line:rgba(255,159,10,.50);--hig-gray-fill:rgba(142,142,147,.24);--hig-shadow:none;color-scheme:dark}
+
+/* ---------- 2. 语义别名：旧变量名统一指向 HIG 令牌（assets.css / explain.css / daily.css / 世界页 / 行情面板 都读这些名字） ----------
+   html[data-t] 与 assets.css 里的 html[data-t=dark] 同优先级、本文件更晚加载 → 以本文件为准 */
+:root,html[data-t]{
+ --tint:var(--hig-tx-blue);
+ --bg:var(--hig-bg);--fg:var(--hig-label);--mut:var(--hig-label2);--line:var(--hig-sep);--card:var(--hig-card);
+ --acc:var(--tint);--acc2:var(--tint);
+ --ok:var(--hig-tx-green);--warn:var(--hig-tx-yellow);--risk:var(--hig-tx-red);--est:var(--hig-tx-purple);--cn:var(--hig-tx-orange);
+ --up:var(--hig-tx-red);--dn:var(--hig-tx-green);          /* A 股习惯：红涨绿跌 */
+ --ln:var(--hig-sep);--ac:var(--tint);                       /* 行情面板旧变量名 */
+ /* 字体 */
+ --f-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","PingFang SC","Hiragino Sans GB","Helvetica Neue","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
+ --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+ /* HIG 字号阶梯（iOS 默认 Dynamic Type 大小） */
+ --t-large:34px;--t-title1:28px;--t-title2:22px;--t-title3:20px;--t-headline:17px;--t-body:17px;--t-callout:16px;--t-subhead:15px;--t-footnote:13px;--t-caption:12px;--t-caption2:11px;
+ /* 8pt 网格（4 为半格） */
+ --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;--s-8:32px;--s-10:40px;--s-12:48px;
+ /* 圆角 */
+ --r-card:12px;--r-ctl:8px;--r-tag:5px;--r-cap:999px;
+ /* 触控与导航栏 */
+ --tap:44px;--bar-h:calc(44px + env(safe-area-inset-top,0px));
+}
+
+/* ---------- 3. 基础排版 ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:var(--f-sans);font-size:var(--t-body);line-height:1.65;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+a{color:var(--tint)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media(min-width:760px){.wrap{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}}
+h1{font-size:clamp(28px,8vw,var(--t-large));line-height:1.2;font-weight:700;letter-spacing:.005em;margin:.25em 0 .35em}
+h1.gov,h1.lgt,h1.dt{font-size:clamp(22px,5.8vw,var(--t-title1));line-height:1.3;font-weight:700}
+h2{font-size:var(--t-title2);line-height:1.3;font-weight:700;margin:0 0 var(--s-2)}
+h2.claim{font-size:var(--t-title3);line-height:1.4;font-weight:600}
+h3{font-size:var(--t-headline);line-height:1.4;font-weight:600}
+.kicker{font-size:var(--t-footnote);font-weight:600;letter-spacing:.02em;color:var(--mut);text-transform:none}
+.dek{font-size:var(--t-body);color:var(--mut);line-height:1.6}
+.sub{font-size:var(--t-subhead);color:var(--mut);line-height:1.55}
+.note{font-size:var(--t-footnote);color:var(--mut);line-height:1.55}
+section{padding:var(--s-8) 0;border-bottom:0}
+section.basehd{border-top:.5px solid var(--hig-sep-op);margin-top:var(--s-6)}
+footer{font-size:var(--t-footnote);color:var(--mut);padding:var(--s-8) 0 calc(var(--s-12) + env(safe-area-inset-bottom,0px))}
+
+/* ---------- 4. 导航栏（HIG Navigation Bar：44pt、半透明材质、细分隔线、左上角返回） ---------- */
+header.top{position:sticky;top:0;z-index:20;background:var(--hig-bar-solid);background:var(--hig-bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--line);padding:env(safe-area-inset-top,0px) 0 0}
+header.top .wrap{display:flex;align-items:center;max-width:1080px;margin:0 auto;box-sizing:border-box;height:44px;gap:2px;padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+header.top .brand{font-size:var(--t-headline);font-weight:600;color:var(--fg);display:inline-flex;align-items:center;min-height:var(--tap);padding:0 8px;text-decoration:none}
+header.top .brand b{color:var(--tint);margin-right:2px}
+header.top .brand.back{color:var(--tint);font-weight:400;padding-left:4px}
+header.top .brand.back::before{content:"";flex:none;width:11px;height:11px;border-left:2.5px solid currentColor;border-bottom:2.5px solid currentColor;border-radius:1px;transform:rotate(45deg);margin:0 6px 0 6px}
+header.top .btn{border:0;background:none;color:var(--tint);border-radius:var(--r-ctl);font-size:var(--t-callout);font-family:inherit;min-height:var(--tap);min-width:var(--tap);padding:0 8px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+header.top .btn:active{opacity:.4}header.top .btn[aria-current=page]{color:var(--fg)}
+header.top .sp{flex:1}header.top .brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}header.top .btn{white-space:nowrap}
+header.top .pill{background:var(--hig-fill);color:var(--mut);border:0}
+@media(max-width:420px){header.top .wrap{gap:0;padding:0 4px}header.top .btn{padding:0 6px;font-size:var(--t-subhead)}}
+/* 二级导航（本页目录）：44pt 高的横向标签栏，当前项为强调色下划线 */
+nav.sec{top:var(--bar-h);background:var(--hig-bar-solid);background:var(--hig-bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--line)}
+nav.sec a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 12px;font-size:var(--t-subhead);color:var(--mut);border-bottom:0;box-shadow:none}
+nav.sec a.on{color:var(--fg);font-weight:600;box-shadow:inset 0 -2px 0 var(--tint)}
+nav.two .links a{padding:0 10px}
+/* 分段控件（HIG Segmented Control） */
+nav.two .tiers,.seg{background:var(--hig-fill);border:0;border-radius:9px;padding:2px;gap:0;overflow:visible}
+nav.two .tiers{margin:6px 0}
+nav.two .tiers a,.seg button{border:0;border-radius:7px;color:var(--fg);font-size:var(--t-footnote);font-weight:500;padding:5px 12px;min-height:28px;display:inline-flex;align-items:center;background:transparent;font-family:inherit}
+nav.two .tiers a.on,.seg button.on{background:var(--hig-seg-on);color:var(--fg);font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)}
+
+/* ---------- 5. 分组卡片（HIG Inset Grouped：白卡浮在灰底上，无描边、12pt 圆角） ---------- */
+.grid{gap:var(--s-3)}
+.card,.evc,.scqa,details.apx,.ic,.al li,.bgc,.ex-card,.v2keys div,ol.stepix a,.keys div,.flowp span{background:var(--card);border-color:transparent;box-shadow:var(--hig-shadow)}
+.card,.evc,.scqa,details.apx,.ic,.bgc,.ex-card,.v2keys div{border-radius:var(--r-card)}
+.card{padding:var(--s-4)}
+.kl a,.qa,.ml,.lt,.node,.sum,.cnb{background:var(--card);border-top-color:transparent;border-right-color:transparent;border-bottom-color:transparent;border-left-width:3px;border-radius:var(--r-card);box-shadow:var(--hig-shadow)}
+.twoled a{background:var(--card);border-left-color:transparent;border-right-color:transparent;border-bottom-color:transparent;border-radius:var(--r-card)}
+details.apx .card,details.apx .evc{background:var(--hig-card2);box-shadow:none}
+details.base2 .card{background:var(--card)}
+.scqa>div{border-top:.5px solid var(--line)}.scqa>div:first-child{border-top:0}
+.scqa .a{background:var(--hig-tint-fill)}.scqa .a b{color:var(--tint)}
+.stat .n{font-size:var(--t-title1);font-weight:700}.stat .l{font-size:var(--t-footnote)}
+.big{font-weight:700}
+.evc:target,.step:target{box-shadow:0 0 0 2px var(--tint) inset}
+.cnb{background:var(--card);border-color:var(--hig-cn-line);border-left-color:var(--cn)}
+.cnb .sup a{border-color:var(--hig-cn-line)!important}
+.qa .qn,.ml .lb{color:var(--tint)}
+html:root .qa i{color:#fff;background:var(--tint)}
+html:root .qa .ac i{background:var(--cn);color:#fff}
+html[data-t=dark] .qa .ac i,html[data-t=dark] .cnb .lb,html[data-t=dark] .cnm{color:#000}
+@media(prefers-color-scheme:dark){html:root:not([data-t=light]) .qa .ac i,html:not([data-t=light]) .cnb .lb,html:not([data-t=light]) .cnm{color:#000}}
+
+/* 折叠（HIG Disclosure）：右侧 chevron，展开时旋转 */
+details.apx>summary{min-height:var(--tap);align-items:center;font-size:var(--t-headline);font-weight:600}
+details.apx>summary small{font-size:var(--t-footnote)}
+details.apx>summary::after{content:"";flex:none;width:8px;height:8px;border-right:2px solid var(--hig-label3);border-bottom:2px solid var(--hig-label3);transform:rotate(-45deg);margin:0 4px;transition:transform .2s}
+details.apx[open]>summary::after{content:"";transform:rotate(45deg)}
+
+/* ---------- 6. 标签、胶囊、按钮 ---------- */
+.tag{border-radius:var(--r-tag);font-size:var(--t-caption2);font-weight:600;padding:1px 6px}
+.t-src{background:var(--hig-tint-fill);color:var(--tint)}.t-est{background:var(--hig-est-fill);color:var(--est)}
+.pill{border:0;background:var(--hig-fill);color:var(--mut);border-radius:var(--r-cap);font-size:var(--t-caption);font-weight:500;padding:2px 10px}
+.pill.new{background:var(--hig-tint-fill);color:var(--tint)}
+.btn{border:0;background:var(--hig-tint-fill);color:var(--tint);border-radius:var(--r-cap);font-family:inherit;font-weight:500}
+.acts .btn{min-height:var(--tap);display:inline-flex;align-items:center;padding:0 16px;font-size:var(--t-subhead)}
+.step .sup a{border-color:var(--hig-tint-line);color:var(--tint)}.step .sup a:hover{background:var(--hig-tint-fill)}
+.step .sup span{border-color:var(--line)}
+input[type=range]{accent-color:var(--tint)}
+.bar{background:var(--hig-fill)}.bar i{background:var(--tint)}
+.tl{border-left-color:var(--line)}.tl div:before{background:var(--tint)}.tl .h:before{background:var(--hig-gray)}
+svg.flow .fk{fill:var(--hig-tint-fill);stroke:var(--tint)}svg.flow .fn{fill:var(--card);stroke:var(--hig-sep-op)}
+ol.stepix a{border-radius:var(--r-ctl);min-height:var(--tap);align-items:center}
+
+/* ---------- 7. 表格（细分隔线、表头用脚注字号） ---------- */
+th,td{border-bottom:.5px solid var(--line)}
+th{color:var(--mut);font-weight:600;font-size:var(--t-caption)}
+table.rc tr,table.bt tr{border-color:transparent!important;border-radius:var(--r-card)!important;background:var(--card)}
+
+/* ---------- 8. 语义色（涨跌 / 风险 / 状态），替换各页写死的颜色 ---------- */
+.up{color:var(--up)}.dn{color:var(--dn)}
+.lt{border-left-width:4px}.lt.red{border-left-color:var(--risk)}.lt.amber{border-left-color:var(--hig-orange)}.lt.green{border-left-color:var(--hig-green)}
+.st.red{color:var(--risk);border-color:var(--risk)}.st.amber{color:var(--warn);border-color:var(--warn)}.st.green{color:var(--ok);border-color:var(--ok)}
+.ic .ds.over{color:var(--risk)}.tg.opp{color:var(--ok);border-color:var(--ok)}
+.st.hot{background:var(--hig-risk-fill)}.st.warm{background:var(--hig-warn-fill)}.st.mix{background:var(--hig-warn-fill)}.st.cold{background:var(--hig-tint-fill)}
+.sgY{color:var(--risk)}.sgH{color:var(--warn)}.sgN{color:var(--tint)}
+.t利好,.p改善{background:var(--hig-risk-fill);color:var(--up)}.t利空,.p恶化{background:var(--hig-ok-fill);color:var(--dn)}
+
+/* ---------- 9. 日报 ---------- */
+.rpt p,.rpt li{font-size:var(--t-body);line-height:1.7}
+.ml p{font-size:var(--t-body)}
+.rpt h2{font-size:var(--t-title2)}
+.rpt h3{font-size:var(--t-headline)}
+.rpt h3.ly{border-radius:var(--r-ctl);font-size:var(--t-subhead);padding:2px 10px}
+.rpt h3.ly1{background:var(--hig-gray-fill)}.rpt h3.ly2{background:var(--hig-tint-fill)}.rpt h3.ly3{background:var(--hig-warn-fill)}.rpt h3.ly4{background:var(--hig-ok-fill)}
+.rpt blockquote{background:var(--card);border-left:3px solid var(--hig-sep-op);border-radius:0 var(--r-card) var(--r-card) 0}
+.rpt blockquote p{font-size:var(--t-subhead)}
+.rpt blockquote.cc{border-left-color:var(--tint);background:var(--hig-tint-fill)}
+.rpt blockquote.cc p{font-size:var(--t-callout)}
+a.src{background:var(--hig-tint-fill);border-radius:var(--r-tag)}a.src:hover{background:var(--hig-tint-line)}
+.rpt figure img{border:0;border-radius:var(--r-card)}
+.rpt code{background:var(--hig-fill);border:0;font-family:var(--f-mono)}
+nav.pn a{display:inline-flex;align-items:center;min-height:var(--tap)}
+ol.dl .card:hover{border-color:transparent}
+
+/* ---------- 10. 万物原理图 ---------- */
+.ex-fig{top:var(--bar-h);background:var(--bg);border-bottom:.5px solid var(--line)}
+.ex-card{box-shadow:0 1px 2px rgba(0,0,0,.05),0 8px 20px -12px rgba(0,0,0,.18)}
+.ex-dots a{border-color:transparent;background:var(--hig-fill);color:var(--fg)}
+.ex-dots a.act{background:var(--tint);color:#fff}
+.ex-chips button,.ex-seg button,.ex-spd button,.ex-pg button{border-color:transparent;background:var(--hig-fill);color:var(--fg)}
+.ex-chips button[aria-pressed=true],.ex-seg button[aria-pressed=true],.ex-spd button[aria-pressed=true]{background:var(--tint);color:#fff}
+.ex-ana{background:var(--hig-tint-fill);border-left-color:var(--tint)}
+
+/* ---------- 11. 行情面板（market.html，独立页面套同一套令牌） ---------- */
+body.mk{font-size:var(--t-subhead);line-height:1.5}
+body.mk header.mkhd{padding:var(--s-4) var(--s-4) var(--s-2)}
+body.mk header.mkhd h1{font-size:clamp(28px,8vw,var(--t-large));margin:0}
+body.mk nav{top:var(--bar-h);background:var(--hig-bar-solid);background:var(--hig-bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--line);padding:6px 12px}
+body.mk nav button,body.mk .seg button{border:0;background:var(--hig-fill);color:var(--fg);border-radius:var(--r-cap);min-height:32px;padding:0 14px;font-family:inherit}
+body.mk nav button.on,body.mk .seg button.on{background:var(--tint);color:#fff;box-shadow:none}
+body.mk .seg{background:none;padding:0;gap:6px}
+body.mk .grid{gap:var(--s-2)}
+body.mk .lvl{color:var(--mut);letter-spacing:.04em}
+body.mk #sheet>div{background:var(--bg);border-radius:var(--r-card) var(--r-card) 0 0;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+body.mk .tg{background:var(--hig-fill)}

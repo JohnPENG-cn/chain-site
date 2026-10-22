@@ -22,7 +22,7 @@ PLANNED = [
 ANATOMY = ('Anatomy', 'https://github.com/wheresryan22/anatomy')
 
 def header(nav=('hbm.html', 'HBM')):
-    return ('<header class="top"><div class="wrap"><a class="brand" href="./"><b>●</b> 产业链情报研究中心</a><span class="sp"></span>'
+    return ('<header class="top"><div class="wrap"><a class="brand back" href="./" aria-label="返回首页">首页</a><span class="sp"></span>'
             f'<a class="btn" href="daily/">日报</a><a class="btn" href="explain.html">原理图</a><a class="btn" href="{nav[0]}">{nav[1]}</a>'
             '<button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>')
 
@@ -91,7 +91,7 @@ def render(name):
     js = json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     page = f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{M["title"]} · 万物原理图</title><meta name="description" content="{html.escape(M["card"])}">
-<link rel="stylesheet" href="assets.css"><link rel="stylesheet" href="explain/explain.css"><script src="theme.js"></script></head><body class="ex-body">
+<link rel="stylesheet" href="assets.css"><link rel="stylesheet" href="explain/explain.css"><script src="theme.js"></script><link rel="stylesheet" href="assets/hig.css"></head><body class="ex-body">
 {header(M['nav'])}
 <main class="wrap ex-main">
 <section class="ex-hero"><div class="kicker">{M["kicker"]}</div><h1>{M["title"]}</h1><p class="dek">{M["dek"]}</p>
@@ -138,7 +138,7 @@ def main():
     cards = ''.join(card(M) for M in metas)
     plan = ''.join(planned_card(t, d) for t, d in PLANNED)
     idx = f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>万物原理图 · 产业链情报研究中心</title><link rel="stylesheet" href="assets.css"><link rel="stylesheet" href="explain/explain.css"><script src="theme.js"></script></head><body>
+<title>万物原理图 · 产业链情报研究中心</title><link rel="stylesheet" href="assets.css"><link rel="stylesheet" href="explain/explain.css"><script src="theme.js"></script><link rel="stylesheet" href="assets/hig.css"></head><body>
 {HEADER}
 <main class="wrap">
 <section><div class="kicker">万物原理图</div><h1>一步一步看懂东西是怎么工作的</h1>
