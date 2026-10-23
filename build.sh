@@ -8,6 +8,7 @@ python3 cowos/model.py
 python3 hbm/build.py
 python3 cowos/build.py
 python3 pcb/build.py     # PCB 小链：读 CoWoS 页出货表与 TOC 汇总、HBM 页中国账本（回测数据由 pcb/backtest.py 单独联网生成）
+python3 pcb/map.py       # PCB 底图层：技术路线图 + 格局图 → pcb-map.html（只链接 G/P 编号，不新增判断）
 python3 cu/build.py      # 大宗商品系列：铜（回测数据由 cu/backtest.py 单独联网生成）
 python3 tpl/page.py      # 三页同一模板（结论层 + 底稿 13 步），见 SOP 页面规范；pcb.html 用 tpl/page_v2.py 行业版。pcb_v1.html / pcb_v1.js / data/pcb_v1.json 是 v1 冻结存档，构建不重写
 python3 ledger/build.py  # 全局判断总账：data/ledger.json → ledger.html + ledger_ids.js；检查每条都对得上研究页条目（不过就停）

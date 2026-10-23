@@ -58,7 +58,7 @@ STAGE_TBL = '<div class="tbl"><table id="pcb-stT" class="stack"><thead><tr><th>�
 SPEC = dict(
  layout='v2',
  file='pcb.html', title='PCB 印制电路板', pill='PCB v0.2', other=('cowos.html', 'CoWoS ⇄'), archive=('pcb_v1.html', '旧版 v1'), scripts=['pcb.js'],
- vbar='v0.2（2026-10-21）新结构：先看全行业，AI 是下钻。核心判断已改（理由见<a href="#log">更新记录</a>）· 对比旧版：<a href="pcb_v1.html">v1 存档（2026-10-20）→</a>',
+ vbar='<b>新：<a href="pcb-map.html">技术路线图 + 格局图（底图）→</a></b> · v0.2（2026-10-21）新结构：先看全行业，AI 是下钻。核心判断已改（理由见<a href="#log">更新记录</a>）· 对比旧版：<a href="pcb_v1.html">v1 存档（2026-10-20）→</a>',
  ledgers=[('ai', 'gl', 'AI 下钻', f'出货约束是 ABF 载板（{ABF}）；PCB 材料里 HVLP3+ 铜箔约 {CU} 只是预测口径，市场信号只支持 HVLP4/5 认证瓶颈'),
           ('cn', 'cnl', '中国账本', f'国产卡被 HBM 卡在约 {CN["WHK27"]*100:.0f} 万张，PCB 链不是约束；国内短板在 Low-CTE 纱、HVLP5 和进口设备')],
  kicker='PCB 小链 · v0.2 行业版 · 更新 <span id="pcb-upd"></span> · 统一单位接 <a href="cowos.html">CoWoS</a> / <a href="hbm.html">HBM</a> 页',
