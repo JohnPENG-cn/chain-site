@@ -15,4 +15,6 @@ python3 ledger/build.py  # 全局判断总账：data/ledger.json → ledger.html
 python3 explain/build.py # 万物原理图：explain/<专题>.py 规格 + explain/<专题>.js 图形 + explain/engine.js 通用引擎 → explain-<专题>.html、explain.html、首页卡片
 python3 tools/hig_apply.py  # 全站接入统一设计系统 assets/hig.css（Apple HIG）；幂等，只动页面外壳
 python3 tools/cachebust.py # 全站静态资源加 ?v=内容哈希（防 iOS Safari / CDN 新旧混用）；必须最后跑
+# 阅读版排版检查：9 个宽度 × 两档缩放，查横向滚动、出视口、压目录栏、图表文字出界/重叠（约 1 分钟；SKIP_LAYOUT_CHECK=1 跳过）
+if [ "${SKIP_LAYOUT_CHECK:-0}" != "1" ]; then python3 tools/overflow_check.py; fi
 echo "构建完成。"

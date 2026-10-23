@@ -172,7 +172,7 @@ a.gtag{display:inline-block;margin-left:4px;font-family:ui-monospace,SFMono-Regu
 
 /* ---------- 12. 阅读模式 body.article（长文研究页；参照 SemiAnalysis 版式，模板见 docs/READING_MODE.md） ----------
    只在 <body class="article"> 生效，其它页面不受影响。单栏 ≈40 个汉字、正文 17px / 1.75、图表全宽、来源改上标脚注。 */
-body.article{--measure:680px;--wide:960px;--bar2:36px;font-size:17px;line-height:1.75;overflow-x:clip}
+body.article{--measure:680px;--wide:960px;--rail-w:212px;--rail-gap:32px;--pad:16px;--bar2:36px;font-size:17px;line-height:1.75;overflow-x:clip}
 body.article .v2bar,body.article nav.sec{display:none}
 body.article main.wrap{max-width:calc(var(--measure) + 48px);margin:0 auto;padding-bottom:var(--s-12)}
 body.article main p{margin:0 0 1em}
@@ -227,8 +227,24 @@ body.article .tag.t-est{font-size:10.5px;padding:0 5px;border-radius:var(--r-cap
 body.article .pill.gap{font-size:11px;padding:0 6px;border-radius:var(--r-cap)}
 /* 图：标题 → 图 → 一句图注 → 一行灰字来源；宽屏比正文宽，手机贴边 */
 body.article figure.fig{margin:var(--s-8) 0;padding:0}
-body.article figure.bleed{width:min(var(--wide),calc(100vw - 48px));margin-left:calc(50% - min(var(--wide),calc(100vw - 48px))/2)}
-@media(max-width:727px){body.article figure.bleed{width:100vw;margin-left:calc(50% - 50vw)}body.article figure.bleed>figcaption,body.article figure.bleed>.src-line{padding:0 16px}}
+/* 破栏规则（全部由变量算出，改宽度只改变量）：
+   · <728px：贴边，左右各伸出正文内边距 --pad；
+   · 728–1199px（无目录栏）：以正文为中线向两侧伸出，最宽 --wide，两边至少留 24px；
+   · ≥1200px（有目录栏）：左边与正文对齐，只往右侧空白处伸出，右边至少留 48px（含滚动条）。
+   1200 = --measure + 2×(--rail-w + --rail-gap + 16px)，即目录栏刚好放得下、不压正文的最小宽度。 */
+body.article figure.bleed,body.article details.more.wide[open]{width:min(var(--wide),calc(100vw - 48px));max-width:none;margin-left:calc(50% - min(var(--wide),calc(100vw - 48px))/2)}
+@media(max-width:759px){body.article{--pad:16px}}
+@media(min-width:760px){body.article{--pad:24px}}
+@media(max-width:727px){body.article figure.bleed{width:auto;margin-left:calc(-1 * var(--pad));margin-right:calc(-1 * var(--pad))}body.article figure.bleed>figcaption,body.article figure.bleed>.src-line{padding:0 var(--pad)}
+ body.article details.more.wide[open]{width:auto;margin-left:0}}
+@media(min-width:1200px){body.article figure.bleed,body.article details.more.wide[open]{margin-left:0;width:min(var(--wide),calc(50vw + var(--measure)/2 - 48px))}}
+body.article figure .chart{max-width:100%;min-width:0}
+body.article .tbl{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+body.article .grid>*{min-width:0}
+body.article .grid:not(.g2):not(.g3):not(.g4){grid-template-columns:minmax(0,1fr)}
+body.article main .pill{white-space:normal;overflow-wrap:anywhere}
+body.article main [style*="display:flex"]{flex-wrap:wrap}
+body.article main img,body.article main svg{max-width:100%}
 body.article .fig-t{font-size:15px;font-weight:700;line-height:1.45;margin-bottom:var(--s-2)}
 body.article figure .chart{background:none;border-radius:0;margin:0}
 body.article .fig-c{font-size:14px;line-height:1.6;color:var(--mut);margin-top:var(--s-2)}
@@ -247,7 +263,6 @@ body.article details.more>summary>span{display:inline-block;font-size:12px;font-
 body.article details.more>summary>b{font-size:15.5px;font-weight:600}
 body.article details.more>summary>small{display:block;font-size:12.5px;color:var(--mut);font-weight:400}
 body.article details.more>.more-b{padding:0 0 var(--s-4)}
-@media(min-width:1008px){body.article details.more.wide[open]{width:var(--wide);margin-left:calc(50% - var(--wide)/2)}}
 body.article .tbl{margin:var(--s-2) 0}
 body.article .tbl table{font-size:14px;line-height:1.55}
 body.article .tbl table th{font-size:12.5px;color:var(--mut);font-weight:600}
@@ -305,8 +320,8 @@ body.article .rd-toc a.on{color:var(--fg);font-weight:600;background:var(--hig-f
 body.article .rd-toc a.on b{color:var(--tint)}
 body.article .rd-toc.open{display:block;position:fixed;z-index:40;left:0;right:0;bottom:0;max-height:75vh;overflow:auto;background:var(--hig-card);border-radius:14px 14px 0 0;padding:var(--s-4) var(--s-3) calc(var(--s-4) + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(0,0,0,.18)}
 body.article .rd-toc.open::before{content:"目录";display:block;font-weight:700;font-size:15px;padding:0 10px 8px}
-@media(min-width:1180px){
- body.article .rd-toc,body.article .rd-toc.open{display:block;position:fixed;z-index:5;top:calc(var(--bar-h) + var(--bar2) + 24px);left:max(16px,calc(50% - var(--measure)/2 - 24px - 240px));right:auto;bottom:auto;width:212px;max-height:calc(100vh - 140px);overflow:auto;background:none;box-shadow:none;border-radius:0;padding:0}
+@media(min-width:1200px){
+ body.article .rd-toc,body.article .rd-toc.open{display:block;position:fixed;z-index:5;top:calc(var(--bar-h) + var(--bar2) + 24px);left:max(16px,calc(50% - var(--measure)/2 - var(--rail-gap) - var(--rail-w)));right:auto;bottom:auto;width:var(--rail-w);box-sizing:border-box;max-height:calc(100vh - 140px);overflow:auto;background:none;box-shadow:none;border-radius:0;padding:0}
  body.article .rd-toc.open::before{display:none}
  body.article .rd-cur{pointer-events:none}body.article .rd-cur::after{display:none}
 }
@@ -321,4 +336,3 @@ body.article .rd-toc.open::before{content:"目录";display:block;font-weight:700
 .fn-sheet .fn-t{font-size:15px;line-height:1.65;margin:0 0 var(--s-3);word-break:break-word}
 .fn-sheet .fn-go{display:flex;gap:var(--s-4);flex-wrap:wrap;font-size:14px}
 .fn-sheet .fn-go a{min-height:var(--tap);display:inline-flex;align-items:center}
-@media(min-width:1180px){body.article{--wide:max(var(--measure),min(960px,calc(100vw - 540px)))}}
