@@ -14,6 +14,9 @@ E = html.escape
 TODAY = datetime.date(2026, 10, 22) if os.environ.get('LEDGER_TODAY') == 'fixed' else datetime.date.today()
 
 
+EV_W = ('支持', '削弱', '触发证伪', '待核')  # 周度跟踪的证据记录：只追加，不改状态/概率（改判要 John 批准）
+
+
 def load():
     return json.load(open(os.path.join(ROOT, 'data', 'ledger.json'), encoding='utf-8'))
 
@@ -45,6 +48,9 @@ def check(doc):
                 errs.append(f'{x["gid"]}：缺概率或不在 0–1')
             if x.get('outcome') not in ('待验证', '命中', '未中'):
                 errs.append(f'{x["gid"]}：outcome 应为 待验证/命中/未中')
+        for e in x.get('ev', []):
+            if e.get('w') not in EV_W or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', e.get('d', '')) or not e.get('src', '').startswith('http') or not e.get('t'):
+                errs.append(f'{x["gid"]}：证据记录格式不对（d=YYYY-MM-DD、w∈{"/".join(EV_W)}、t、src=链接）')
     texts = [x['text'] for x in items]
     if len(set(texts)) != len(texts):
         errs.append('有两条原文完全相同，标签会冲突')
@@ -82,8 +88,27 @@ CSS = '''
 .st-有效{background:var(--hig-ok-fill);color:var(--hig-tx-green)}.st-受挑战{background:var(--hig-warn-fill);color:var(--hig-tx-orange)}
 .st-证伪{background:var(--hig-risk-fill);color:var(--hig-tx-red)}.st-作废{background:var(--hig-gray-fill);color:var(--mut)}
 .draft{background:var(--hig-est-fill);color:var(--hig-tx-purple);border-radius:var(--r-tag,5px);font-size:11px;font-weight:600;padding:1px 6px;margin-left:4px}
+.ev{font-weight:600;border-radius:var(--r-tag,5px);font-size:11px;padding:1px 6px;margin-right:4px}
+.ev-支持{background:var(--hig-ok-fill);color:var(--hig-tx-green)}.ev-削弱{background:var(--hig-warn-fill);color:var(--hig-tx-orange)}
+.ev-触发证伪{background:var(--hig-risk-fill);color:var(--hig-tx-red)}.ev-待核{background:var(--hig-gray-fill);color:var(--mut)}
+.lg-ev{list-style:none;padding:0;margin:0}.lg-ev li{margin:0 0 4px}
 .lg-banner{background:var(--hig-est-fill);border-radius:var(--r-card,12px);padding:10px 14px;margin:10px 0;font-size:15px}
 '''
+
+
+def evli(e, gid=None):
+    head = f'<a href="#{gid}">{gid}</a> ' if gid else ''
+    return f'<li>{head}<span class="ev ev-{e["w"]}">{e["w"]}</span>{E(e["d"])} · {E(e["t"])} <a href="{E(e["src"])}" rel="noopener">来源</a></li>'
+
+
+def week(items):
+    ev = [(x['gid'], e) for x in items for e in x.get('ev', [])]
+    if not ev:
+        return ''
+    last = max(e['d'] for _, e in ev)
+    rows = [evli(e, g) for g, e in ev if e['d'] == last]
+    return (f'<section><h2>最近一次周度跟踪 · {E(last)}</h2><p class="sub">只记录证据方向，不改状态和概率；改判要 John 批准。</p>'
+            f'<ul class="lg-ev">{"".join(rows)}</ul></section>')
 
 
 def render(doc):
@@ -122,6 +147,7 @@ def render(doc):
 <div class="lg-dl">{"".join(f'<span>{l}<br>{c} 条</span>' for l, c in zip(bl, bc))}</div>
 <p class="sub">最近到期：{"；".join(f'<a href="#{x["gid"]}">{x["gid"]}</a> {x["due"]}' for x in nxt)}。</p>
 </section>
+{week(items)}
 <section><h2>总账</h2>
 <div class="lg-f"><select id="fk" aria-label="类型"><option value="">判断 + 预测</option><option>判断</option><option>预测</option></select>
 <select id="fc" aria-label="链"><option value="">全部链</option>{"".join(f"<option>{c}</option>" for c in chains)}</select>
@@ -137,6 +163,8 @@ def render(doc):
             elif x.get('reason'):
                 dl.append(('作废说明', E(x['reason'])))
             dl.append(('结果', E(x['outcome']) + (f' · Brier {x["brier"]:.3f}' if x['brier'] is not None else '')))
+        if x.get('ev'):
+            dl.append(('证据记录', '<ul class="lg-ev">' + ''.join(evli(e) for e in sorted(x['ev'], key=lambda e: e['d'], reverse=True)) + '</ul>'))
         o.append(f'<li class="lg-it" id="{x["gid"]}" data-k="{x["kind"]}" data-c="{E(x["chain"])}" data-s="{x["status"]}">'
                  f'<div class="lg-h"><span class="gid">{x["gid"]}</span><span>旧编号 {E(x["old"])}</span><span>·</span><a href="{x["page"]}">{E(x["chain"])}{"" if x["book"] == "全球" else " · 中国账本"}</a><span class="st st-{x["status"]}">{x["status"]}</span></div>'
                  f'<p class="lg-t">{E(x["text"])}</p><dl class="lg-d">' + ''.join(f'<dt>{a}</dt><dd>{b}</dd>' for a, b in dl) + '</dl></li>')

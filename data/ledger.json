@@ -1,6 +1,6 @@
 {
  "schema": "ledger/v1",
- "updated": "2026-10-22",
+ "updated": "2026-10-23",
  "note": "全局判断总账（唯一来源）。判断原文与各研究页一致，不在这里改写；概率为 2026-10-22 初稿，待 John 确认。打分：到期后 outcome 填 命中/未中，build.py 自动算 Brier =（概率 − 结果）²，结果命中=1、未中=0。",
  "status_legend": {
   "有效": "页面上“未触发”",
@@ -245,7 +245,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "10-21 英伟达公告：Amkor 中介层晶圆产能到 2028 年底扩 >300%，与“2028 转松”同向（不改受挑战状态）",
+     "src": "https://nvidianews.nvidia.com/news/nvidia-and-supply-chain-partners-expand-capacity-to-accelerate-ai-infrastructure-buildout"
+    }
+   ]
   },
   {
    "gid": "G15",
@@ -330,7 +338,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "10-21 英伟达公告预付款扩载板：3 年载板产能 2.5 倍（Ibiden 大野 2028Q1 投产、欣兴 2027Q2 起加产能、SEMCO 加入）；黄仁勋“产能就是约束”。买方出钱扩产也可能压住载板涨价（G11 方向待 John 判断）",
+     "src": "https://nvidianews.nvidia.com/news/nvidia-and-supply-chain-partners-expand-capacity-to-accelerate-ai-infrastructure-buildout"
+    }
+   ]
   },
   {
    "gid": "G20",
@@ -398,7 +414,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "生益科技预告前三季度归母净利 64.6–68.7 亿（+164%~+181%），Q3 单季环比约 +49%~+68%；原因是覆铜板量价齐升（含生益电子贡献）。正式三季报 10-30",
+     "src": "http://static.cninfo.com.cn/finalpage/2026-10-17/1225608514.PDF"
+    }
+   ]
   },
   {
    "gid": "G24",
@@ -466,7 +490,21 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "10-21 英伟达预付扩载板产能（3 年 2.5 倍），说明 ABF 载板仍是被点名的约束",
+     "src": "https://nvidianews.nvidia.com/news/nvidia-and-supply-chain-partners-expand-capacity-to-accelerate-ai-infrastructure-buildout"
+    },
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "10 月电子布再涨：7628 +1.5 元/米，2116、1080 各 +2.5 元/米；原因是织布机紧、下游超预期（证券日报引国金 10-09 研报）",
+     "src": "http://www.ce.cn/cysc/newmain/yc/jsxw/202610/t20261016_3259796.shtml"
+    }
+   ]
   },
   {
    "gid": "G28",
@@ -534,7 +572,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "中材科技定增净额 44.62 亿，投年产 3,500 万米低介电布 + 2,400 万米超低损耗低介电布；平安电工拟募 ≤13 亿扩高性能电子布——二代布供给在加码",
+     "src": "http://www.ce.cn/cysc/newmain/yc/jsxw/202610/t20261016_3259796.shtml"
+    }
+   ]
   },
   {
    "gid": "G32",
@@ -551,7 +597,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "10-22 COMEX 近月转为对 LME 贴水，金属回流 LME 仓库；LME 库存 27.3 万吨（7-24 以来最高，约 62% 在美国），LME 三月铜跌至五周低点",
+     "src": "https://www.kitco.com/news/off-the-wire/2026-10-22/copper-price-falls-five-week-low-lme-inventory-build-continues"
+    }
+   ]
   },
   {
    "gid": "G33",
@@ -653,7 +707,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "Mysteel：10 月国内检修冶炼厂明显增多，原料难采、硫酸价跌导致部分减产；精铜出口预计降到 1.5–2 万吨",
+     "src": "https://www.mysteel.net/analysis/5145863-sept-refined-copper-imports-rebound-mom-while-exports-shrink-in-china"
+    }
+   ]
   },
   {
    "gid": "G39",
@@ -688,7 +750,15 @@
    "reason": "10 月上旬 +170.9%、前 20 天芯片 +222.5%，下旬要大幅失速才会跌破 +150%",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "韩国 10 月 1–20 日芯片出口 275.2 亿美元，同比 +222.5%（工作日 13 天 vs 去年 10.5 天；日均出口 +65.9%）；全月数据 11-01 发布",
+     "src": "https://en.yna.co.kr/view/AEN20261021002051320"
+    }
+   ]
   },
   {
    "gid": "P002",
@@ -1030,7 +1100,15 @@
    "reason": "官方路线图仍是约 1TB，降规格属于逆共识判断",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "待核",
+     "t": "TrendForce 10-16 HBM 月报称 Rubin Ultra 改用 8-Hi（单 GPU HBM 容量约 −33%）；Digitimes 10-14 称 Rubin 主体仍是 12-Hi；英伟达未确认。若属实利于本预测（≤384GB），概率是否调整待 John",
+     "src": "https://www.trendforce.com/news/2026/10/20/news-dram-prices-seen-rising-20-qoq-in-4q26-despite-slower-gains-ai-demand-tight-supply-support-outlook/"
+    }
+   ]
   },
   {
    "gid": "P021",
@@ -1642,7 +1720,15 @@
    "reason": "COMEX–LME 价差隐含约 8% 开征概率，政治不确定性另留余量",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "待核",
+     "t": "精铜 232 关税仍无决定；9 月中旬起市场关税预期降温，COMEX−LME 价差收窄并在 10-22 转为贴水（市场定价方向与本预测一致，不是政策证据）",
+     "src": "https://www.kitco.com/news/off-the-wire/2026-10-22/copper-price-falls-five-week-low-lme-inventory-build-continues"
+    }
+   ]
   },
   {
    "gid": "P055",
@@ -1786,7 +1872,15 @@
    "reason": "9 月进口同比 −16.7%，全年大概率低于 2025 年",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-23",
+     "w": "支持",
+     "t": "海关：9 月精铜进口 25.34 万吨（同比 −24%），1–9 月 212.55 万吨（同比 −16.63%）",
+     "src": "https://www.mysteel.net/analysis/5145863-sept-refined-copper-imports-rebound-mom-while-exports-shrink-in-china"
+    }
+   ]
   },
   {
    "gid": "P063",
