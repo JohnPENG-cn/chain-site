@@ -1,0 +1,429 @@
+{
+ "asof": "2026-10-23",
+ "src": "巨潮资讯网 上市公司年度报告“主要销售客户情况”",
+ "rows": [
+  {
+   "code": "300476",
+   "name": "胜宏科技",
+   "fy": 2021,
+   "top5": 22.88,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-04-29/1213221909.PDF"
+  },
+  {
+   "code": "300476",
+   "name": "胜宏科技",
+   "fy": 2022,
+   "top5": 23.76,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-04-20/1216478659.PDF"
+  },
+  {
+   "code": "300476",
+   "name": "胜宏科技",
+   "fy": 2023,
+   "top5": 21.57,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-04-19/1219672549.PDF"
+  },
+  {
+   "code": "300476",
+   "name": "胜宏科技",
+   "fy": 2024,
+   "top5": 20.03,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-03-29/1222949182.PDF"
+  },
+  {
+   "code": "300476",
+   "name": "胜宏科技",
+   "fy": 2025,
+   "top5": 41.98,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-13/1225007455.PDF"
+  },
+  {
+   "code": "002463",
+   "name": "沪电股份",
+   "fy": 2021,
+   "top5": 52.72,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-03-23/1212643055.PDF"
+  },
+  {
+   "code": "002463",
+   "name": "沪电股份",
+   "fy": 2022,
+   "top5": 48.22,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-11-28/1224831827.PDF"
+  },
+  {
+   "code": "002463",
+   "name": "沪电股份",
+   "fy": 2023,
+   "top5": 47.87,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-11-28/1224831829.PDF"
+  },
+  {
+   "code": "002463",
+   "name": "沪电股份",
+   "fy": 2024,
+   "top5": 49.78,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-11-28/1224831828.PDF"
+  },
+  {
+   "code": "002463",
+   "name": "沪电股份",
+   "fy": 2025,
+   "top5": 53.32,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-25/1225027832.PDF"
+  },
+  {
+   "code": "002916",
+   "name": "深南电路",
+   "fy": 2021,
+   "top5": 28.85,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-03-15/1212566170.PDF"
+  },
+  {
+   "code": "002916",
+   "name": "深南电路",
+   "fy": 2022,
+   "top5": 22.9,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-03-15/1216115512.PDF"
+  },
+  {
+   "code": "002916",
+   "name": "深南电路",
+   "fy": 2023,
+   "top5": 19.87,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-03-15/1219307500.PDF"
+  },
+  {
+   "code": "002916",
+   "name": "深南电路",
+   "fy": 2024,
+   "top5": 16.49,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-03-13/1222778134.PDF"
+  },
+  {
+   "code": "002916",
+   "name": "深南电路",
+   "fy": 2025,
+   "top5": 18.42,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-13/1225006760.PDF"
+  },
+  {
+   "code": "603228",
+   "name": "景旺电子",
+   "fy": 2021,
+   "top5": 18.91,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-04-30/1213271555.PDF"
+  },
+  {
+   "code": "603228",
+   "name": "景旺电子",
+   "fy": 2022,
+   "top5": 19.73,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-04-20/1216476332.PDF"
+  },
+  {
+   "code": "603228",
+   "name": "景旺电子",
+   "fy": 2023,
+   "top5": 18.98,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-04-27/1219879416.PDF"
+  },
+  {
+   "code": "603228",
+   "name": "景旺电子",
+   "fy": 2024,
+   "top5": 23.11,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-04-29/1223377812.PDF"
+  },
+  {
+   "code": "603228",
+   "name": "景旺电子",
+   "fy": 2025,
+   "top5": 25.09,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-04-23/1225145528.PDF"
+  },
+  {
+   "code": "002938",
+   "name": "鹏鼎控股",
+   "fy": 2021,
+   "top5": 86.45,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-03-17/1212593714.PDF"
+  },
+  {
+   "code": "002938",
+   "name": "鹏鼎控股",
+   "fy": 2022,
+   "top5": 87.74,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-03-29/1216245992.PDF"
+  },
+  {
+   "code": "002938",
+   "name": "鹏鼎控股",
+   "fy": 2023,
+   "top5": 89.4,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-03-30/1219466957.PDF"
+  },
+  {
+   "code": "002938",
+   "name": "鹏鼎控股",
+   "fy": 2024,
+   "top5": 91.23,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-04-09/1223032925.PDF"
+  },
+  {
+   "code": "002938",
+   "name": "鹏鼎控股",
+   "fy": 2025,
+   "top5": 89.45,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-31/1225062281.PDF"
+  },
+  {
+   "code": "002815",
+   "name": "崇达技术",
+   "fy": 2021,
+   "top5": 22.75,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-04-16/1212942029.PDF"
+  },
+  {
+   "code": "002815",
+   "name": "崇达技术",
+   "fy": 2022,
+   "top5": 28.73,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-04-18/1216441981.PDF"
+  },
+  {
+   "code": "002815",
+   "name": "崇达技术",
+   "fy": 2023,
+   "top5": 24.42,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-04-13/1219596460.PDF"
+  },
+  {
+   "code": "002815",
+   "name": "崇达技术",
+   "fy": 2024,
+   "top5": 22.41,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-04-17/1223109893.PDF"
+  },
+  {
+   "code": "002815",
+   "name": "崇达技术",
+   "fy": 2025,
+   "top5": 22.52,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-04-29/1225231026.PDF"
+  },
+  {
+   "code": "000823",
+   "name": "超声电子",
+   "fy": 2021,
+   "top5": 43.08,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-04-23/1213044117.PDF"
+  },
+  {
+   "code": "000823",
+   "name": "超声电子",
+   "fy": 2022,
+   "top5": 44.87,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-04-22/1216515240.PDF"
+  },
+  {
+   "code": "000823",
+   "name": "超声电子",
+   "fy": 2023,
+   "top5": 45.91,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-03-28/1219424765.PDF"
+  },
+  {
+   "code": "000823",
+   "name": "超声电子",
+   "fy": 2024,
+   "top5": 46.13,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-03-20/1222845103.PDF"
+  },
+  {
+   "code": "000823",
+   "name": "超声电子",
+   "fy": 2025,
+   "top5": 43.07,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-21/1225020573.PDF"
+  },
+  {
+   "code": "603920",
+   "name": "世运电路",
+   "fy": 2021,
+   "top5": 29.06,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-04-26/1213106053.PDF"
+  },
+  {
+   "code": "603920",
+   "name": "世运电路",
+   "fy": 2022,
+   "top5": null,
+   "url": null,
+   "note": "巨潮未检索到年报"
+  },
+  {
+   "code": "603920",
+   "name": "世运电路",
+   "fy": 2023,
+   "top5": 23.68,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-04-25/1219798140.PDF"
+  },
+  {
+   "code": "603920",
+   "name": "世运电路",
+   "fy": 2024,
+   "top5": 33.69,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-04-16/1223102435.PDF"
+  },
+  {
+   "code": "603920",
+   "name": "世运电路",
+   "fy": 2025,
+   "top5": 32.78,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-04-23/1225152639.PDF"
+  },
+  {
+   "code": "688183",
+   "name": "生益电子",
+   "fy": 2021,
+   "top5": 54.02,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-03-25/1212668389.PDF"
+  },
+  {
+   "code": "688183",
+   "name": "生益电子",
+   "fy": 2022,
+   "top5": 49.78,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-03-28/1216233346.PDF"
+  },
+  {
+   "code": "688183",
+   "name": "生益电子",
+   "fy": 2023,
+   "top5": 42.28,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-05-18/1220089643.PDF"
+  },
+  {
+   "code": "688183",
+   "name": "生益电子",
+   "fy": 2024,
+   "top5": 46.24,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-03-28/1222921458.PDF"
+  },
+  {
+   "code": "688183",
+   "name": "生益电子",
+   "fy": 2025,
+   "top5": 65.21,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-04-24/1225167248.PDF"
+  },
+  {
+   "code": "001389",
+   "name": "广合科技",
+   "fy": 2021,
+   "top5": null,
+   "url": null,
+   "note": "巨潮未检索到年报"
+  },
+  {
+   "code": "001389",
+   "name": "广合科技",
+   "fy": 2022,
+   "top5": null,
+   "url": null,
+   "note": "巨潮未检索到年报"
+  },
+  {
+   "code": "001389",
+   "name": "广合科技",
+   "fy": 2023,
+   "top5": 65.59,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-04-29/1219873939.PDF"
+  },
+  {
+   "code": "001389",
+   "name": "广合科技",
+   "fy": 2024,
+   "top5": 61.38,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-04-01/1222975342.PDF"
+  },
+  {
+   "code": "001389",
+   "name": "广合科技",
+   "fy": 2025,
+   "top5": 60.74,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-28/1225044663.PDF"
+  },
+  {
+   "code": "600183",
+   "name": "生益科技",
+   "fy": 2021,
+   "top5": 18.03,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-03-29/1212709283.PDF"
+  },
+  {
+   "code": "600183",
+   "name": "生益科技",
+   "fy": 2022,
+   "top5": 16.69,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-03-29/1216246172.PDF"
+  },
+  {
+   "code": "600183",
+   "name": "生益科技",
+   "fy": 2023,
+   "top5": 15.93,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-03-29/1219448691.PDF"
+  },
+  {
+   "code": "600183",
+   "name": "生益科技",
+   "fy": 2024,
+   "top5": 16.22,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-03-29/1222952338.PDF"
+  },
+  {
+   "code": "600183",
+   "name": "生益科技",
+   "fy": 2025,
+   "top5": 29.71,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-04-25/1225195409.PDF"
+  },
+  {
+   "code": "688519",
+   "name": "南亚新材",
+   "fy": 2021,
+   "top5": 38.97,
+   "url": "https://static.cninfo.com.cn/finalpage/2022-04-15/1212924936.PDF"
+  },
+  {
+   "code": "688519",
+   "name": "南亚新材",
+   "fy": 2022,
+   "top5": 36.14,
+   "url": "https://static.cninfo.com.cn/finalpage/2023-03-22/1216178998.PDF"
+  },
+  {
+   "code": "688519",
+   "name": "南亚新材",
+   "fy": 2023,
+   "top5": 37.2,
+   "url": "https://static.cninfo.com.cn/finalpage/2024-04-27/1219886599.PDF"
+  },
+  {
+   "code": "688519",
+   "name": "南亚新材",
+   "fy": 2024,
+   "top5": 37.73,
+   "url": "https://static.cninfo.com.cn/finalpage/2025-04-17/1223110521.PDF"
+  },
+  {
+   "code": "688519",
+   "name": "南亚新材",
+   "fy": 2025,
+   "top5": 34.96,
+   "url": "https://static.cninfo.com.cn/finalpage/2026-03-26/1225031388.PDF"
+  }
+ ]
+}
