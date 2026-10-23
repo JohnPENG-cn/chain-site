@@ -82,6 +82,22 @@ SRC = [
  ('hizh', '珠海报业 2026-01-12：富山工业园排污总量指标接近饱和（环评约束个案）', 'https://pub-static.hizh.cn/a/202601/12/AP6964c221e4b086489718fbb6.html'),
  ('cupage', '本站铜页 v0.1：LME 铜季度均价 2025Q3 9,792 → 2026Q3 14,120 美元/吨（+44%）', 'cu.html'),
  ('review', '本站 PCB 页 v1 存档（2026-10-20 版）：改判前的原文，供对照', 'pcb_v1.html'),
+ # —— 2026-10-23 追加：原 pcb-map.html 底图来源（合并进 pcb.html），编号接在后面，旧编号不变
+ ('pr25t', 'Prismark 2026-05《Global Leading PCB Companies – 2025》排名表：2025 年臻鼎 58.69 亿美元、欣兴 42.25、东山 35.70、深南 32.95、TTM 29.06、沪电 27.60、胜宏 26.86、华通 24.46、健鼎 23.61、旗胜 22.73；前 100 大合计 871.5 亿美元（含组装与非 PCB 收入约 13.6%）；中国大陆企业约占 36% 产值、台湾约 30%；前 40 大净利率 8.3%', 'https://www.prismark.com/_files/ugd/950e51_7b4250411feb4f89a9c53d4a8aa5f3dd.pdf'),
+ ('iekccl', '工商时报 2026-08-03（IEK 转载）：Prismark 2025 年 CCL（扣除大宗标准型、含 PP）市场 186.76 亿美元（+24.4%）；台光电 16.2%、生益 13.2%、建滔 12.4%；台系四家（台光电、南亚、联茂、台燿）合计 34.4%', 'https://ieknet.iek.org.tw/ieknews/news_open.aspx?nsl_id=993f82be5979424284e465e5ae7ea779'),
+ ('cnasub', '中央社 2025-04-28（引 TPCA）：全球载板前 5 大 欣兴 16%、SEMCO 9.9%、Ibiden 9.3%、AT&S 9.1%、南电 8.7%，合计过半；台湾占载板产值 32.8%、日本 27.6%、韩国 27%', 'https://www.cna.com.tw/news/afe/202504280185.aspx'),
+ ('ajiabf', '味之素官网故事页（2026）：ABF 1999 年上市，FC-BGA 绝缘积层膜全球份额“约 95%”（公司自述）', 'https://www.ajinomoto.com/zh-CN/stories/the-ajinomoto-groups-unexpected-role-in-semiconductor-manufacturing-the-insulating-film-abf-born-from-aminoscience'),
+ ('yole', 'Electronics Weekly 2025-07（Yole《Status of the Advanced IC Substrate Industry 2025》）：先进 IC 载板 2024 年 142 亿美元，2030 年 310 亿美元', 'https://www.electronicsweekly.com/news/business/substrate-market-to-be-worth-31bn-by-2030-2025-07/'),
+ ('dzar', '大族数控 2025 年年报摘要（巨潮 2026-03-31）：机械钻孔机“根据 Prismark 市场预测及公司交付数据测算”2025 年全球份额约 50%；灼识咨询：2024 年 PCB 专用设备全球份额 6.5%（第一）', 'https://static.cninfo.com.cn/finalpage/2026-03-31/1225057159.PDF'),
+ ('m6', 'Panasonic MEGTRON6 产品页：R-5775(N) Dk 3.34 / Df 0.0037 @13GHz（典型值）', 'https://industrial.panasonic.com/ww/products/pt/megtron/megtron6'),
+ ('m7', 'Panasonic MEGTRON7 产品页：R-5785(N) Dk 3.31 / Df 0.0023 @14GHz（典型值）', 'https://industrial.panasonic.com/ww/products/pt/megtron/megtron7'),
+ ('m8', 'Panasonic MEGTRON8 数据表：R-5795(U) Dk 3.08 / Df 0.0012 @14GHz（典型值）', 'https://industrial.panasonic.com/content/data/EM/PDF/ipcdatasheet_R-5795.pdf'),
+ ('tcf', '三井金属（台湾三井铜箔）HSD 铜箔路线图：B 面粗糙度 Rz HVLP 1.5 / HVLP2 1.0 / HVLP3 0.6 / HVLP4 0.5 / HVLP5 0.4 μm（代表值，HVLP5 送样中）', 'https://www.tcf.com.tw/download/50/'),
+ ('msap', 'Electronic Design 2017-10-24：mSAP 用于 HDI，线宽/线距 30/30 μm 走向 25/25、20/20；薄铜 + 图形电镀，线形接近矩形', 'https://www.electronicdesign.com/markets/automation/article/21805746/msap-the-new-pcb-manufacturing-imperative-for-5g-smartphones'),
+ ('cowop', 'TrendForce 2025-07-30：CoWoP（芯片 + 中介层直接贴 PCB，省掉 ABF 载板）仍很早期；板厂存疑；要替代 ABF，PCB 线宽线距需从 20/35 μm 缩到 10/10 μm 以下', 'https://www.trendforce.com/news/2025/07/30/news-cowop-a-game-changer-beyond-cowos-or-just-hype-pcb-makers-stay-skeptical/'),
+ # —— 2026-10-23 追加：财报数据（pcb/filings.py、pcb/top5.py 拉取；脚本不在 build.sh 里，结果存 pcb_data/）
+ ('tsfin', 'Tushare Pro 财务接口（现金流量表、资产负债表、利润表、财务指标，数据源自上市公司定期报告），17 家 A 股 PCB 链公司 FY2015–2025 + 2026H1，2026-10-23 拉取。资本开支 = 购建固定资产、无形资产和其他长期资产支付的现金；折旧 = 现金流量表补充资料的固定资产折旧；在建工程取资产负债表；ROIC、毛利率为 Tushare 口径。2026H1 为半年数，未年化。整理结果：pcb_data/filings.json', 'pcb_data/filings.json'),
+ ('cnar', '巨潮资讯网：12 家公司 2021–2025 年年度报告“主要销售客户情况”（前五名客户合计销售额占年度销售总额比例），2026-10-23 下载核对；逐份年报链接见 pcb_data/top5.json', 'pcb_data/top5.json'),
 ]
 ID = {k: i + 1 for i, (k, _, _) in enumerate(SRC)}
 assert len(ID) == len(SRC), '来源 key 重复'

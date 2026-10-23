@@ -1,35 +1,20 @@
-"""PCB 技术路线图 + 格局图（底图层，v0.1，2026-10-23）→ pcb-map.html。
+"""PCB 技术路线图 + 格局图（底图层）。2026-10-23 起内容并入 pcb.html（第 2、3 章：原理图 / 路线图 / 格局图），由 pcb/page.py import 本文件的 ROAD / AI / MAP / GAPS；\npcb-map.html 只保留为跳转页（旧锚点 #road #ai #map #check #gap #sN 映射到 pcb.html 对应位置）。\n原说明：
 每个数字都挂来源与日期；没有可靠来源的写“数据缺口”，不估。来源：复用 pcb/src.py（2026-10-20 核对）+ 本页新增 NEW（2026-10-23 核对）。
 本页不新增判断/预测，只用 G/P 编号链接到 ledger.html，不改总账任何判断与概率。由 ./build.sh 调用。"""
 import os, sys
 R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(R0, 'pcb'))
-from src import SRC
+from src import SRC, ID
 
-NEW = [
- ('pr25t', 'Prismark 2026-05《Global Leading PCB Companies – 2025》排名表：2025 年臻鼎 58.69 亿美元、欣兴 42.25、东山 35.70、深南 32.95、TTM 29.06、沪电 27.60、胜宏 26.86、华通 24.46、健鼎 23.61、旗胜 22.73；前 100 大合计 871.5 亿美元（含组装与非 PCB 收入约 13.6%）；中国大陆企业约占 36% 产值、台湾约 30%；前 40 大净利率 8.3%', 'https://www.prismark.com/_files/ugd/950e51_7b4250411feb4f89a9c53d4a8aa5f3dd.pdf'),
- ('iekccl', '工商时报 2026-08-03（IEK 转载）：Prismark 2025 年 CCL（扣除大宗标准型、含 PP）市场 186.76 亿美元（+24.4%）；台光电 16.2%、生益 13.2%、建滔 12.4%；台系四家（台光电、南亚、联茂、台燿）合计 34.4%', 'https://ieknet.iek.org.tw/ieknews/news_open.aspx?nsl_id=993f82be5979424284e465e5ae7ea779'),
- ('cnasub', '中央社 2025-04-28（引 TPCA）：全球载板前 5 大 欣兴 16%、SEMCO 9.9%、Ibiden 9.3%、AT&S 9.1%、南电 8.7%，合计过半；台湾占载板产值 32.8%、日本 27.6%、韩国 27%', 'https://www.cna.com.tw/news/afe/202504280185.aspx'),
- ('ajiabf', '味之素官网故事页（2026）：ABF 1999 年上市，FC-BGA 绝缘积层膜全球份额“约 95%”（公司自述）', 'https://www.ajinomoto.com/zh-CN/stories/the-ajinomoto-groups-unexpected-role-in-semiconductor-manufacturing-the-insulating-film-abf-born-from-aminoscience'),
- ('yole', 'Electronics Weekly 2025-07（Yole《Status of the Advanced IC Substrate Industry 2025》）：先进 IC 载板 2024 年 142 亿美元，2030 年 310 亿美元', 'https://www.electronicsweekly.com/news/business/substrate-market-to-be-worth-31bn-by-2030-2025-07/'),
- ('dzar', '大族数控 2025 年年报摘要（巨潮 2026-03-31）：机械钻孔机“根据 Prismark 市场预测及公司交付数据测算”2025 年全球份额约 50%；灼识咨询：2024 年 PCB 专用设备全球份额 6.5%（第一）', 'https://static.cninfo.com.cn/finalpage/2026-03-31/1225057159.PDF'),
- ('m6', 'Panasonic MEGTRON6 产品页：R-5775(N) Dk 3.34 / Df 0.0037 @13GHz（典型值）', 'https://industrial.panasonic.com/ww/products/pt/megtron/megtron6'),
- ('m7', 'Panasonic MEGTRON7 产品页：R-5785(N) Dk 3.31 / Df 0.0023 @14GHz（典型值）', 'https://industrial.panasonic.com/ww/products/pt/megtron/megtron7'),
- ('m8', 'Panasonic MEGTRON8 数据表：R-5795(U) Dk 3.08 / Df 0.0012 @14GHz（典型值）', 'https://industrial.panasonic.com/content/data/EM/PDF/ipcdatasheet_R-5795.pdf'),
- ('tcf', '三井金属（台湾三井铜箔）HSD 铜箔路线图：B 面粗糙度 Rz HVLP 1.5 / HVLP2 1.0 / HVLP3 0.6 / HVLP4 0.5 / HVLP5 0.4 μm（代表值，HVLP5 送样中）', 'https://www.tcf.com.tw/download/50/'),
- ('msap', 'Electronic Design 2017-10-24：mSAP 用于 HDI，线宽/线距 30/30 μm 走向 25/25、20/20；薄铜 + 图形电镀，线形接近矩形', 'https://www.electronicdesign.com/markets/automation/article/21805746/msap-the-new-pcb-manufacturing-imperative-for-5g-smartphones'),
- ('cowop', 'TrendForce 2025-07-30：CoWoP（芯片 + 中介层直接贴 PCB，省掉 ABF 载板）仍很早期；板厂存疑；要替代 ABF，PCB 线宽线距需从 20/35 μm 缩到 10/10 μm 以下', 'https://www.trendforce.com/news/2025/07/30/news-cowop-a-game-changer-beyond-cowos-or-just-hype-pcb-makers-stay-skeptical/'),
-]
+# NEW 已并入 pcb/src.py（2026-10-23），编号接在原 80 条之后
+NEWK = {'pr25t','iekccl','cnasub','ajiabf','yole','dzar','m6','m7','m8','tcf','msap','cowop'}
 
 USE = ['prq2', 'pr25t', 'prtop25', 'ms', 'tpu', 'kyber', 'hf', 'm6', 'm7', 'm8', 'emcir', 'udn2', 'doosan', 'tcf', 'mitjan', 'mitqa', 'mitsuiq1', 'ctcuf', 'ctcud', 'uacu', 'bfc', 'tgh1', 'hh', 'tft', 'tfn', 'cq', 'gsq', 'jm', 'sq', 'dc',
        'iekccl', 'sy', 'hd', 'sn', 'cnasub', 'ajiabf', 'yole', 'mdjabf', 'cnyabf', 'ctsub', 'uad', 'dzar', 'msap', 'cowop']
-ALL = {k: (t, u) for k, t, u in SRC + NEW}
-NEWK = {k for k, _, _ in NEW}
-NUM = {k: i for i, k in enumerate(USE, 1)}
 
 
-def S(*k):
-    return '<span class="tag t-src">' + ' '.join(f'<a href="#s{NUM[x]}">源{NUM[x]}</a>' for x in k) + '</span>'
+def S(*k):   # 合并进 pcb.html 后统一用 pcb/src.py 的编号（#srcN）
+    return '<span class="tag t-src">' + ' '.join(f'<a href="#src{ID[x]}">源{ID[x]}</a>' for x in k) + '</span>'
 
 
 E = '<span class="tag t-est">推算</span>'
@@ -167,42 +152,21 @@ ol.src{font-size:13px;line-height:1.6;padding-left:22px;word-break:break-word}ol
 </style>"""
 
 
+# 旧 pcb-map.html 锚点 → pcb.html 新位置
+HASH = {'road': 'road', 'ai': 'road-ai', 'map': 'pattern', 'check': 'check', 'gap': 'gaps', 'src': 'src'}
+
+
 def main():
-    w = []
-    a = w.append
-    a('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-      '<!-- 由 pcb/map.py 生成，不要手改；改内容请改 pcb/map.py 后跑 ./build.sh -->\n'
-      '<title>PCB 技术路线图 + 格局图 · 产业链情报研究中心</title><meta name="description" content="PCB 链底图：技术怎么一代代升级、每一环谁说了算、利润在哪。每个数字挂来源与日期。">\n'
-      '<link rel="stylesheet" href="assets.css"><script src="theme.js"></script>' + CSS + '</head><body>\n'
-      '<header class="top"><div class="wrap"><a class="brand back" href="./" aria-label="返回首页">首页</a><span class="sp"></span><a class="btn" href="pcb.html">PCB 研究页</a><a class="btn" href="ledger.html">总账</a><span class="pill">底图 v0.1</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>\n'
-      '<main class="wrap">\n')
-    a('<section><div class="kicker">PCB 链 · 底图层 · 2026-10-23 · 先看底图，再看 <a href="pcb.html">PCB 研究页</a>的判断</div><h1>PCB 技术路线图 + 格局图</h1>\n'
-      '<div class="card bluf"><b>一句话：</b>PCB 每升一代，难点都从“板厂会不会做”往上游“材料够不够、认不认证”移。'
-      '所以集中度和定价权是倒过来的：最上游的 ABF 膜、低 Dk/低 CTE 玻纤布、HVLP4/5 铜箔是一两家日企说了算；CCL 前 3 约四成；板厂最分散，利润分成 AI 板和普通板两头。'
-      '对应总账 ' + L('G23') + '（利润往上游）、' + L('G26') + '（两种行情）、' + L('G27') + '（最硬约束）。</div>\n'
-      '<div class="note">读法：卡片点开看“改了什么 / 为什么 / 卡在哪 / 谁领先”。<span class="tag t-src">源N</span> 跳到页末来源（含日期）；<span class="tag t-est">推算</span> 是用来源里的数自己加总；' + GAP + ' 表示没有可靠公开数据，不估。G/P 编号链接到总账，本页不改任何判断和概率。</div></section>\n')
-    a('<section id="road"><div class="kicker">一 · 技术路线图（通用代际）</div><h2>板子是怎么一代代变“密”的</h2>\n')
-    for i, r in enumerate(ROAD):
-        a(card(r) + ('\n<div class="arrow">↓ 线更细、孔更小</div>\n' if i < len(ROAD) - 1 else '\n'))
-    a('</section>\n<section id="ai"><div class="kicker">二 · AI 服务器带来的新变量</div><h2>AI 板难在哪：层数、材料、结构</h2>\n'
-      '<div class="note">Ⓐ–Ⓓ 已在出货或爬坡；Ⓔ 推迟；Ⓕ 还在测试。</div>\n')
-    a('\n'.join(card(r, True) for r in AI) + '\n</section>\n')
-    a('<section id="map"><div class="kicker">三 · 格局图</div><h2>每一环：谁占多少、谁能涨价、钱在哪</h2>\n'
-      '<div class="note">从上游到下游排。越往上越集中、越有定价权，这是利润往上游走的结构原因。</div>\n'
-      '<div class="tbl"><table class="mp stack"><thead><tr><th>环节</th><th>集中度</th><th>头部与份额</th><th>定价权</th><th>利润池</th><th>账本</th></tr></thead><tbody>\n')
-    for seg, c, top, pw, pf, led in MAP:
-        a(f'<tr><td><b>{seg}</b></td><td data-l="集中度">{c}</td><td data-l="头部与份额">{top}</td><td data-l="定价权">{pw}</td><td data-l="利润池">{pf}</td><td data-l="账本">{" ".join(led)}</td></tr>\n')
-    a('</tbody></table></div></section>\n')
-    a('<section id="check"><div class="kicker">四 · 一线校验（请 John 回答）</div><h2>三个问题，你的工厂比公开数据更早知道</h2>\n')
-    for i, (q, d, why) in enumerate(CHECK, 1):
-        a(f'<div class="card qq"><b>Q{i} {q}</b><p>{d}</p><p class="note">为什么问：{why}</p></div>\n')
-    a('</section>\n<section id="gap"><div class="kicker">五 · 数据缺口</div><h2>还不知道的</h2><div class="card"><ul>' + ''.join(f'<li>{g}</li>' for g in GAPS) + '</ul></div></section>\n')
-    a('<section id="src"><div class="kicker">来源</div><ol class="src">' + ''.join(
-        f'<li id="s{NUM[k]}">{ALL[k][0]}（{"2026-10-23" if k in NEWK else "2026-10-20"} 核对）· <a href="{ALL[k][1]}" target="_blank" rel="noopener">链接</a></li>' for k in USE) + '</ol>'
-      '<div class="note">2026-10-20 核对的沿用 PCB 研究页来源表；标“弱”的是专家纪要或转述。</div></section>\n')
-    a('</main><footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="pcb.html">PCB 研究页</a> · <a href="ledger.html">总账</a></footer></body></html>\n')
-    open(os.path.join(R0, 'pcb-map.html'), 'w', encoding='utf-8').write(''.join(w))
-    print('pcb-map.html', f'{len(USE)} 个来源')
+    js = ('var h=location.hash.slice(1),M=' + __import__('json').dumps(HASH) + ',U=' + __import__('json').dumps({f's{i}': f'src{ID[k]}' for i, k in enumerate(USE, 1)}) +
+          ';location.replace("pcb.html#"+(M[h]||U[h]||"layers"));')
+    html = ('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n'
+            '<!-- 由 pcb/map.py 生成：底图已并入 pcb.html（2026-10-23），本页只做跳转 -->\n'
+            '<title>PCB 底图已并入 PCB 研究页</title><meta http-equiv="refresh" content="0; url=pcb.html#layers"><link rel="canonical" href="pcb.html">'
+            f'<script>{js}</script></head><body style="font-family:-apple-system,sans-serif;padding:24px">'
+            '<p>PCB 技术路线图 + 格局图已并入 <a href="pcb.html#layers">PCB 研究页</a>（第 2、3 章）。正在跳转…</p>'
+            '<ul><li><a href="pcb.html#road">技术路线图</a></li><li><a href="pcb.html#pattern">格局图</a></li><li><a href="pcb.html#check">一线校验</a></li><li><a href="pcb.html#gaps">数据缺口</a></li></ul></body></html>\n')
+    open(os.path.join(R0, 'pcb-map.html'), 'w', encoding='utf-8').write(html)
+    print('pcb-map.html → 跳转到 pcb.html（旧锚点已映射）')
 
 
 if __name__ == '__main__':

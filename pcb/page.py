@@ -1,4 +1,4 @@
-"""PCB 页内容 spec v0.2（行业版，layout='v2'）：一句话 → 行业地图 → 短缺检验 → 机制 + 价格分解 → 三条核心判断 → AI 下钻 → 一线校验 → 证伪 / 台账 → 底稿 13 步（折叠）→ 读后五问。
+"""PCB 页内容 spec v0.3（九章研究版，layout='v3'，模板 tpl/page_v3.py，新章节内容在 pcb/research.py；2026-10-23）。v0.2 原说明：：一句话 → 行业地图 → 短缺检验 → 机制 + 价格分解 → 三条核心判断 → AI 下钻 → 一线校验 → 证伪 / 台账 → 底稿 13 步（折叠）→ 读后五问。
 由 tpl/page.py → tpl/page_v2.py 渲染成 pcb.html。行业层内容在 pcb/industry.py；模型数字来自 pcb/build.py 写出的 pcb_data/model_out.json；来源编号来自 pcb/src.py。
 旧版 v0.1（逻辑层 + 金字塔）冻结为 pcb_v1.html，不由本文件生成。"""
 import json, os, sys
@@ -56,13 +56,13 @@ TOCBLOCK = f"""<div class="card"><b>推导过程（每一步都能在 Excel「TO
 STAGE_TBL = '<div class="tbl"><table id="pcb-stT" class="stack"><thead><tr><th>环节</th><th>2025</th><th>2026</th><th>2027 基准</th><th>依据</th><th>来源</th></tr></thead><tbody></tbody></table></div>'
 
 SPEC = dict(
- layout='v2',
- file='pcb.html', title='PCB 印制电路板', pill='PCB v0.2', other=('cowos.html', 'CoWoS ⇄'), archive=('pcb_v1.html', '旧版 v1'), scripts=['pcb.js'],
- vbar='<b>新：<a href="pcb-map.html">技术路线图 + 格局图（底图）→</a></b> · v0.2（2026-10-21）新结构：先看全行业，AI 是下钻。核心判断已改（理由见<a href="#log">更新记录</a>）· 对比旧版：<a href="pcb_v1.html">v1 存档（2026-10-20）→</a>',
+ layout='v3',
+ file='pcb.html', title='PCB 印制电路板', pill='PCB v0.3', other=('cowos.html', 'CoWoS ⇄'), archive=('pcb_v1.html', '旧版 v1'), scripts=['pcb.js'],
+ vbar='<b>v0.3（2026-10-23）九章研究版</b>：顶部先写主要矛盾（扩产潮 vs 需求持续多久）和什么会证明我们错；原“底图”页的分层图、路线图、格局图已并入<a href="#ch2">第 2 章</a>、<a href="#ch3">第 3 章</a>；补了 A 股财报数据（资本开支、在建工程、ROIC、前五大客户）。v0.2 的核心判断与概率未改 · <a href="pcb_v1.html">v1 存档 →</a>',
  ledgers=[('ai', 'gl', 'AI 下钻', f'出货约束是 ABF 载板（{ABF}）；PCB 材料里 HVLP3+ 铜箔约 {CU} 只是预测口径，市场信号只支持 HVLP4/5 认证瓶颈'),
           ('cn', 'cnl', '中国账本', f'国产卡被 HBM 卡在约 {CN["WHK27"]*100:.0f} 万张，PCB 链不是约束；国内短板在 Low-CTE 纱、HVLP5 和进口设备')],
- kicker='PCB 小链 · v0.2 行业版 · 更新 <span id="pcb-upd"></span> · 统一单位接 <a href="cowos.html">CoWoS</a> / <a href="hbm.html">HBM</a> 页',
- card=f'全行业：2026 年是"AI 景气 + 成本通胀"两种行情；真缺的是 ABF/BT 载板和玻纤布，其次是设备；HVLP4/5 铜箔是认证瓶颈，HVLP3+ 缺口只是预测。中国账本：国产卡被 HBM 卡住，PCB 链不是约束{E}',
+ kicker='PCB 小链 · v0.3 九章研究版 · 更新 <span id="pcb-upd"></span> · 统一单位接 <a href="cowos.html">CoWoS</a> / <a href="hbm.html">HBM</a> 页',
+ card='v0.3 主要矛盾：板厂扩产潮 vs AI 需求能持续多久——10 家 A 股板厂 2026 上半年资本开支是折旧的 5.8 倍（上一轮高点 2020 年 3.7 倍），产能 2027–28 年到；次要矛盾：利润往扩得慢的玻纤布、钻针、载板走，但大客户越来越集中。',
  keys=[('1,134 亿美元', f'2026E 全球 PCB（+32.1%，面积 +10.9%）{S("prq2")}'), ('3 / 4', f'ABF 载板短缺信号成立数（实缺）{S("mdjabf", "cnyabf")}'),
        ('+5–10%', f'HVLP 高阶加工费累计涨幅（不是缺货式涨价）{S("ctcuf")}'), ('< 10%', f'2025 年多数板厂增速（AI 龙头 > 50%）{S("prtop25")}')],
  gov=GOV,
@@ -245,8 +245,8 @@ SPEC = dict(
 <div class="card"><div class="tbl"><table><thead><tr><th>输出</th><th>2026</th><th>2027</th><th>说明</th></tr></thead><tbody id="pcb-ifT-b"></tbody></table></div></div></div>
 <p class="card" style="margin-top:12px"><b>约束公式</b><br><span id="pcb-formula"></span></p></div>'''),
  ],
- src_small='2026-10-20 / 10-21 打开 · 局限',
- src='''<p class="sub">均于 2026-10-20（第 1–58 条）或 2026-10-21（第 59 条起）用 curl 或浏览器打开核对（标"只看到搜索摘要 / 摘要页"的除外）。券商数据多为二手转述，标在标题里；纪要、自媒体标"弱"。</p><ol class="src" id="pcb-srcL"></ol>
+ src_small='2026-10-20 / 10-21 / 10-23 打开 · 局限',
+ src='''<p class="sub">均于 2026-10-20（第 1–58 条）或 2026-10-21（第 59 条起）用 curl 或浏览器打开核对（标"只看到搜索摘要 / 摘要页"的除外）。券商数据多为二手转述，标在标题里；纪要、自媒体标"弱"。第 81–92 条原在底图页（pcb-map.html），2026-10-23 并入本页、编号改为全站统一；第 93–94 条是 2026-10-23 拉取的 Tushare 财务指标和巨潮年报（前五大客户），原始文件不入库，汇总在 pcb_data/。</p><ol class="src" id="pcb-srcL"></ol>
 <h3>局限（公开数据补不了的）</h3><ul style="font-size:14px" id="pcb-lim"></ul>''',
  log='''<div class="tbl"><table id="pcb-logT"><tbody></tbody></table></div>
 <p><b>版本对比</b>：<a href="pcb_v1.html">旧版 v1 存档（2026-10-20）</a> ⇄ 本页 v0.2。</p>
