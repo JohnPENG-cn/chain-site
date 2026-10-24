@@ -199,3 +199,6 @@
 92. TrendForce 2025-07-30：CoWoP（芯片 + 中介层直接贴 PCB，省掉 ABF 载板）仍很早期；板厂存疑；要替代 ABF，PCB 线宽线距需从 20/35 μm 缩到 10/10 μm 以下 https://www.trendforce.com/news/2025/07/30/news-cowop-a-game-changer-beyond-cowos-or-just-hype-pcb-makers-stay-skeptical/
 93. Tushare Pro 财务接口（现金流量表、资产负债表、利润表、财务指标，数据源自上市公司定期报告），17 家 A 股 PCB 链公司 FY2015–2025 + 2026H1，2026-10-23 拉取。资本开支 = 购建固定资产、无形资产和其他长期资产支付的现金；折旧 = 现金流量表补充资料的固定资产折旧；在建工程取资产负债表；ROIC、毛利率为 Tushare 口径。2026H1 为半年数，未年化。整理结果：pcb_data/filings.json pcb_data/filings.json
 94. 巨潮资讯网：12 家公司 2021–2025 年年度报告“主要销售客户情况”（前五名客户合计销售额占年度销售总额比例），2026-10-23 下载核对；逐份年报链接见 pcb_data/top5.json pcb_data/top5.json
+95. Tushare Pro 分红送股（dividend，取“实施”记录，现金分红 = 每股派息（税前）× 基准股本，按除息日所在年份归年）与股票回购（repurchase，取“完成”记录；同一回购方案的“完成”行是累计进度，按方案取最大值；剔除价格上下限相同且金额 < 0.2 亿元的限制性股票回购注销），18 家（17 家 + 兴森科技），2026-10-24 拉取；兴森科技财报口径同 tsfin。整理结果：pcb_data/scorecard.json pcb_data/scorecard.json
+96. MOPS 季报（经 FinMind API 下载）：欣兴 3037、南电 8046、景硕 3189 季度营收与毛利率，2019Q1–2026Q2，2026-10-24 下载；整理结果：pcb_data/scorecard.json https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockFinancialStatements&data_id=8046&start_date=2019-01-01
+97. 巨潮资讯网：宏和科技、鼎泰高科、兴森科技 2021–2025 年年度报告“主要销售客户情况”（前五名客户合计销售额占年度销售总额比例；鼎泰 2022 年上市，无 2021 年报），2026-10-24 下载核对；逐份年报链接见 pcb_data/scorecard.json pcb_data/scorecard.json

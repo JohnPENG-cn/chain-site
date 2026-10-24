@@ -31,6 +31,14 @@ table.fin tr.sum td{font-weight:700;border-top:1px solid var(--line)}.neg{color:
 .fq{background:var(--card);border-radius:var(--r-card);padding:12px 14px;margin:0 0 8px}.fq b{font-size:16px}.fq p{margin:4px 0;font-size:15px}
 .cls{columns:2;column-gap:24px}@media(max-width:700px){.cls{columns:1}}
 .pill.gap{background:var(--hig-warn-fill);color:var(--warn);font-size:11px}
+table.scm{border-collapse:separate;border-spacing:3px;width:100%;max-width:640px}table.scm th{font-size:12px;color:var(--mut);font-weight:600;text-align:center;padding:2px 3px;line-height:1.3}
+table.scm tbody th{text-align:left;color:var(--fg,inherit);font-size:13.5px;white-space:nowrap;padding-right:6px}
+td.sc{text-align:center;font-weight:700;font-size:15px;border-radius:6px;padding:7px 2px;min-width:30px;font-variant-numeric:tabular-nums}
+td.s5{background:var(--hig-ok-fill);color:var(--hig-tx-green)}td.s4{background:color-mix(in srgb,var(--hig-ok-fill) 50%,transparent);color:var(--hig-tx-green)}
+td.s3{background:var(--hig-gray-fill)}td.s2{background:color-mix(in srgb,var(--hig-risk-fill) 55%,transparent);color:var(--hig-tx-red)}td.s1{background:var(--hig-risk-fill);color:var(--hig-tx-red)}
+td.s0{background:transparent;border:1px dashed var(--line);color:var(--mut);font-weight:400}td.sc.avg{background:var(--hig-tint-fill)}td.sc.fl{font-weight:600;font-size:13.5px}
+table.scev td.sc{font-size:13px;padding:3px 6px;min-width:0}table.scev td:nth-child(2){width:3em}
+.sc-hh{background:var(--card);border-radius:var(--r-card);padding:12px 14px;margin:10px 0;border-left:4px solid var(--warn)}.sc-hh h4{margin:0 0 6px}.sc-hh p{font-size:15px;line-height:1.65;margin:0 0 .5em}
 </style>
 '''
 
@@ -71,6 +79,47 @@ def fin_tables():
               top5={n: {str(k): v for k, v in d.items()} for n, d in R.T5.items()})
     return capt, roict, t5t, '<script>window.PCBFIN=' + json.dumps(js, ensure_ascii=False) + '</script>'
 
+
+
+SHORT = dict(board='AI 板厂', cloth='电子布', drill='钻针', sub='IC 载板', ccl='CCL')
+
+
+def scorecard(w, tbl, more):
+    """第 ④ 章：回报持续性打分卡（2026-10-24）。数据与证据全在 pcb/research.py 的 SCORE / CHECK / ALLOC。"""
+    cell = lambda v: f'<td class="sc s{v}">{v}</td>' if v is not None else '<td class="sc s0" title="待补">?</td>'
+    body = ''
+    for r in R.SCORE:
+        body += (f'<tr><th scope="row">{SHORT[r["k"]]}</th>' + ''.join(cell(c[0]) for c in r['cells'])
+                 + f'<td class="sc avg">{r["avg"]:.1f}</td><td class="sc fl{" neg" if r["floor"] < 0 else ""}">{r["floor"]:.0f}%</td></tr>')
+    head = '<tr><th>环节</th>' + ''.join(f'<th>{d[0]}</th>' for d in R.DIMS) + '<th>均分</th><th>谷底<br>毛利率</th></tr>'
+    w('<div id="score"><h3 class="sec-h">回报持续性打分卡：钱是护城河挣的，还是缺货挣的</h3>'
+      '<p>借 Marathon《Capital Returns》看模拟芯片的办法——不看需求多大，看供给侧：别人能不能复制、客户敢不敢换、换代会不会让产能作废、要不要一直砸钱。六维各 1–5 分，5 = 回报更能持续；最后一列“谷底毛利率”是上一轮下行（2021–2025）里同环节最抗跌那家的最低毛利率，用来检验打分。</p>')
+    w('<div class="tbl"><table class="scm"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>')
+    w(f'<p class="note">{R.SC_NOTE} ? = 待补。谷底毛利率：A 股为年度、台股为单季 {R.SF} {R.S("fm")} {R.SSUB} {R.SD}。</p>\n')
+    w(A.callout('钻针最接近结构性回报，CCL 头部次之；电子布、IC 载板、AI 板厂是周期性回报——技术壁垒高不等于回报能持续，全行业同时扩产时壁垒挡不住。'))
+    w('<ul class="sc-l">' + ''.join(f'<li>{x}</li>' for x in R.SC_CALL[:3]) + '</ul>')
+    w('<div class="sc-hh"><h4>宏和 59%、鼎泰 56%：护城河还是短缺峰值？</h4><p>' + R.SC_CALL[3] + '</p><p>' + R.SC_CALL[4] + '</p>'
+      '<p class="note">这一判断不改主要矛盾（#1 板厂扩产潮 vs 需求持续性；#2 利润往扩得慢的上游迁移），只是把 #2 说细：往上游迁移的利润里，钻针更可能留下来，电子布更可能随 2027–28 年新产能回吐。</p></div>\n')
+    dt = ''.join(f'<tr><td><b>{d[1]}</b></td><td data-l="定义">{d[2]}</td><td data-l="1 分">{d[3]}</td><td data-l="5 分">{d[4]}</td><td data-l="证据数据">{d[5]}</td></tr>' for d in R.DIMS)
+    ev = ''
+    for r in R.SCORE:
+        ev += f'<tr class="sum"><td colspan="3"><b>{r["n"]}</b> · {r["rep"]} · 均分 {r["avg"]:.1f}（{r["cnt"]}/6 格有分）· 判定：{r["v"]}</td></tr>'
+        for d, (v, t) in zip(R.DIMS, r['cells']):
+            ev += f'<tr><td>{d[0]}</td><td class="sc s{v if v is not None else 0}">{v if v is not None else "待补"}</td><td data-l="证据">{t or "待补"}</td></tr>'
+        ck = '；'.join(f'{a} {p} {lo:.1f}% → {q} {hi:.1f}%' for a, p, lo, hi, q in r['chk'])
+        ev += f'<tr><td>谷底检验</td><td>—</td><td data-l="谷底 → 现在">{ck} {R.CHK_SRC[r["k"]]}</td></tr>'
+    w(more('打分定义：六维怎么打 1 分、5 分，用什么数据', tbl(['维度', '定义', '1 分', '5 分', '证据数据'], dt), small='6 维'))
+    w(more('逐格证据：5 个环节 × 6 维 + 谷底检验', tbl(['维度', '分', '证据'], ev, 'hm scev'), small='30 格 · 含待补', wide=True))
+    ar = ''
+    for seg in ('板厂', '覆铜板', '上游', '载板'):
+        for x in [x for x in R.ALLOC if x['seg'] == seg]:
+            ar += (f'<tr><td>{x["n"]}<span class="note"> {seg}</span></td><td>{x["cip"]:.1f}</td><td>{x["r"]:.1f}×</td><td>{x["cap"]:.1f}</td><td>{x["div"]:.1f}</td><td>{x["bb"]:.1f}</td>'
+                   f'<td>{x["pay"]:.0f}%</td></tr>')
+    at = ('<div class="tbl"><table class="fin"><thead><tr><th>公司（亿元）</th><th>在建工程 1H26</th><th>资本开支÷折旧 1H26</th><th>资本开支 2021–25</th><th>现金分红 2021–25</th><th>回购 2021–25</th><th>(分红+回购)÷资本开支</th></tr></thead><tbody>'
+          + ar + '</tbody></table></div>')
+    w(f'<h4 id="alloc">跟踪指标：管理层资本配置</h4><p>{R.ALLOC_CALL}</p>')
+    w(more('逐家资本配置表（18 家）', at + f'<p class="note">分红按除息日归年，回购按方案归到最后一笔“完成”的年份，股权激励回购注销已剔除；兴森科技为 IC 载板参照，含 PCB 业务。{R.SD} {R.SF}</p>', small='18 家 · 2021–2025', wide=True))
+    w('</div>\n')
 
 def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     """阅读模式（body.article）：参照 SemiAnalysis 长文版式。只改摆放，不改内容；来源从行内标签挪到上标脚注 + 图表来源行 + 页末「来源与注释」。"""
@@ -198,7 +247,9 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     w('<div id="buyer">' + fig('f-top5', '买方力量：前五大客户占比（年报）', '<div id="fin-cTop5" class="chart" style="height:300px"></div>',
           f'AI 板厂的客户越来越集中：胜宏 2024 → 2025 年从 {R.T5["胜宏科技"][2024]:.0f}% 升到 {R.T5["胜宏科技"][2025]:.0f}%，生益电子到 {R.T5["生益电子"][2025]:.0f}%；鹏鼎（苹果链）长期约 90%。集中度高 = 客户压价、导入二供的筹码大。{R.SC}') + '</div>\n')
     w(more('前五大客户占比全表', f'{t5t}<p class="note">世运 2022 年报在巨潮未检索到；广合 2023 年上市，之前没有年报。{R.SC}</p>', small='12 家 · 2021–2025', wide=True))
-    w(f'<h3 class="sec-h">份额稳定性</h3><p>2025 年 ROIC 已经分成两组——广合 {R.g("广合科技","2025","roic"):.1f}%、胜宏 {R.g("胜宏科技","2025","roic"):.1f}%、生益电子 {R.g("生益电子","2025","roic"):.1f}%、沪电 {R.g("沪电股份","2025","roic"):.1f}% vs 崇达 {R.g("崇达技术","2025","roic"):.1f}%、超声 {R.g("超声电子","2025","roic"):.1f}%、景旺 {R.g("景旺电子","2025","roic"):.1f}% {R.SF}。高回报只持续了 1–2 年，还看不出是护城河还是周期 {R.E}。</p>\n</section>\n')
+    w(f'<h3 class="sec-h">份额稳定性</h3><p>2025 年 ROIC 已经分成两组——广合 {R.g("广合科技","2025","roic"):.1f}%、胜宏 {R.g("胜宏科技","2025","roic"):.1f}%、生益电子 {R.g("生益电子","2025","roic"):.1f}%、沪电 {R.g("沪电股份","2025","roic"):.1f}% vs 崇达 {R.g("崇达技术","2025","roic"):.1f}%、超声 {R.g("超声电子","2025","roic"):.1f}%、景旺 {R.g("景旺电子","2025","roic"):.1f}% {R.SF}。高回报只持续了 1–2 年，还看不出是护城河还是周期 {R.E}。下面的打分卡就是用来回答这个问题的。</p>\n')
+    scorecard(w, tbl, more)
+    w('</section>\n')
 
     # ===== ⑤ 需求与技术
     chap('ch5', 5, '需求与技术：谁在拉、拉多久', '需求的上一层是云厂商资本开支；技术决定每台机柜用多少、用多好的板。')
