@@ -92,3 +92,28 @@ def compare(rows, left, right, head='', extra=None):
 def stats(items):
     """关键数字一排：[(数, 说明html)]。说明里的来源变成上标。"""
     return '<div class="stat-row">' + ''.join(f'<div><b>{v}</b><span>{k}</span></div>' for v, k in items) + '</div>\n'
+
+
+# ---------------- 说人话（2026-10-26，John：小学生都能听懂）。规则见 docs/PLAIN_LANGUAGE.md
+def gl(term, expl):
+    """行内名词解释：只在全页第一次出现时用。term 正常显示，后面跟一个灰色小括号「＝ 一句大白话」。"""
+    return f'{term}<span class="gl-x">（{expl}）</span>'
+
+
+def one_min(lines, title='一分钟看懂'):
+    """开篇「一分钟看懂」：5 句话，依次回答 是什么 / 钱在哪 / 最大风险 / 盯什么 / 什么算我们错。每句一个意思。"""
+    keys = ('是什么', '钱在哪', '最大风险', '盯什么', '什么算我们错')
+    lis = ''.join(f'<li><span class="om-k">{keys[i] if i < len(keys) else ""}</span>{x}</li>' for i, x in enumerate(lines))
+    return f'<div class="onemin" id="onemin"><span class="pull-k">{title}</span><ol>{lis}</ol></div>\n'
+
+
+def glossary(items, did='gloss', summary='名词小白版：页里的行话，一句话说清', open_=False):
+    """名词表：[(词, 一句话解释, 生活类比或'')]。默认收起，放在开篇；正文第一次出现的词也可以用 gl() 就地解释。"""
+    dl = ''.join(f'<dt>{t}</dt><dd>{e}' + (f'<span class="gs-a">打个比方：{a}</span>' if a else '') + '</dd>' for t, e, a in items)
+    return (f'<details class="more gloss" id="{did}"{" open" if open_ else ""}><summary><span>名词</span><b>{summary}</b><small>{len(items)} 个词</small></summary>'
+            f'<div class="more-b"><dl class="gs">{dl}</dl></div></details>\n')
+
+
+def plain(text, label='说人话'):
+    """在一段专业表述下面补一句大白话（不改原判断，只翻译）。"""
+    return f'<p class="plain"><span class="plain-k">{label}</span>{text}</p>'

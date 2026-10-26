@@ -336,3 +336,17 @@ body.article .rd-toc.open::before{content:"目录";display:block;font-weight:700
 .fn-sheet .fn-t{font-size:15px;line-height:1.65;margin:0 0 var(--s-3);word-break:break-word}
 .fn-sheet .fn-go{display:flex;gap:var(--s-4);flex-wrap:wrap;font-size:14px}
 .fn-sheet .fn-go a{min-height:var(--tap);display:inline-flex;align-items:center}
+/* 12b. 说人话组件（tpl/article.py: one_min / glossary / gl / plain；规则见 docs/PLAIN_LANGUAGE.md） */
+body.article .onemin{background:var(--hig-tint-fill);border-radius:var(--r-card,14px);padding:var(--s-4) var(--s-5);margin:0 0 var(--s-6)}
+body.article .onemin ol{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-2)}
+body.article .onemin li{font-size:17px;line-height:1.7}
+body.article .onemin .om-k{display:inline-block;font-size:12px;font-weight:700;color:var(--tint);min-width:5.5em;margin-right:6px;letter-spacing:.04em}
+@media(max-width:520px){body.article .onemin .om-k{display:block;margin:0}}
+body.article .gl-x{font-size:.86em;color:var(--mut);font-weight:400}
+body.article dl.gs{margin:0;display:grid;gap:2px 0}
+body.article dl.gs dt{font-weight:700;font-size:15.5px;margin-top:var(--s-3)}
+body.article dl.gs dd{margin:2px 0 0;font-size:15px;line-height:1.65}
+body.article dl.gs .gs-a{display:block;color:var(--mut);font-size:14px}
+body.article p.plain{font-size:16px;line-height:1.7;margin:var(--s-2) 0 var(--s-4);padding:var(--s-2) var(--s-3);background:var(--hig-fill);border-radius:8px}
+body.article .plain-k{font-size:12px;font-weight:700;color:var(--tint);margin-right:8px;letter-spacing:.04em}
+body.article ol.wt li .wt-p{display:block;color:var(--mut);font-size:14px;margin-top:2px}

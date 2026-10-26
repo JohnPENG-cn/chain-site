@@ -92,14 +92,15 @@ def scorecard(w, tbl, more):
         body += (f'<tr><th scope="row">{SHORT[r["k"]]}</th>' + ''.join(cell(c[0]) for c in r['cells'])
                  + f'<td class="sc avg">{r["avg"]:.1f}</td><td class="sc fl{" neg" if r["floor"] < 0 else ""}">{r["floor"]:.0f}%</td></tr>')
     head = '<tr><th>环节</th>' + ''.join(f'<th>{d[0]}</th>' for d in R.DIMS) + '<th>均分</th><th>谷底<br>毛利率</th></tr>'
-    w('<div id="score"><h3 class="sec-h">回报持续性打分卡：钱是护城河挣的，还是缺货挣的</h3>'
-      '<p>借 Marathon《Capital Returns》看模拟芯片的办法——不看需求多大，看供给侧：别人能不能复制、客户敢不敢换、换代会不会让产能作废、要不要一直砸钱。六维各 1–5 分，5 = 回报更能持续；最后一列“谷底毛利率”是上一轮下行（2021–2025）里同环节最抗跌那家的最低毛利率，用来检验打分。</p>')
+    w('<div id="score"><h3 class="sec-h">回报持续性打分卡：钱是真本事挣的，还是缺货时运气好</h3>'
+      '<p>这里借用投资书《资本回报》（Marathon）的办法：不问需求有多大，只问“别人能不能抢走这门生意”。六个问题：别人能不能照着做、客户敢不敢换、换了要多麻烦、是不是靠少数大客户、新技术会不会让工厂作废、要不要一直砸钱。每项 1–5 分，5 分 = 高回报更能撑得久。'
+      '最后一列“谷底毛利率”是上一轮行业不景气时（2021–2025），这个环节里最抗跌那家最差的一年（台股是最差一个季度），用来检验打分准不准。</p>')
     w('<div class="tbl"><table class="scm"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>')
     w(f'<p class="note">{R.SC_NOTE} ? = 待补。谷底毛利率：A 股为年度、台股为单季 {R.SF} {R.S("fm")} {R.SSUB} {R.SD}。</p>\n')
-    w(A.callout('钻针最接近结构性回报，CCL 头部次之；电子布、IC 载板、AI 板厂是周期性回报——技术壁垒高不等于回报能持续，全行业同时扩产时壁垒挡不住。'))
+    w(A.callout(R.CALL['score']))
     w('<ul class="sc-l">' + ''.join(f'<li>{x}</li>' for x in R.SC_CALL[:3]) + '</ul>')
     w('<div class="sc-hh"><h4>宏和 59%、鼎泰 56%：护城河还是短缺峰值？</h4><p>' + R.SC_CALL[3] + '</p><p>' + R.SC_CALL[4] + '</p>'
-      '<p class="note">这一判断不改主要矛盾（#1 板厂扩产潮 vs 需求持续性；#2 利润往扩得慢的上游迁移），只是把 #2 说细：往上游迁移的利润里，钻针更可能留下来，电子布更可能随 2027–28 年新产能回吐。</p></div>\n')
+      '<p class="note">这一判断不改主要矛盾（#1 板厂扩产潮 vs 需求能撑多久；#2 利润流向新产能来得慢的上游），只是把 #2 说细：流到上游的利润里，钻针更可能留得住，电子布更可能在 2027–28 年新产能出来后吐回去。</p></div>\n')
     dt = ''.join(f'<tr><td><b>{d[1]}</b></td><td data-l="定义">{d[2]}</td><td data-l="1 分">{d[3]}</td><td data-l="5 分">{d[4]}</td><td data-l="证据数据">{d[5]}</td></tr>' for d in R.DIMS)
     ev = ''
     for r in R.SCORE:
@@ -160,31 +161,30 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     # ===== 开篇：标题 → BLUF 大字摘要 → 关键数字 → 什么会证明我们错
     w(f'<section id="top" data-nav="c" class="hero" data-toc="00 主要矛盾"><div class="kicker">{S["kicker"]} · <a href="#log">更新记录</a></div>\n<h1>PCB：扩产潮能不能等到需求接住</h1>\n'
       f'<p class="dek">{S["vbar"]}</p>\n')
-    w('<div class="bluf" id="bluf"><span class="pull-k">一句话版本</span>' + ''.join(f'<p>{x}</p>' for x in R.BLUF) + A.src_line(R.BLUF_SRC, T, extra=A.strip_fn(R.BLUF_SRC).replace('数字：', '').lstrip('；')) + '</div>\n')
-    keys = [(f'{R.NUMS["rH1"]}×', f'10 家板厂 1H26 资本开支 ÷ 折旧（{R.PEAK} 年高点 {R.NUMS["rPk"]}×）{R.SF}'),
-            (f'{R.NUMS["cipH1"]} 亿', f'在建工程 1H26（2024 末 {R.NUMS["cip24"]} 亿）{R.SF}'),
-            (f'{R.NUMS["roic25"]}%', f'板厂 ROIC 中位数 2025（2023 年 {R.NUMS["roic23"]}%）{R.SF}'),
-            (f'{R.NUMS["sh25"]}%', f'胜宏前五大客户占比 2025（2024 年 {R.NUMS["sh24"]}%）{R.SC}')]
+    w(A.one_min(R.ONE_MIN))  # 2026-10-26 说人话：小学生版五句话，见 docs/PLAIN_LANGUAGE.md
+    w('<div class="bluf" id="bluf"><span class="pull-k">要点版：再多说一点</span>' + ''.join(f'<p>{x}</p>' for x in R.BLUF) + A.src_line(R.BLUF_SRC, T, extra=A.strip_fn(R.BLUF_SRC).replace('数字：', '').lstrip('；')) + '</div>\n')
+    keys = R.STATS  # 说人话版说明，数字同前
     w(A.stats(keys))
     w('<h3 id="prove" class="sec-h">什么会证明我们错</h3><ol class="wt">' + ''.join(f'<li><b>{a}</b><span>{b}</span></li>' for a, b in R.WRONG_TOP) + '</ol>\n')
     w(f'<p class="howto">怎么读：九章从“结论”往下展开到“怎么证伪”，每章先一句导语、一句判断，细表收在“展开细节”里。正文里的小号上标数字<sup class="fn"><a class="fn-a" href="#src93">93</a></sup>是来源编号，点一下看来源，全部列在文末<a href="#src">来源与注释</a>；'
       f'图表下方一行灰字是这张图的来源。{R.E} = Kiko 自估；{R.GAP} = 没有可靠公开数据，不估；{R.PAY} = 付费数据，没看到原文。G / P 编号链接到<a href="ledger.html">总账</a>。'
-      '公开数据整理，<b>不构成投资建议</b>，不对任何个股给买卖意见。</p>\n</section>\n')
+      '看不懂的词，先点开下面的「名词小白版」。公开数据整理，<b>不构成投资建议</b>，不对任何个股给买卖意见。</p>\n')
+    w(A.glossary(R.GLOSS) + '\n</section>\n')
 
     # ===== ① 结论与市场观点
-    chap('ch1', 1, '结论与市场观点：我们和市场哪里不一样', '先说结论，再说和共识的差别；共识只用能公开核到的。')
+    chap('ch1', 1, *R.CH[1])
     w(A.callout(R.BLUF[0]))
     w(A.compare(R.VIEW, '市场 / 卖方', '本页'))
     w(f'<p class="note">{R.VIEW_NOTE}</p>\n')
-    w(f'<h3 class="sec-h">2026 年的现状 <small>v0.2 起的结论，未改</small></h3><p>{S["gov"]}</p>\n')
+    w(f'<h3 class="sec-h">2026 年的现状 <small>v0.2 起的结论，未改</small></h3><p>{S["gov"]}</p>' + A.plain(R.PLAIN_GOV) + '\n')
     w('<div id="claims"><h3 class="sec-h">三条核心判断 <small>每条写了“若我错，你会看到什么”</small></h3><ol class="claims">')
     for i, c in enumerate(S['claims'], 1):
-        w(f'<li><div class="jid">判断 {i} · {c["id"]} · 检查日 {c["due"]}</div><p class="cl-t">{c["t"]}</p><p class="note">依据：{c["ev"]}</p><p class="wr"><b>若我错，你会看到：</b>{c["wrong"]}</p></li>')
+        w(f'<li><div class="jid">判断 {i} · {c["id"]} · 检查日 {c["due"]}</div><p class="cl-t">{c["t"]}</p>' + (A.plain(R.PLAIN_CLAIMS[c["id"]]) if c["id"] in R.PLAIN_CLAIMS else '') + f'<p class="note">依据：{c["ev"]}</p><p class="wr"><b>若我错，你会看到：</b>{c["wrong"]}</p></li>')
     w('</ol></div>\n</section>\n')
 
     # ===== ② 地图与细分
-    chap('ch2', 2, '产业地图与细分：一层一层看', '每一层做什么、怎么升级、谁在做。点开任一层。')
-    w(A.callout('从上游到下游排，越往上越集中、越有定价权。'))
+    chap('ch2', 2, *R.CH[2])
+    w(A.callout(R.CALL[2]))
     w('<div class="lay" id="layers"><div class="ax">↓ 从买家往上游走 · 点开任一层看功能、代际、玩家</div>')
     for L in R.LAYERS:
         led = f'<dt>账本</dt><dd>{R.L(*L["led"])}</dd>' if L['led'] else ''
@@ -224,13 +224,13 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
         w('</div>\n')
 
     # ===== ③ 利润池与成本结构
-    chap('ch3', 3, '利润池与成本结构：钱在哪一层', '先看每一环的格局，再看真实回报（ROIC）和毛利率怎么在变。')
-    w(A.callout(f'钱在扩得慢、认证难的环节，不在吨数：上游里玻纤布、钻针大涨，铜箔仍低。{R.SF}'))
+    chap('ch3', 3, *R.CH[3])
+    w(A.callout(R.CALL[3]))
     mp = ''.join(f'<tr><td><b>{seg}</b></td><td data-l="集中度">{c}</td><td data-l="头部与份额">{top}</td><td data-l="定价权">{pw}</td><td data-l="利润池">{pf}</td><td data-l="账本">{" ".join(led)}</td></tr>\n' for seg, c, top, pw, pf, led in PM.MAP)
-    w('<div id="pattern"><h3 class="sec-h">格局图：谁占多少、谁能涨价、钱在哪</h3><p>从上游到下游排。越往上越集中、越有定价权。</p>\n'
+    w('<div id="pattern"><h3 class="sec-h">格局图：谁占多少、谁能涨价、钱在哪</h3><p>从上游到下游排。“集中度”看几家公司占了多少；“定价权”看谁能说涨就涨。越往上游，最高端那一小段越集中，但铜箔这样的环节集中了也不一定赚钱。</p>\n'
       + more('格局图全表：集中度、头部与份额、定价权、利润池', tbl(['环节', '集中度', '头部与份额', '定价权', '利润池', '账本'], mp, 'mp stack'), small=f'{len(PM.MAP)} 环', open_=True, wide=True) + '</div>\n')
     w(fig('f-gm', '毛利率：2025 → 2026H1（17 家 A 股，公司整体口径）', '<div id="fin-cGm" class="chart" style="height:520px"></div>',
-          f'蓝 = 板厂、青 = 覆铜板、橙 = 上游（玻纤布、钻针、铜箔）。上游里分化很大：玻纤布、钻针大涨，铜箔仍低——钱在扩得慢、认证难的环节，不在吨数。{R.SF}'))
+          f'蓝 = 板厂、青 = 覆铜板、橙 = 上游（玻纤布、钻针、铜箔）。上游里分化很大：玻纤布、钻针大涨，铜箔仍低。钱在新产能来得慢、客户认证难的环节，不在卖得多的环节。{R.SF}'))
     w(fig('f-roic', 'ROIC 中位数：板厂 / 覆铜板 / 上游（2015–2025）', '<div id="fin-cRoic" class="chart" style="height:300px"></div>',
           f'上一轮 2020–21 年扩产后，三个环节的 ROIC 都在 2022–24 年回落，覆铜板和上游一度为负。ROIC 用 Tushare 口径，各家投入资本算法未统一调整 {R.SF}。我们没有逐家算资本成本；如果按制造业常用的约 8% 粗看 {R.E}，2023–24 年多数公司低于资本成本。'))
     w(more('逐家 ROIC 表（2019–2025 + 1H26 毛利率）', f'{roict}<p class="note">红色 = 负值；1H26 ROIC 是半年口径、没年化，所以表里不放。{R.SF}</p>', small='17 家', wide=True))
@@ -241,18 +241,18 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     w('</section>\n')
 
     # ===== ④ 为什么
-    chap('ch4', 4, '为什么：力量、护城河、份额稳定性', '谁有议价力、靠什么守住、份额稳不稳。')
-    w(A.callout('AI 板厂的客户越来越集中：集中度高 = 客户压价、导入二供的筹码大。高回报只持续了 1–2 年，还看不出是护城河还是周期。'))
+    chap('ch4', 4, *R.CH[4])
+    w(A.callout(R.CALL[4]))
     w(more('五力表：供应商议价、买方议价、新进入者、替代、护城河', tbl(['环节', '供应商议价', '买方议价', '新进入者', '替代', '护城河'], ''.join(f'<tr><td><b>{a}</b></td><td data-l="供应商">{b}</td><td data-l="买方">{c}</td><td data-l="新进入">{d}</td><td data-l="替代">{e}</td><td data-l="护城河">{f}</td></tr>' for a, b, c, d, e, f in R.FORCE)) + f'<p class="note">{R.FORCE_NOTE}</p>', small=f'{len(R.FORCE)} 环', wide=True))
     w('<div id="buyer">' + fig('f-top5', '买方力量：前五大客户占比（年报）', '<div id="fin-cTop5" class="chart" style="height:300px"></div>',
-          f'AI 板厂的客户越来越集中：胜宏 2024 → 2025 年从 {R.T5["胜宏科技"][2024]:.0f}% 升到 {R.T5["胜宏科技"][2025]:.0f}%，生益电子到 {R.T5["生益电子"][2025]:.0f}%；鹏鼎（苹果链）长期约 90%。集中度高 = 客户压价、导入二供的筹码大。{R.SC}') + '</div>\n')
+          f'AI 板厂的客户越来越集中：胜宏 2024 → 2025 年从 {R.T5["胜宏科技"][2024]:.0f}% 升到 {R.T5["胜宏科技"][2025]:.0f}%，生益电子到 {R.T5["生益电子"][2025]:.0f}%；鹏鼎（苹果链）长期约 90%。客户越集中，它压价、找第二家供应商时板厂越难说不；不过占比升高，一部分也只是因为最大客户自己的订单涨得快。{R.SC}') + '</div>\n')
     w(more('前五大客户占比全表', f'{t5t}<p class="note">世运 2022 年报在巨潮未检索到；广合 2023 年上市，之前没有年报。{R.SC}</p>', small='12 家 · 2021–2025', wide=True))
     w(f'<h3 class="sec-h">份额稳定性</h3><p>2025 年 ROIC 已经分成两组——广合 {R.g("广合科技","2025","roic"):.1f}%、胜宏 {R.g("胜宏科技","2025","roic"):.1f}%、生益电子 {R.g("生益电子","2025","roic"):.1f}%、沪电 {R.g("沪电股份","2025","roic"):.1f}% vs 崇达 {R.g("崇达技术","2025","roic"):.1f}%、超声 {R.g("超声电子","2025","roic"):.1f}%、景旺 {R.g("景旺电子","2025","roic"):.1f}% {R.SF}。高回报只持续了 1–2 年，还看不出是护城河还是周期 {R.E}。下面的打分卡就是用来回答这个问题的。</p>\n')
     scorecard(w, tbl, more)
     w('</section>\n')
 
     # ===== ⑤ 需求与技术
-    chap('ch5', 5, '需求与技术：谁在拉、拉多久', '需求的上一层是云厂商资本开支；技术决定每台机柜用多少、用多好的板。')
+    chap('ch5', 5, *R.CH[5])
     w(A.callout(R.BLUF[4]))
     w(f'<div id="ai"><h3 class="sec-h">{S["ai_h"]}</h3><p>{S["ai_sub"]}</p>\n'
       + more('各环节：2027 满足率（模型）vs 可观测信号', tbl(['环节', '预测口径（2027 满足率，模型）', '可观测信号（得分）', '判定'], ''.join(f'<tr><td><b>{a}</b></td><td data-l="预测">{b}</td><td data-l="可观测">{c}</td><td class="st {stcls(d)}" data-l="判定">{d}</td></tr>' for a, b, c, d in S['ai_tbl'])), small=f'{len(S["ai_tbl"])} 环', open_=True) + '</div>\n')
@@ -261,8 +261,8 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     w('</section>\n')
 
     # ===== ⑥ 周期与产能
-    chap('ch6', 6, '周期与产能：扩产潮有多大', '主要矛盾的证据在这里：钱已经投出去了，产能 2027–28 年到。')
-    w(A.callout(f'10 家板厂 1H26 资本开支是同期折旧的 {R.NUMS["rH1"]} 倍，高于上一轮扩产高点（{R.PEAK} 年 {R.NUMS["rPk"]} 倍）；在建工程 {R.NUMS["cipH1"]} 亿元，2027–2028 年陆续投产。{R.SF}'))
+    chap('ch6', 6, *R.CH[6])
+    w(A.callout(R.CALL[6]))
     w('<div id="capex">' + fig('f-cap', '10 家 A 股板厂：资本开支、折旧、在建工程（亿元）与资本开支 ÷ 折旧（倍）', '<div id="fin-cCap" class="chart" style="height:340px"></div>',
           f'2026H1 是半年数（柱子只有半年），倍数是同期相除可比。上一轮 {R.PEAK} 年 {R.NUMS["rPk"]}× 之后，板厂 ROIC 中位数 2023 年降到 {R.NUMS["roic23"]}%。2016–2021 年为 8–9 家（生益电子、广合数据不全）。{R.SF}') + '</div>\n')
     w(more('逐家资本开支、折旧倍数、在建工程', f'{capt}<p class="note">{R.SF}</p>', small='10 家板厂', wide=True))
@@ -277,14 +277,14 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     w('</section>\n')
 
     # ===== ⑦ 替代
-    chap('ch7', 7, '替代：什么能绕过最贵的那一环', '每条替代路径：替代什么、现在到哪、看什么信号。')
-    w(A.callout('替代是上游涨价的天花板，也是 #4 观察项。'))
+    chap('ch7', 7, *R.CH[7])
+    w(A.callout(R.CALL[7]))
     w('<ol class="subst">' + ''.join(f'<li><h4>{a}</h4><p>{b}</p><dl><dt>现状</dt><dd>{c}</dd><dt>看什么</dt><dd>{d}</dd>' + (f'<dt>账本</dt><dd>{e}</dd>' if e and e != '—' else '') + '</dl></li>' for a, b, c, d, e in R.SUBST) + '</ol>\n</section>\n')
 
     # ===== ⑧ 中国 vs 海外
-    chap('ch8', 8, '中国 vs 海外', '同一环节，海外龙头和中国龙头差在哪；再看国产 AI 卡这本账。')
+    chap('ch8', 8, *R.CH[8])
     if cn:
-        w(A.callout(cn['gov'], '中国账本判断'))
+        w(A.callout(cn['gov'], '中国账本判断') + A.plain(R.PLAIN_CN))
     w(A.compare([(a, b, c, f'<b>差距</b> {d}') for a, b, c, d in R.CNOS], '海外龙头', '中国龙头'))
     w(f'<p class="note">“差距”是我们的归纳 {R.E}。海外和中国口径不同（季度 / 半年、营业利益率 / 毛利率），只看方向。</p>\n')
     if cn:
@@ -300,7 +300,7 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
     w('</section>\n')
 
     # ===== ⑨ 主要矛盾、指标与证伪
-    chap('ch9', 9, '主要矛盾、先行指标与证伪', '每个矛盾 2–3 个先行指标，写好阈值和“什么算我错”，挂总账编号。')
+    chap('ch9', 9, *R.CH[9])
     w(A.callout(f'{R.WRONG_TOP[0][0]}——{R.WRONG_TOP[0][1]}', '最该盯的证伪'))
     w('<div id="track">')
     for t in R.TRACK:
@@ -309,7 +309,7 @@ def render_v3(S, STEPS, SID, MID, CIRC, CNC):
             w(f'<li><b>{ind}</b><br><span class="k">现在</span> {now}<br><span class="k">阈值</span> {th}<br><span class="k">账本</span> {led}</li>')
         w(f'</ol><div class="wr"><b>证伪：</b>{t["wrong"]}</div></div>')
     w('</div>\n<p class="note">没有总账编号的阈值是本页提议，要变成预测需 John 确认（见下方“待 John 确认”）。</p>\n')
-    w(f'<div id="check"><h3 class="sec-h">一线校验：6 个问题，工厂比公开数据早知道</h3><ol class="fqs">')
+    w(f'<div id="check"><h3 class="sec-h">一线校验：{len(R.FIELD)} 个问题，工厂里的人比公开数据早知道</h3><ol class="fqs">')
     for i, (t, q, why, ref) in enumerate(R.FIELD, 1):
         w(f'<li class="fq"><b>Q{i} {t}</b> <span class="pill">{ref}</span><p>{q}</p><p class="note">为什么问：{why}</p></li>')
     w('</ol>' + more('公开数据替代跟踪（每周五）', f'<p class="sub">{S["check_sub"]}</p>' + tbl(['问题', '公开替代数据', '频率', '判读阈值', '当前读数'], ''.join(f'<tr><td><b>{a}</b></td><td data-l="数据">{b}</td><td data-l="频率">{c}</td><td data-l="阈值">{d}</td><td data-l="当前">{e}</td></tr>' for a, b, c, d, e in S['checks'])), small='v0.2 的四个问题', wide=True) + '</div>\n')
