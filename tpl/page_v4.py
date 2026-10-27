@@ -328,7 +328,7 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
     w('<p>这里借用投资书《资本回报》（Marathon）的办法：不问需求有多大，只问“别人能不能抢走这门生意”。六个问题：别人能不能照着做、客户敢不敢换、换了要多麻烦、是不是靠少数大客户、新技术会不会让工厂作废、要不要一直砸钱。每项 1–5 分，5 分 = 高回报更能撑得久。'
       '最后一列“谷底毛利率”是上一轮行业不景气时（2021–2025），这个环节里最抗跌那家最差的一年（台股是最差一个季度），用来检验打分准不准。</p>')
     w('<div class="tbl"><table class="scm"><thead>' + hd + '</thead><tbody>' + body + '</tbody></table></div>')
-    w(f'<p class="note">{R.SC_NOTE} ? = 待补。谷底毛利率：A 股为年度、台股为单季 {R.SF} {R.S("fm")} {R.SSUB} {R.SD}。</p>\n')
+    sc_note = f'<p class="note">{R.SC_NOTE} ? = 待补。谷底毛利率：A 股为年度、台股为单季 {R.SF} {R.S("fm")} {R.SSUB} {R.SD}。</p>'
     w(A.callout(R.CALL['score']))
     w(more('打分卡读出来的三条 + 宏和 59%、鼎泰 56%：护城河还是短缺峰值？',
            '<ul class="sc-l">' + ''.join(f'<li>{x}</li>' for x in R.SC_CALL[:3]) + '</ul>'
@@ -342,7 +342,7 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
             ev += f'<tr><td>{d[0]}</td><td class="sc s{v if v is not None else 0}">{v if v is not None else "待补"}</td><td data-l="证据">{t or "待补"}</td></tr>'
         ck = '；'.join(f'{a} {p} {lo:.1f}% → {q} {hi:.1f}%' for a, p, lo, hi, q in r['chk'])
         ev += f'<tr><td>谷底检验</td><td>—</td><td data-l="谷底 → 现在">{ck} {R.CHK_SRC[r["k"]]}</td></tr>'
-    w(more('打分定义：六维怎么打 1 分、5 分，用什么数据', tbl(['维度', '定义', '1 分', '5 分', '证据数据'], dt), small='6 维'))
+    w(more('打分定义：分数怎么读、六维怎么打 1 分 / 5 分', sc_note + tbl(['维度', '定义', '1 分', '5 分', '证据数据'], dt), small='6 维'))
     w(more('逐格证据：5 个环节 × 6 维 + 谷底检验', tbl(['维度', '分', '证据'], ev, 'hm scev'), small='30 格 · 含待补', wide=True))
     w(f'<h4 id="alloc">管理层怎么花钱？</h4>' + more('跟踪指标：管理层资本配置（分红 + 回购 vs 建厂投资）', f'<p>{R.ALLOC_CALL}</p>' + f'<p class="note">逐家资本配置表（18 家）在<a href="{P5}#fin">底稿与数据</a>。</p>', small='只跟踪，不打分'))
 
@@ -352,10 +352,9 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
     w(more('海外龙头 vs 中国龙头：逐项差距', A.compare([(a, b, c, f'<b>差距</b> {d}') for a, b, c, d in R.CNOS], '海外龙头', '中国龙头')
            + f'<p class="note">“差距”是我们的归纳 {R.E}。海外和中国口径不同（季度 / 半年、营业利益率 / 毛利率），只看方向。</p>', small=f'{len(R.CNOS)} 项', wide=True))
     if cn:
-        o = [f'<div id="cn" class="cnsec"><div class="kicker">平行账本 · {cn["kicker"]}</div>\n<div class="scqa">']
-        for lab, txt in zip(('背景', '冲突', '问题'), cn['scqa']):
-            o.append(f'<div><b>{lab}</b><span>{txt}</span></div>')
-        o.append('</div>\n<div class="kl cn">')
+        sq = '<div class="scqa">' + ''.join(f'<div><b>{lab}</b><span>{txt}</span></div>' for lab, txt in zip(('背景', '冲突', '问题'), cn['scqa'])) + '</div>'
+        o = [f'<div id="cn" class="cnsec"><div class="kicker">平行账本 · {cn["kicker"]}</div>\n' + more('中国账本从哪来：背景、冲突、问题', sq, small='3 句')]
+        o.append('\n<div class="kl cn">')
         for i, a in enumerate(cn['args'], 1):
             o.append(f'<a href="#c{i}"><span class="i">{CNC[i-1]}</span><span>{nolink(a["claim"])}<span class="k">{nolink(a["key"])}</span></span></a>')
         o.append(f'</div>\n<p class="note">{cn["mece"]}</p></div>\n')
