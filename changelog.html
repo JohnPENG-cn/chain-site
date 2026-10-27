@@ -1,0 +1,87 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- 由 tpl/page_v4.py（链条 5 页模板，见 docs/CHAIN_TEMPLATE.md）根据 pcb/page.py + pcb/research.py + pcb/map.py 生成，不要手改；改内容请改这些文件后跑 ./build.sh -->
+<title>更新记录 · 产业链情报研究中心</title><meta name="description" content="产业链情报研究中心：各研究页的版本说明、并入说明与旧版存档"><link rel="stylesheet" href="assets.css?v=d719aa79da"><script src="theme.js?v=fdaa671bee"></script>
+<script src="vendor/echarts.min.js?v=8f667a68e5"></script><script src="assets/hig-echarts.js?v=2c601d3578"></script><style>
+.v2bar{background:var(--card);border-bottom:1px solid var(--line);font-size:13px;padding:6px 0;color:var(--mut)}.v2bar a{font-weight:600}
+table.hm td,table.hm th{font-size:13px;vertical-align:top}table.hm .num{white-space:nowrap}table.hm .sg{text-align:center;font-size:15px}
+.st{font-weight:700}.st.hot{background:rgba(217,83,79,.18)}.st.warm{background:rgba(230,140,40,.20)}.st.mix{background:rgba(230,190,60,.16)}.st.cold{background:rgba(91,141,239,.16)}.st.na{color:var(--mut)}
+.sgY{color:#d9534f}.sgH{color:#e08a20}.sgN{color:#5b8def}.sgQ{color:var(--mut);font-weight:400}
+.flowp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;margin:6px 0 12px}.flowp span{border:1px solid var(--line);border-radius:6px;padding:3px 8px;background:var(--card)}
+.v2keys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.v2keys div{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card)}.v2keys b{display:block;font-size:22px;color:var(--acc)}.v2keys span{font-size:12.5px;color:var(--mut)}
+@media(max-width:700px){.v2keys{grid-template-columns:repeat(2,1fr)}.v2keys b{font-size:19px}}
+.cl .jid{font-size:12px;color:var(--mut)}.cl .wr{border-left:3px solid var(--warn);padding:4px 8px;margin-top:8px;font-size:14px}
+ol.q5{margin:6px 0 0 18px;padding:0;line-height:1.7}details.qd{margin:8px 0}details.qd>summary{font-weight:600}details.qd p{margin:4px 16px 14px;font-size:15px}
+details.base2>summary{font-size:17px}details.base2 .step{padding:28px 0;border-bottom:1px solid var(--line);scroll-margin-top:100px}details.base2 .card{background:var(--card)}details.base2>.body{overflow-x:visible}
+@media(max-width:700px){table.hm.stack td.sg{display:inline-block;margin-right:10px}table.hm.stack td.sg::before{content:attr(data-l)" ";color:var(--mut);font-size:12px}table.hm.stack td[data-l]:not(.sg)::before{content:attr(data-l)"　";color:var(--mut);font-size:12px;font-weight:400}}
+</style>
+<style>
+.rd>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:34px 1fr;gap:2px 8px;align-items:start;min-height:44px}
+.rd>summary::-webkit-details-marker{display:none}.rd .rn{grid-row:span 2;font-size:22px;color:var(--acc);line-height:1.2}
+.rd .one{font-size:14px;color:var(--mut);grid-column:2}.rd dl{margin:10px 0 0 42px}.rd dt{font-size:12px;color:var(--mut);margin-top:8px;font-weight:600}.rd dd{margin:2px 0 0;font-size:15px;line-height:1.6}
+.rd[open]>summary b::after{content:" ▾";color:var(--mut)}.rd:not([open])>summary b::after{content:" ▸";color:var(--mut)}
+.arrow{text-align:center;color:var(--mut);font-size:13px;margin:-4px 0}
+.mp td{vertical-align:top;font-size:14px;line-height:1.55}.mp td:first-child{white-space:nowrap}
+.lid{display:inline-block;font-size:12px;font-weight:700;padding:1px 7px;border-radius:10px;border:1px solid var(--line);margin:2px 2px 0 0;text-decoration:none}
+.pill.gap{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn);font-size:11px}
+.bluf{font-size:17px;line-height:1.7}.qq p{margin:4px 0 10px;font-size:15px}
+ol.src{font-size:13px;line-height:1.6;padding-left:22px;word-break:break-word}ol.src li{scroll-margin-top:80px}
+@media(max-width:700px){table.mp.stack td[data-l]::before{content:attr(data-l)"　";color:var(--mut);font-size:12px;font-weight:600;display:block}table.mp.stack td:first-child{white-space:normal;font-size:16px}}
+</style><style>
+.bluf{background:var(--card);border-radius:var(--r-card);padding:16px 18px;margin:14px 0;border-left:4px solid var(--tint)}
+.bluf p{margin:0 0 .55em;font-size:17px;line-height:1.7}.bluf p:first-child{font-weight:700;font-size:19px}.bluf p:last-of-type{margin-bottom:.3em}
+.wt{display:grid;gap:8px;margin:10px 0}.wt div{background:var(--card);border-radius:var(--r-card);padding:12px 14px;font-size:15px;line-height:1.6;border-left:4px solid var(--hig-red)}.wt b{display:block;font-size:16px}
+.chh{margin-top:8px;padding-top:28px;border-top:.5px solid var(--hig-sep-op)}.chh>.kicker{color:var(--tint)}
+.chq{font-size:15px;color:var(--mut);margin:-2px 0 12px}
+.lay{margin:12px 0}.lay details{background:var(--card);border-radius:10px;margin:0 0 6px;border-left:8px solid var(--c);box-shadow:var(--hig-shadow)}
+.lay summary{list-style:none;cursor:pointer;padding:10px 12px;min-height:44px;display:flex;flex-direction:column;justify-content:center}
+.lay summary::-webkit-details-marker{display:none}.lay summary b{font-size:16px}.lay summary b::after{content:" ›";color:var(--mut);font-weight:400}.lay details[open] summary b::after{content:" ⌄"}
+.lay summary span{font-size:13.5px;color:var(--mut);line-height:1.45}.lay dl{margin:0;padding:0 12px 12px}.lay dt{font-size:12px;color:var(--mut);font-weight:600;margin-top:8px}.lay dd{margin:2px 0 0;font-size:15px;line-height:1.6}
+.lay .ax{font-size:12px;color:var(--mut);text-align:center;margin:2px 0 8px}
+table.fin td,table.fin th{font-size:13px;white-space:nowrap;text-align:right}table.fin td:first-child,table.fin th:first-child{text-align:left;position:sticky;left:0;background:var(--card)}
+table.fin tr.sum td{font-weight:700;border-top:1px solid var(--line)}.neg{color:var(--hig-tx-red)}
+.trk{background:var(--card);border-radius:var(--r-card);padding:14px;margin:0 0 12px}.trk h3{margin:0 0 2px}.trk .role{font-size:12px;font-weight:700;color:var(--tint)}
+.trk ol{margin:8px 0 0;padding-left:20px}.trk li{margin:0 0 10px;font-size:14.5px;line-height:1.6}.trk .k{color:var(--mut);font-size:12px;font-weight:600}.trk .wr{border-left:3px solid var(--warn);padding:4px 8px;font-size:14px}
+.fq{background:var(--card);border-radius:var(--r-card);padding:12px 14px;margin:0 0 8px}.fq b{font-size:16px}.fq p{margin:4px 0;font-size:15px}
+.cls{columns:2;column-gap:24px}@media(max-width:700px){.cls{columns:1}}
+.pill.gap{background:var(--hig-warn-fill);color:var(--warn);font-size:11px}
+table.scm{border-collapse:separate;border-spacing:3px;width:100%;max-width:640px}table.scm th{font-size:12px;color:var(--mut);font-weight:600;text-align:center;padding:2px 3px;line-height:1.3}
+table.scm tbody th{text-align:left;color:var(--fg,inherit);font-size:13.5px;white-space:nowrap;padding-right:6px}
+td.sc{text-align:center;font-weight:700;font-size:15px;border-radius:6px;padding:7px 2px;min-width:30px;font-variant-numeric:tabular-nums}
+td.s5{background:var(--hig-ok-fill);color:var(--hig-tx-green)}td.s4{background:color-mix(in srgb,var(--hig-ok-fill) 50%,transparent);color:var(--hig-tx-green)}
+td.s3{background:var(--hig-gray-fill)}td.s2{background:color-mix(in srgb,var(--hig-risk-fill) 55%,transparent);color:var(--hig-tx-red)}td.s1{background:var(--hig-risk-fill);color:var(--hig-tx-red)}
+td.s0{background:transparent;border:1px dashed var(--line);color:var(--mut);font-weight:400}td.sc.avg{background:var(--hig-tint-fill)}td.sc.fl{font-weight:600;font-size:13.5px}
+table.scev td.sc{font-size:13px;padding:3px 6px;min-width:0}table.scev td:nth-child(2){width:3em}
+.sc-hh{background:var(--card);border-radius:var(--r-card);padding:12px 14px;margin:10px 0;border-left:4px solid var(--warn)}.sc-hh h4{margin:0 0 6px}.sc-hh p{font-size:15px;line-height:1.65;margin:0 0 .5em}
+</style>
+<style>
+.ov5{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}.ov5 li{background:var(--card);border-radius:var(--r-card);padding:12px 14px;font-size:16px;line-height:1.65}
+.fj{display:inline-block;font-size:11.5px;font-weight:700;line-height:1;padding:3px 6px;border-radius:5px;margin-right:6px;vertical-align:2px;letter-spacing:.02em}
+.fj.f{background:var(--hig-tint-fill);color:var(--tint)}.fj.j{background:var(--hig-warn-fill);color:var(--warn)}
+.sig3{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}.sig3 li{display:flex;gap:12px;background:var(--card);border-radius:var(--r-card);padding:12px 14px}
+.sig3 .lt{flex:0 0 14px;height:14px;border-radius:50%;margin-top:5px;background:var(--mut)}.sig3 .r .lt{background:var(--hig-red)}.sig3 .y .lt{background:var(--warn)}.sig3 .g .lt{background:var(--ok)}
+.sig3 b{display:block;font-size:16px}.sig3 span{display:block;font-size:14.5px;line-height:1.6}.sig3 .k{color:var(--mut);font-size:12px;font-weight:600;margin-right:4px;display:inline}
+.sig3 .st{font-weight:600}.sig3 .r .st{color:var(--hig-tx-red)}.sig3 .g .st{color:var(--hig-tx-green)}.sig3 .y .st{color:var(--warn)}
+.pg-steps{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}.pg-steps a{display:flex;gap:5px;align-items:baseline;font-size:13px;text-decoration:none;color:var(--mut);background:var(--hig-fill);border-radius:999px;padding:5px 10px;min-height:20px}
+.pg-steps a b{font-size:11px;font-variant-numeric:tabular-nums}.pg-steps a.on{background:var(--tint);color:#fff}.pg-steps a.on b{color:#fff}
+.pg-pn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:36px 0 12px}.pg-pn a{display:block;background:var(--card);border-radius:var(--r-card);padding:12px 14px;text-decoration:none;color:var(--fg);box-shadow:var(--hig-shadow);min-width:0}
+.pg-pn a.nx{text-align:right;grid-column:2}.pg-pn small{display:block;color:var(--mut);font-size:12px}.pg-pn b{font-size:15px;overflow-wrap:anywhere}
+.ov-next{display:block;text-align:center;font-weight:600;margin:18px 0 0}
+.chsrc ol{margin:0;padding-left:0;list-style:none}.chsrc li{font-size:13.5px;line-height:1.55;margin:0 0 4px;overflow-wrap:anywhere}.chsrc li a{font-variant-numeric:tabular-nums;margin-right:6px}
+.forwho{display:inline-block;background:var(--hig-gray-fill);border-radius:6px;font-size:12.5px;font-weight:600;padding:3px 8px;margin:4px 0 8px}
+.xr{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+#ch-shadow{display:none!important}
+.cl-log td{font-size:14px;line-height:1.6;vertical-align:top}.cl-log td:first-child{white-space:nowrap}
+</style>
+<link rel="stylesheet" href="assets/hig.css?v=5cdb961f75"></head><body class="article chain" data-src-page="pcb-data.html" data-page="更新记录">
+<header class="top"><div class="wrap"><a class="brand back" href="./" aria-label="返回首页">首页</a><span class="sp"></span><a class="btn" href="daily/">日报</a><a class="btn" href="world/">世界</a><a class="btn" href="ledger.html">总账</a><a class="btn" href="changelog.html">更新记录</a><span class="pill">更新记录</span><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
+<div class="rd-bar" id="rdBar"><div class="rd-in"><button class="rd-cur" id="rdCur" aria-label="打开导航">更新记录</button><span class="rd-pct" id="rdPct"></span></div><i class="rd-prog" id="rdProg"></i></div>
+<nav class="rd-toc sn" id="rdToc" aria-label="站内导航"><div class="sn-h">链条</div><div class="sn-chain on"><a class="sn-c" href="pcb.html"><b>PCB</b><span>5 页</span></a><ol class="sn-pg"><li><a href="pcb.html" class="pg"><b>1</b><span>总览</span></a></li><li><a href="pcb-pattern.html" class="pg"><b>2</b><span>格局与钱在哪赚</span></a></li><li><a href="pcb-cycle.html" class="pg"><b>3</b><span>周期与产能</span></a></li><li><a href="pcb-track.html" class="pg"><b>4</b><span>主要矛盾追踪</span></a></li><li><a href="pcb-data.html" class="pg"><b>5</b><span>底稿与数据</span></a></li></ol></div><div class="sn-chain"><a class="sn-c" href="hbm.html"><b>HBM</b><span>旧版式</span></a></div><div class="sn-chain"><a class="sn-c" href="cowos.html"><b>CoWoS</b><span>旧版式</span></a></div><div class="sn-chain"><a class="sn-c" href="cu.html"><b>铜</b><span>旧版式</span></a></div><div class="sn-h">站内</div><div class="sn-here" id="snHere"></div><a class="sn-s" href="ledger.html">总账</a><a class="sn-s" href="daily/">日报</a><a class="sn-s" href="explain.html">原理图</a><a class="sn-s on" href="changelog.html">更新记录</a></nav>
+<main class="wrap">
+<section id="top" class="hero" data-toc="01 PCB 更新记录"><div class="kicker">站内 · 更新记录</div><h1>更新记录</h1><p class="dek">每次改版、改判断都记在这里。研究页只放内容，版本说明、并入说明、旧版链接都搬到本页。</p><h3 class="sec-h">PCB 现在是哪一版？</h3><p>PCB v0.3 → 2026-10-27 拆成 5 页（总览 / 格局与钱在哪赚 / 周期与产能 / 主要矛盾追踪 / 底稿与数据）。原页眉：PCB 小链 · v0.3 九章研究版 · 统一单位接 <a href="cowos.html">CoWoS</a> / <a href="hbm.html">HBM</a> 页。</p><p><b>v0.3（2026-10-23）九章研究版</b>：顶部先写主要矛盾（扩产潮 vs 需求持续多久）和什么会证明我们错；原“底图”页的分层图、路线图、格局图已并入<a href="pcb-pattern.html#ch2">第 2 章</a>、<a href="pcb-pattern.html#ch3">第 3 章</a>；补了 A 股财报数据（资本开支、在建工程、ROIC、前五大客户）。v0.2 的核心判断与概率未改 · <a href="pcb_v1.html">v1 存档 →</a></p></section>
+<section id="log" class="ch" data-toc="02 逐版记录"><header class="ch-h"><span class="ch-n">02</span><h2>逐版记录</h2></header><div class="tbl"><table class="cl-log"><thead><tr><th>日期 · 版本</th><th>改了什么</th></tr></thead><tbody><tr><td><b>2026-10-27</b><br>v0.4</td><td>PCB 拆成 5 页同一模板：总览（一分钟看懂 + 五句话 + 一张图 + 三个信号 + 三条证伪）、格局与钱在哪赚、周期与产能、主要矛盾追踪、底稿与数据；左侧整站导航、每页目录、上一页 / 下一页、手机抽屉；段落标“事实 / 判断”，每段最多 1 个上标、其余收进各章“本章来源”；版本说明、并入说明和旧版链接集中到更新记录页。只搬内容、不删数字；主要矛盾、总账概率、X1–X8 未改。</td></tr><tr><td><b>2026-10-24</b><br>v0.3.1</td><td>第 4 章新增“回报持续性打分卡”（借鉴 Marathon《Capital Returns》看供给侧）：AI 板厂、电子布、钻针、IC 载板、CCL 五个环节 × 六维（工艺可复制性、BOM 占比 / 失效代价、切换成本、客户集中度、技术淘汰、资本强度）打分，用上一轮谷底毛利率检验；新增跟踪指标“管理层资本配置”（在建工程、资本开支 ÷ 折旧、分红 + 回购 vs 资本开支，18 家）。新数据：分红 / 回购（Tushare）、宏和 / 鼎泰 / 兴森前五大客户（巨潮）、台股载板三家毛利率（FinMind），来源 95–97。主要矛盾、总账概率、X1–X6 未改；新增待确认草案 X7、X8。</td></tr><tr><td><b>2026-10-23</b><br>v0.3</td><td>改版为九章研究框架（结论与市场观点 → 地图与细分 → 利润池与成本 → 为什么 → 需求与技术 → 周期与产能 → 替代 → 中国 vs 海外 → 主要矛盾、指标与证伪）。顶部新增 BLUF：主要矛盾 = 板厂扩产潮 vs AI 需求能持续多久（John 2026-10-23 定），次要矛盾 = 利润往扩得慢的上游迁移 vs 客户反制；规格升级、CoWoP、普通板成本转嫁为观察项。原底图页（pcb-map.html）并入第 2、3 章并改为跳转；新增可点开的分层原理图。补财报数据：17 家 A 股 PCB 链公司 FY2015–2025 + 2026H1 资本开支、折旧、在建工程、ROIC、毛利率（Tushare），12 家前五大客户占比（巨潮年报）。每个矛盾 2–3 个先行指标、阈值、证伪并挂总账编号；新预测 X1–X6 只列为“待 John 确认”，未入账。<b>未改</b>任何已入账判断、概率和模型数字。</td></tr><tr><td><b>2026-10-21</b><br>v0.2</td><td>改版：页面先看全行业（行业地图 → 短缺检验 → 机制入门 → 价格分解 → 三条核心判断），AI 改为下钻，新增一线校验和读后五问；13 步底稿默认折叠。<b>改判</b>（原因：PCB 业内读者反馈"看不到大涨价、不觉得缺" + 本页 HVLP 复核）：① HVLP 由"2026 年短缺"降级为 HVLP4/5 认证 / 良率瓶颈、HVLP3+ 预测缺口；② 最紧环节改为 ABF/BT 载板和玻纤布 > 设备 > HVLP4；③ 0.69/72% 标明是我们对高盛 2026–28 年区间的自行分配；④ 修正 7 处错误或夸大：中心思想"铜箔最紧、与 ABF 打平"、环节表把预测当观测、45–55% 未写明是区间、三井"有价无货"（来源不支持）、金居价格预测未标"预测、含铜价"、需求分母未并列三井口径、约束表未区分可观测与预测。预测 M1 作废（原文保留），新增 M3、C9、C10；证伪新增 J6–J8。旧版存档：<a href="pcb_v1.html">pcb_v1.html</a>。</td></tr><tr><td><b>2026-10-20</b><br>v0.1</td><td>首版：按 SOP v1.6 建 PCB 小链（逻辑层 + 金字塔 + 13 步底稿 + 中国账本）。统一单位接 CoWoS 页 KGI 加速器口径；ABF 载板只读 CoWoS 页，不重复建模。预测 C1–C8、M1–M2、N1–N4，证伪 J1–J5、CJ1–CJ3。</td></tr></tbody></table></div><p class="note">已入账判断、概率和模型数字只在 John 确认后改，每次改都在这里留一行。</p></section>
+<section id="merge" class="ch" data-toc="03 并入与旧版"><header class="ch-h"><span class="ch-n">03</span><h2>并入与旧版</h2></header><ul><li>原“底图”页 <a href="pcb-map.html">pcb-map.html</a>（技术路线图、格局图、一线校验、缺口）2026-10-23 并入 PCB 页；旧链接自动跳转到新位置（现在在<a href="pcb-pattern.html#road">格局与钱在哪赚</a>、<a href="pcb-track.html#check">主要矛盾追踪</a>）。</li><li>来源第 81–92 条原在底图页，2026-10-23 并入时编号改为全站统一；第 93 条起接着编。</li><li>2026-10-27：一页九章拆成 5 页。旧网址 <code>pcb.html#锚点</code> 仍可用，会自动跳到新页的同一块。</li><li>“2026 年的现状”一段是 v0.2 起的结论，未改；“公开数据替代跟踪”是 v0.2 的四个问题；“读后五问”沿用 v0.2。</li><li>版本对比：<a href="pcb_v1.html">旧版 v1 存档（2026-10-20）</a> ⇄ 现在的 5 页版。</li></ul></section>
+</main>
+<footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="ledger.html">总账</a> · <a href="pcb.html">PCB</a></footer>
+<div class="fn-sheet" id="fnSheet" role="dialog" aria-modal="true" aria-label="来源" hidden><div class="fn-bd" data-close></div><div class="fn-card"><button class="fn-x" data-close aria-label="关闭">×</button><div class="fn-body" id="fnBody"></div></div></div>
+<script src="assets/reading.js?v=b233e3dabc"></script>
+</body></html>

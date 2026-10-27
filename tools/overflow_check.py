@@ -7,6 +7,9 @@
   2. 正文里任何可见元素都没有超出视口（在自身横向滚动容器内的除外——那是允许的“表格内滚动”）；
   3. 左侧目录栏出现时，正文里的图、表、对比、细节块都不和目录栏横向重叠；
   4. 每张 ECharts 图：图宽不超过容器，图内文字不超出画布、文字之间不互相压住。
+  5. 链条 5 页模板的整站导航（nav.rd-toc.sn，docs/CHAIN_TEMPLATE.md）：<1200px 点顶栏打开抽屉，抽屉整块在视口内、
+     里面没有横向滚动、本页小节已填进去，Esc 能关；≥1200px 常驻栏在视口内、不横向滚动；页内步骤条 / 上一页下一页不超宽。
+     隐藏区 #ch-shadow（给页面脚本用的其他页副本）不参与任何检查。
 用法：python3 tools/overflow_check.py [--base URL] [--pages pcb.html ...] [--shots DIR]
 不给 --base 时在仓库根目录起一个本地 http 服务。缺 playwright 时打印 SKIP 并返回 0。
 """
@@ -74,6 +77,36 @@ JS = r"""
 }
 """
 
+NAV_JS = r"""
+(phase) => {
+ const vw = document.documentElement.clientWidth, vh = window.innerHeight, out = [];
+ const nav = document.querySelector('nav.rd-toc.sn'); if (!nav) return {out, nav: null};
+ const R = e => e.getBoundingClientRect();
+ const inVp = (r, k) => { if (r.left < -1 || r.right > vw + 1 || r.top < -1 || r.bottom > vh + 1) out.push({k:'nav', m:`${k} [${Math.round(r.left)},${Math.round(r.top)},${Math.round(r.right)},${Math.round(r.bottom)}] 超出视口 ${vw}×${vh}`}) };
+ const noHs = (e, k) => { if (e.scrollWidth > e.clientWidth + 1) out.push({k:'nav', m:`${k} 内部横向滚动 ${e.scrollWidth} > ${e.clientWidth}`}) };
+ const here = nav.querySelector('#snHere'); const n = here ? here.querySelectorAll('a').length : 0;
+ if (!n) out.push({k:'nav', m:'本页小节没有填进 #snHere'});
+ if (!nav.querySelector('a.pg.on, a.sn-s.on')) out.push({k:'nav', m:'导航里没有标出当前页（a.pg.on / a.sn-s.on）'});
+ const cs = getComputedStyle(nav);
+ if (phase == 'rail') {
+   if (cs.display == 'none' || cs.position != 'fixed') out.push({k:'nav', m:'≥1200px 常驻栏没有显示'});
+   else { inVp(R(nav), 'rail'); noHs(nav, 'rail') }
+ } else if (phase == 'drawer') {
+   if (!nav.classList.contains('open') || cs.display == 'none') out.push({k:'nav', m:'点顶栏后抽屉没有打开'});
+   else { inVp(R(nav), 'drawer'); noHs(nav, 'drawer');
+     for (const a of nav.querySelectorAll('a')) { const r = R(a); if (r.width && (r.right > R(nav).right + 1 || r.left < R(nav).left - 1)) { out.push({k:'nav', m:`抽屉里链接超宽：${a.textContent.trim().slice(0,20)}`}); break } } }
+   if (document.documentElement.scrollWidth > vw + 1) out.push({k:'nav', m:'抽屉打开时页面横向滚动'});
+ } else if (phase == 'closed') {
+   if (nav.classList.contains('open')) out.push({k:'nav', m:'Esc 后抽屉没关'});
+ }
+ for (const e of document.querySelectorAll('main .pg-steps, main .pg-pn, main .ov-next')) {
+   if (e.closest('#ch-shadow')) continue; const r = R(e); if (!r.width) continue;
+   if (r.right > vw + 1 || r.left < -1) out.push({k:'nav', m:`${e.className} 超出视口`});
+   if (getComputedStyle(e).overflowX == 'visible') noHs(e, e.className) }
+ return {out, nav: phase + ':' + n};
+}
+"""
+
 def serve():
     class Q(http.server.SimpleHTTPRequestHandler):
         def log_message(self, *a): pass
@@ -114,6 +147,15 @@ def main():
                     r = pg.evaluate(JS)
                     if r['out']:   # 图表动画 / 重排还没走完时可能误报：等 1.5 秒再测一次，只报两次都在的问题
                         pg.wait_for_timeout(1500); r = pg.evaluate(JS)
+                    navs = []
+                    if pg.evaluate("!!document.querySelector('nav.rd-toc.sn')"):   # 5. 整站导航
+                        if vw >= 1200:
+                            n = pg.evaluate(NAV_JS, 'rail'); r['out'] += n['out']; navs.append(n['nav'])
+                        else:
+                            pg.evaluate("window.scrollTo(0,0)"); pg.click('#rdCur'); pg.wait_for_timeout(350)
+                            n = pg.evaluate(NAV_JS, 'drawer'); r['out'] += n['out']; navs.append(n['nav'])
+                            pg.keyboard.press('Escape'); pg.wait_for_timeout(200)
+                            n = pg.evaluate(NAV_JS, 'closed'); r['out'] += n['out']
                     for e in errs: r['out'].append({'k': 'js', 'm': e})
                     tag = f'{pg_name} {w}px {lab}'
                     if r['out']:
@@ -122,7 +164,7 @@ def main():
                         for o in r['out'][:25]: print(f'   [{o["k"]}] {o["m"]}')
                         if len(r['out']) > 25: print(f'   … +{len(r["out"]) - 25}')
                     else:
-                        print(f'ok   {tag}  charts={len(r["charts"])} rail={r["rail"]}')
+                        print(f'ok   {tag}  charts={len(r["charts"])} rail={r["rail"]}' + (f' nav={navs[0]}' if navs else ''))
                     ctx.close()
         b.close()
     print(f'overflow_check: {"PASS" if not fails else f"{fails} 处问题"}')

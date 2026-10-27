@@ -17,6 +17,10 @@ TODAY = datetime.date(2026, 10, 22) if os.environ.get('LEDGER_TODAY') == 'fixed'
 EV_W = ('支持', '削弱', '触发证伪', '待核')  # 周度跟踪的证据记录：只追加，不改状态/概率（改判要 John 批准）
 
 
+
+# 链条拆页后判断 / 预测住在“主要矛盾追踪”页（ledger.json 里的 page 字段不改，只改链接）
+PAGE_MOVED = {'pcb.html': 'pcb-track.html'}
+
 def load():
     return json.load(open(os.path.join(ROOT, 'data', 'ledger.json'), encoding='utf-8'))
 
@@ -166,7 +170,7 @@ def render(doc):
         if x.get('ev'):
             dl.append(('证据记录', '<ul class="lg-ev">' + ''.join(evli(e) for e in sorted(x['ev'], key=lambda e: e['d'], reverse=True)) + '</ul>'))
         o.append(f'<li class="lg-it" id="{x["gid"]}" data-k="{x["kind"]}" data-c="{E(x["chain"])}" data-s="{x["status"]}">'
-                 f'<div class="lg-h"><span class="gid">{x["gid"]}</span><span>旧编号 {E(x["old"])}</span><span>·</span><a href="{x["page"]}">{E(x["chain"])}{"" if x["book"] == "全球" else " · 中国账本"}</a><span class="st st-{x["status"]}">{x["status"]}</span></div>'
+                 f'<div class="lg-h"><span class="gid">{x["gid"]}</span><span>旧编号 {E(x["old"])}</span><span>·</span><a href="{PAGE_MOVED.get(x["page"], x["page"])}">{E(x["chain"])}{"" if x["book"] == "全球" else " · 中国账本"}</a><span class="st st-{x["status"]}">{x["status"]}</span></div>'
                  f'<p class="lg-t">{E(x["text"])}</p><dl class="lg-d">' + ''.join(f'<dt>{a}</dt><dd>{b}</dd>' for a, b in dl) + '</dl></li>')
     o.append('''</ol></section>
 <section><h2>规则</h2><ul class="sub">

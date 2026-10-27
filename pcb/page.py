@@ -1,4 +1,4 @@
-"""PCB 页内容 spec v0.3（九章研究版，layout='v3'，模板 tpl/page_v3.py，新章节内容在 pcb/research.py；2026-10-23）。v0.2 原说明：：一句话 → 行业地图 → 短缺检验 → 机制 + 价格分解 → 三条核心判断 → AI 下钻 → 一线校验 → 证伪 / 台账 → 底稿 13 步（折叠）→ 读后五问。
+"""PCB 页内容 spec（2026-10-27 起 layout='v4' 链条 5 页模板 tpl/page_v4.py，见 docs/CHAIN_TEMPLATE.md；此前 v0.3 九章研究版 layout='v3'，模板 tpl/page_v3.py，新章节内容在 pcb/research.py；2026-10-23）。v0.2 原说明：：一句话 → 行业地图 → 短缺检验 → 机制 + 价格分解 → 三条核心判断 → AI 下钻 → 一线校验 → 证伪 / 台账 → 底稿 13 步（折叠）→ 读后五问。
 由 tpl/page.py → tpl/page_v2.py 渲染成 pcb.html。行业层内容在 pcb/industry.py；模型数字来自 pcb/build.py 写出的 pcb_data/model_out.json；来源编号来自 pcb/src.py。
 旧版 v0.1（逻辑层 + 金字塔）冻结为 pcb_v1.html，不由本文件生成。"""
 import json, os, sys
@@ -56,7 +56,7 @@ TOCBLOCK = f"""<div class="card"><b>推导过程（每一步都能在 Excel「TO
 STAGE_TBL = '<div class="tbl"><table id="pcb-stT" class="stack"><thead><tr><th>环节</th><th>2025</th><th>2026</th><th>2027 基准</th><th>依据</th><th>来源</th></tr></thead><tbody></tbody></table></div>'
 
 SPEC = dict(
- layout='v3',
+ layout='v4',   # 2026-10-27 起：5 页链条模板 tpl/page_v4.py（docs/CHAIN_TEMPLATE.md）；v3 单页版保留在 tpl/page_v3.py 供回退
  file='pcb.html', title='PCB 印制电路板', pill='PCB v0.3', other=('cowos.html', 'CoWoS ⇄'), archive=('pcb_v1.html', '旧版 v1'), scripts=['pcb.js'],
  vbar='<b>v0.3（2026-10-23）九章研究版</b>：顶部先写主要矛盾（扩产潮 vs 需求持续多久）和什么会证明我们错；原“底图”页的分层图、路线图、格局图已并入<a href="#ch2">第 2 章</a>、<a href="#ch3">第 3 章</a>；补了 A 股财报数据（资本开支、在建工程、ROIC、前五大客户）。v0.2 的核心判断与概率未改 · <a href="pcb_v1.html">v1 存档 →</a>',
  ledgers=[('ai', 'gl', 'AI 下钻', f'出货约束是 ABF 载板（{ABF}）；PCB 材料里 HVLP3+ 铜箔约 {CU} 只是预测口径，市场信号只支持 HVLP4/5 认证瓶颈'),
@@ -155,7 +155,7 @@ SPEC = dict(
 <div class="tbl"><table id="pcb-falT" class="fal"><thead><tr><th>判断</th><th>反方证据</th><th>证伪条件</th><th>观察指标与阈值</th><th>当前读数</th><th>状态</th></tr></thead><tbody></tbody></table></div>
 <h3>中国账本：CJ1–CJ3</h3><p class="sub">CJ1↔中国论点❶、CJ2↔❷、CJ3↔❸。</p>
 <div class="tbl"><table id="pcb-cnFalT" class="fal"><thead><tr><th>判断</th><th>反方证据</th><th>证伪条件</th><th>观察指标与阈值</th><th>当前读数</th><th>状态</th></tr></thead><tbody></tbody></table></div>''',
- pred='''<p class="sub" id="pcb-predSum"></p><p class="sub">2026-10-20 写入；2026-10-21（v0.2）M1 作废（原文保留，见备注），新增 M3、C9、C10。到期后按公开数据打分，不改原文，只追加结果。C 系列是本链判断，M 系列是约束迁移，N 系列是中国账本。和 CoWoS 页 T 系列（约束迁移）对照：CoWoS 页说 2027 年最紧是载板，本页的可观测信号也指向载板。</p>
+ pred='''<p class="sub" id="pcb-predSum"></p><p class="sub">2026-10-20 写入；2026-10-21 M1 作废（原文保留，见备注），新增 M3、C9、C10。到期后按公开数据打分，不改原文，只追加结果。C 系列是本链判断，M 系列是约束迁移，N 系列是中国账本。和 CoWoS 页 T 系列（约束迁移）对照：CoWoS 页说 2027 年最紧是载板，本页的可观测信号也指向载板。</p>
 <div class="tbl"><table id="pcb-predT" class="stack ledger"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody></tbody></table></div>
 <h3>中国账本：N 系列</h3><p class="note" id="pcb-cnPredS"></p>
 <div class="tbl"><table id="pcb-cnPredT" class="stack ledger"><thead><tr><th>#</th><th>预测</th><th>到期</th><th>验证来源</th><th>状态</th></tr></thead><tbody></tbody></table></div>''',

@@ -7,7 +7,8 @@
 两本账（SOP v1.5）：spec 有 cn=dict(...) 时，结论层在全球论点后加平行的中国账本（#cn、#c1..），
      中心思想下加 ledgers 对照条；底稿 CN_REQ 6 步必须各有 steps[i]['cn'] 中国块（#cn-<步骤>），缺了构建报错。
 用法：python3 tpl/page.py（build.sh 最后一步）。spec 在 <链>/page.py。
-spec 带 layout='v2' 时改用 tpl/page_v2.py 的行业版结构；layout='v3' 用 tpl/page_v3.py 的九章研究版（2026-10-23 起 pcb.html）（目前只有 pcb.html；旧版 pcb_v1.html 是冻结存档，不由这里生成）。"""
+spec 带 layout='v2' 时改用 tpl/page_v2.py 的行业版结构；layout='v3' 用 tpl/page_v3.py 的九章研究版（2026-10-23 起 pcb.html）（目前只有 pcb.html；旧版 pcb_v1.html 是冻结存档，不由这里生成）。
+layout='v4' 用 tpl/page_v4.py 的链条 5 页模板（2026-10-27 起 PCB：pcb.html 总览 + pcb-pattern / cycle / track / data + changelog.html，见 docs/CHAIN_TEMPLATE.md）。"""
 import importlib.util, os, re, sys
 R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -198,9 +199,17 @@ if __name__ == '__main__':
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
             from page_v3 import render_v3
             html = render_v3(S, STEPS, SID, MID, CIRC, CNC)
+        elif S.get('layout') == 'v4':   # 链条 5 页模板（2026-10-27 起 PCB），见 tpl/page_v4.py + docs/CHAIN_TEMPLATE.md
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from page_v4 import render_v4
+            for fn, h in render_v4(S, STEPS, SID, MID, CIRC, CNC).items():
+                open(os.path.join(R0, fn), 'w', encoding='utf-8').write(h)
+            print('  v4 页面：' + '；'.join(f'{k} 脚注 {v["fn_main"]}、标签 {v["labels"]}' for k, v in render_v4.STAT.items()))
+            html = None
         else:
             html = render(S)
-        open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(html)
+        if html is not None:
+            open(os.path.join(R0, S['file']), 'w', encoding='utf-8').write(html)
         # 首页卡片 = 同一句中心思想
         idx, n = re.subn(rf'(<!--card:{chain}-->).*?(<!--/card-->)', lambda m: m.group(1) + S['card'] + m.group(2), idx, flags=re.S)
         assert n == 1, f'index.html 缺 card:{chain} 标记'

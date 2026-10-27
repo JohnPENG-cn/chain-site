@@ -1,6 +1,8 @@
 /* reading.js — 阅读模式（body.article）的交互，模板说明见 docs/READING_MODE.md。
    1) 来源脚注：JS 后渲染的行内「源N」标签也转成上标；点上标弹出来源摘要（手机底部抽屉），可跳到文末「来源与注释」。
    2) 顶部细进度条 + 当前章节名；点开是目录抽屉；宽屏（≥1200px）目录常驻左侧。
+      链条 5 页模板（tpl/page_v4.py）：#rdToc 是服务端写好的整站导航树，本页小节填进 #snHere；每段最多 1 个上标（body[data-fnmax]）；
+      指向别的页的锚点按 window.CH_HOME 跳过去；来源在“底稿与数据”页，本页隐藏区有副本时照样弹摘要。
    3) 图表自适应：每张 ECharts 图用 ResizeObserver 跟着容器宽度重排（含「展开细节」里先隐藏后展开的图），
       并按图的实际宽度调标签：坐标轴文字放进画布、图例换行时自动下移绘图区、窄图隐藏折线数值标签、
       分类轴文字太挤时斜放、所有标签开启防重叠。各页画图代码不用改。
@@ -22,16 +24,37 @@
       var prev=t.previousSibling;if(prev&&prev.nodeType===3)prev.nodeValue=prev.nodeValue.replace(/\s+$/,'');
       t.replaceWith(sup)});
   }
-  fnify(document);
-  var pend=false,mo=new MutationObserver(function(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;mo.disconnect();fnify(document);watch()})});
+  var FNMAX=document.body.getAttribute('data-fnmax')==='1',SRCP=document.body.getAttribute('data-src-page')||'';
+  var BLK='p,li,dd,dt,td,th,figcaption,h1,h2,h3,h4,summary,blockquote';
+  function limit(){   // 链条模板：每段只留第一个上标（一般是关键数字的来源），其余进本节末尾折叠的「本章来源」
+    if(!FNMAX)return;var seen=new Map();
+    $$('main sup.fn a.fn-a').forEach(function(a){
+      if(a.closest('.src-line,.chsrc,.fn-sheet'))return;
+      var b=a.closest(BLK)||a.closest('div');if(!b)return;
+      if(!seen.has(b)){seen.set(b,1);return}
+      var sup=a.parentNode,sec=a.closest('section'),n=a.textContent.replace(/\D/g,''),h=a.getAttribute('href');a.remove();if(!sup.querySelector('a'))sup.remove();
+      if(!sec||!n)return;var box=sec.querySelector(':scope>.chsrc ol');
+      if(!box){var d=document.createElement('details');d.className='more chsrc';d.innerHTML='<summary><span>来源</span><b>本章来源</b><small>每段只留 1 个上标，其余在这里</small></summary><div class="more-b"><ol></ol></div>';
+        var pn=sec.querySelector(':scope>.pg-pn');sec.insertBefore(d,pn||null);box=d.querySelector('ol')}
+      if(box.querySelector('[data-n="'+n+'"]'))return;
+      var t=document.getElementById(h.slice(h.indexOf('#')+1)),li=document.createElement('li');li.setAttribute('data-n',n);
+      var tx=t?t.textContent.replace(/\s+/g,' ').trim():'';if(tx.length>90)tx=tx.slice(0,88)+'…';
+      li.innerHTML='<a href="'+h+'">'+n+'</a>';li.appendChild(document.createTextNode(tx));box.appendChild(li)});
+  }
+  fnify(document);limit();
+  var pend=false,mo=new MutationObserver(function(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;mo.disconnect();fnify(document);limit();watch()})});
   function watch(){mo.observe($('main'),{childList:true,subtree:true})}
   watch();
 
   var sheet=$('#fnSheet'),body=$('#fnBody'),last=null;
   function close(){if(!sheet)return;sheet.hidden=true;if(last){last.classList.remove('on');last.focus({preventScroll:true})}}
   function open(a){
-    var href=a.getAttribute('href'),n=a.textContent.replace(/\D/g,''),html;
-    if(href.charAt(0)==='#'){
+    var href=a.getAttribute('href'),n=a.textContent.replace(/\D/g,''),html,hi=href.indexOf('#'),pg=hi>0?href.slice(0,hi):'';
+    var li0=hi>=0&&document.getElementById(href.slice(hi+1));
+    if(li0&&pg&&li0.closest('#ch-shadow')){   // 链条多页：来源表在“底稿与数据”页，本页隐藏区里有同一份 → 弹摘要，按钮去那一页
+      var c0=li0.cloneNode(true),u0=c0.querySelector('a[href^="http"]');var url0=u0?u0.href:'';if(u0)u0.remove();
+      html='<div class="fn-n">来源 '+n+'</div><p class="fn-t">'+c0.innerHTML.trim()+'</p><div class="fn-go">'+(url0?'<a href="'+url0+'" target="_blank" rel="noopener">打开原文 ↗</a>':'')+'<a href="'+href+'">在来源列表中查看 →</a></div>';
+    }else if(href.charAt(0)==='#'){
       var li=document.getElementById(href.slice(1));
       if(li){var c=li.cloneNode(true),u=c.querySelector('a[href^="http"]');var url=u?u.href:'';if(u)u.remove();
         html='<div class="fn-n">来源 '+n+'</div><p class="fn-t">'+c.innerHTML.trim()+'</p><div class="fn-go">'+(url?'<a href="'+url+'" target="_blank" rel="noopener">打开原文 ↗</a>':'')+'<a href="'+href+'" data-jump>在来源列表中查看 ↓</a></div>';}
@@ -50,14 +73,21 @@
     if(j){var id=j.getAttribute('href').slice(1),t=document.getElementById(id);close();
       if(t){var d=t.closest('details');if(d)d.open=true;$$('#src li.hl').forEach(function(x){x.classList.remove('hl')});t.classList.add('hl')}}
   });
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a||a.classList.contains('fn-a')||a.hasAttribute('data-jump')||!window.CH_HOME)return;
+    var id=decodeURIComponent(a.getAttribute('href').slice(1)),t=document.getElementById(id),pg=window.CH_HOME[id]||(/^src\d+$/.test(id)?SRCP:'');
+    if((!t||t.closest('#ch-shadow'))&&pg&&pg!==window.CH_PAGE){e.preventDefault();e.stopPropagation();location.href=pg+'#'+id}
+  },true);
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){close();closeToc()}});
 
   /* ---------- 2. 进度条 + 目录 ---------- */
   var secs=$$('main section[data-toc]'),toc=$('#rdToc'),cur=$('#rdCur'),prog=$('#rdProg'),pct=$('#rdPct');
   if(!toc||!secs.length)return;
-  toc.innerHTML=secs.map(function(s){var t=s.getAttribute('data-toc'),i=t.indexOf(' ');
+  var here=$('#snHere',toc),pname=document.body.getAttribute('data-page');
+  var items=secs.map(function(s){var t=s.getAttribute('data-toc'),i=t.indexOf(' ');
     return '<a href="#'+s.id+'"><b>'+t.slice(0,i)+'</b><span>'+t.slice(i+1)+'</span></a>'}).join('');
-  var links=$$('a',toc),k=-1;
+  if(here)here.innerHTML=items;else toc.innerHTML=items;
+  var links=$$('a',here||toc),k=-1;
   function closeToc(){toc.classList.remove('open')}
   cur.addEventListener('click',function(){toc.classList.toggle('open')});
   toc.addEventListener('click',function(e){if(e.target.closest('a'))closeToc()});
@@ -68,7 +98,8 @@
     prog.style.transform='scaleX('+p.toFixed(4)+')';pct.textContent=Math.round(p*100)+'%';
     var n=0,lim=innerHeight*0.3;secs.forEach(function(s,i){if(s.getBoundingClientRect().top<lim)n=i});
     if(n!==k){k=n;links.forEach(function(a,i){a.classList.toggle('on',i===n)});
-      var t=secs[n].getAttribute('data-toc');cur.textContent=t;}
+      var t=secs[n].getAttribute('data-toc');cur.textContent=here&&pname?pname+' · '+t.slice(t.indexOf(' ')+1):t;
+      if(here&&links[n]&&toc.scrollHeight>toc.clientHeight&&getComputedStyle(toc).position==='fixed'){var r=links[n].getBoundingClientRect(),q=toc.getBoundingClientRect();if(r.top<q.top||r.bottom>q.bottom)toc.scrollTop+=r.top-q.top-q.height/2}}
   }
   addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});
   addEventListener('resize',upd);upd();
