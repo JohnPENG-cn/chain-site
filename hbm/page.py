@@ -74,7 +74,7 @@ SPEC = dict(
    hero=dict(src='cBal', step='balance', t='HBM 供需（EB）：2027 年供给略低于需求', note='跟随底稿第 5 步的滑块实时重算。'),
    ev=[
     dict(t='供需平衡：2025–26 年有富余，2027 年略缺', b=f'基准（每片有效 GB 880、稼动率 90%）下 2027 年缺口/需求 <b data-from="gap">—</b>。2026 年的富余幅度不可靠（iM 证券的"实际需求"口径比 KGI 出货口径高约 10%），方向比较可靠 {S(65)}。', steps=['balance']),
-    dict(t='为什么改：旧模型比券商统计的实际产量低约三分之一', b=f'iM 证券统计 2025 年 HBM 产量 26.3 亿 GB、2026 年 44.4 亿 GB {S(65)}；v0.4 用它反推每片有效 GB（2026–27 年 880），并用 UBS 年末产能做投片锚点 {S(63)}。', steps=['supply']),
+    dict(t='为什么改：旧模型比券商统计的实际产量低约三分之一', b=f'iM 证券统计 2025 年 HBM 产量 26.3 亿 GB、2026 年 44.4 亿 GB {S(65)}；我们用它反推每片有效 GB（2026–27 年 880），并用 UBS 年末产能做投片锚点 {S(63)}。', steps=['supply']),
     dict(t='产能：三家同时大扩产', b=f'海力士、三星、美光 HBM 年末产能 2025→2027 年从 39 万片/月到 69 万（+77%），2026→2027 年 +38% {S(63)}。', steps=['supply']),
     dict(t='需求：与 CoWoS 页同一张出货表', b=f'KGI 出货 × 每封装 HBM，2027 年 HBM 需求 +71%；需求的上一层是云厂商资本开支和积压订单。CoWoS 页反向对账：2027 年 HBM 够出货所需的约 {HC}%，CoWoS 约 {CC}%。', steps=['demand', 'map']),
     dict(t='要害变量："略紧"很容易被推翻', b=f'单变量区间约 −25%～+12%：每片有效 GB 980 或投片 +10% 都能让缺口基本消失，出货 −20% 则富余 12%，出货 +20% 则缺 25% {E}。', steps=['key']),
@@ -185,7 +185,7 @@ SPEC = dict(
 <div class="card" style="margin-top:12px"><b>长鑫的产出怎么算</b><p class="note" style="font-size:13px">年均 HBM 投片（年末值线性平均）× 12 × 每片有效 GB。每片有效 GB 取 150（2026）/ 165（2027）{E}：按综合良率约 25% {S("73,80")}，并与 SemiAnalysis"2026 年约 200 万颗（16GB）"对齐 {S(72)}；领先三家约 880。武汉新芯约为长鑫的 1/10 {S(74)}（媒体称其 HBM 厂规划 3,000 片/月 {S(86)}）。<b>两个口径冲突</b>：SemiAnalysis 2026 年底约 3 万片/月 {S(73)}，韩媒称 2026 年拿 20%（约 6 万片/月）做 HBM3 {S(88)}——本页用前者，后者见第 5 步滑块。长鑫 2026-07-27 上市 {S(85)}，招股书没有单列 HBM 产能 {S(73)}。</p></div>'''),
   h='供给：分厂产能，以及为什么要按券商产量重新校准', body=f'''<div class="card"><b>分厂季度产能（千片/月，季末）</b><div id="cCap" class="chart" style="height:360px"></div><div class="note">实线 = 有来源的锚点或图上读数，年内为线性插值 {E}。锚点：</div><ul id="capA" class="note" style="padding-left:18px;margin:4px 0 0"></ul></div>
 <div class="card" style="margin-top:14px"><b>校准：旧模型和券商统计的实际产量对不上</b><div class="note" id="calNote" style="font-size:13px"></div>
-<div class="tbl"><table id="calT" style="margin-top:8px"><thead><tr><th>项目（EB）</th><th>本模型 v0.5（不含长鑫）</th><th>外部口径</th><th>来源</th></tr></thead><tbody></tbody></table></div>
+<div class="tbl"><table id="calT" style="margin-top:8px"><thead><tr><th>项目（EB）</th><th>本模型（不含长鑫）</th><th>外部口径</th><th>来源</th></tr></thead><tbody></tbody></table></div>
 <div class="note">外部口径也不一致：iM 证券按"实际需求"算 2026 年要 4.23 EB，比 KGI 出货口径（3.84 EB）高约 10%，按它算 2026 年只富余约 5% {S(65)}。所以"2026 年富余"的幅度不可靠，方向（不缺）比较可靠：TrendForce 也称 2026 年 HBM 价格"暂停"、均价小跌 {S(2)}。</div></div>'''),
   dict(id='balance',
   cn=dict(h='中国平衡：拖动假设看缺口', body=f'''<div class="grid g2"><div class="card">
@@ -253,9 +253,9 @@ SPEC = dict(
 <div class="card" style="margin-top:12px"><b>与 CoWoS 小链对账</b><div class="note" style="font-size:13px" id="ifTxt"></div></div></div>'''),
  ],
  src_small='<span id="srcN"></span> 条公开来源',
- src='''<p class="sub">1–23 于 2026-10-14、24–62 于 2026-10-15、63–67 于 2026-10-15（v0.4）、68–89 于 2026-10-15（v0.5 中国账本）用 curl 或浏览器打开。路透（源71,77,79,84）需登录，内容据搜索摘要；DIGITIMES（源80,82）为付费内容，据标题与摘要；源89 是个人自媒体，只作线索，未证实。未单独验证：Magica（Rubin 下调，搜索摘要）；源63 是研究频道对 UBS 报告的转述（原报告未见）；TrendForce"2027 年 HBM 需求 780 亿 Gb"只见于转载站，未采用。</p><ol class="src" id="srcL"></ol>
+ src='''<p class="sub">1–23 于 2026-10-14、24–62 于 2026-10-15、63–67 于 2026-10-15（供给校准）、68–89 于 2026-10-15（中国账本）用 curl 或浏览器打开。路透（源71,77,79,84）需登录，内容据搜索摘要；DIGITIMES（源80,82）为付费内容，据标题与摘要；源89 是个人自媒体，只作线索，未证实。未单独验证：Magica（Rubin 下调，搜索摘要）；源63 是研究频道对 UBS 报告的转述（原报告未见）；TrendForce"2027 年 HBM 需求 780 亿 Gb"只见于转载站，未采用。</p><ol class="src" id="srcL"></ol>
 <h3>局限（公开数据补不了的）</h3><ul style="font-size:14px">
-<li>每片有效 GB 没有原厂披露，v0.4 用券商产量反推；不同券商、不同月份的版本之间差约 5%，需求口径之间差约 10%。2027 年缺口对它极敏感（单变量 −25%～+12%）。</li>
+<li>每片有效 GB 没有原厂披露，我们用券商产量反推；不同券商、不同月份的版本之间差约 5%，需求口径之间差约 10%。2027 年缺口对它极敏感（单变量 −25%～+12%）。</li>
 <li>中国账本数据最弱：没有官方的中国 HBM 进口、产量或库存数据；囤货量、灰色渠道全部来自 SemiAnalysis、Epoch 的估算；长鑫 HBM 投片有 3 万与 6 万片/月两个冲突口径；良率只有一家媒体（DIGITIMES）和一家机构的数字；"不缺货需求"是 Kiko 的估计（机构只给受限出货量）。</li>
 <li>分厂产能只有年末锚点（UBS 一家口径，经转述）和一张 2024 年券商季度图，季度值多为插值；三星自称 2026 年平均约 18 万片，比 UBS 高约 10%，美光 2025 年 ETNews 口径比 UBS 低。</li>
 <li>HBM 合约价不公开，价格点来自韩媒报道和券商估计（一部分经 Silicon Analysts 二手汇编），不是成交数据。</li>
@@ -264,3 +264,46 @@ SPEC = dict(
  log='''<div class="tbl"><table id="logT"><tbody></tbody></table></div>
 <p><a href="hbm/hbm_model.xlsx">下载模型 Excel</a> · <a href="hbm/hbm_chain.md">报告原文（Markdown）</a> · 构建：<code>./build.sh</code>（数据 <code>hbm/build.py</code>，页面 <code>tpl/page.py</code> + <code>hbm/page.py</code>）</p>''',
 )
+
+# ===== 链条 5 页模板（2026-10-28 起 layout='v4'，tpl/page_v4g.py，见 docs/CHAIN_TEMPLATE.md）=====
+# 只决定“哪一块放哪一页、节标题怎么问”；内容仍是上面的 LOGIC / SPEC，一个字不删。总览的三个信号灯按 data/hbm.json 现算。
+import json as _json
+_J = _json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'hbm.json'), encoding='utf-8'))
+_W = {w[0]: w for w in LOGIC['watch']}
+_p = _J['prices']['DDR5 16Gb 固定价']
+(_m1, _v1), (_m0, _v0) = _p['pts'][-1], _p['pts'][-4]
+_ex = [x for x in _J['bt']['export'] if x.get('y3') is not None][-1]
+_SIG = [
+    ('g' if _v1 >= _v0 else 'y', 'DDR5 会不会先跌？',
+     f'DDR5 16Gb 固定价 {_m1} 约 {_v1:g} 美元/GB，3 个月前（{_m0}）{_v0:g} {S(_p["src"])}',
+     _W['DDR5 和 HBM 谁先松'][2],
+     '没触发：DDR5 还在涨' if _v1 >= _v0 else '接近：DDR5 已比 3 个月前低，HBM 2027 年均价要到明年才能对照'),
+    ('r' if _ex['y3'] < 100 else 'g', '周期见顶了吗？',
+     f'韩国半导体出口 3 个月同比 {_ex["m"]} +{_ex["y3"]:.0f}% {S("30,31,20")}',
+     _W['周期见顶信号'][2],
+     f'越线：已跌破 +100%，按历史约 9–10 个月后原厂营收见顶' if _ex['y3'] < 100 else f'没触发：离 +100% 还有 {_ex["y3"] - 100:.0f} 个百分点'),
+    ('x', 'SK 海力士怎么说 2027？', f'4Q26 财报会还没开（{_W["SK 海力士怎么说 2027"][3]} 前）', _W['SK 海力士怎么说 2027'][2], '未到公布日'),
+]
+SPEC.update(layout='v4', v4=dict(
+    h1='HBM：涨价是缺货，还是 DDR5 抢晶圆？',
+    title0='HBM 高带宽内存：缺不缺、谁赚钱、周期到哪 · 总览',
+    one_min=[
+        ('是什么', 'HBM（高带宽内存）= 把 8–16 层 DRAM 芯片叠起来、贴在 GPU 旁边。' + LOGIC['three'][0]),
+        ('钱在哪', LOGIC['three'][1]),
+        ('最大风险', '三家在利润率高点同时扩产，2028 年投片再 +38%；周期顶部看 2027 年下半年，要防转向过剩。'),
+        ('盯什么', 'DDR5 价格会不会先跌；韩国半导体出口 3 个月同比什么时候跌破 +100%。'),
+        ('什么算我们错', '原厂说 2027 年要配额、大客户拿不到量；或 DDR5 先跌而 HBM 均价仍涨超 50%。'),
+    ],
+    ov5=[('j', SPEC['gov'] + '。'), ('j', '<b>缺不缺：</b>' + LOGIC['qa'][0][0]), ('j', '<b>卡在哪：</b>' + LOGIC['qa'][1][0]),
+         ('j', '<b>和市场差在哪：</b>' + LOGIC['qa'][2][0]), ('j', '<b>中国：</b>' + LOGIC['qa'][0][1])],
+    ov_fig=(1, '到底缺多少？'),
+    sig=_SIG,
+    sig_note='第 4 个信号（中国缺口有没有松）每月看 950DT 报价和长鑫投片，在追踪页。',
+    pattern=[('step', 'proc', 'HBM 怎么做出来？'), ('step', 'profit', '钱在哪一层？'), ('arg', 2, '涨价靠什么？'),
+             ('step', 'play', '谁说了算？'), ('step', 'map', '哪些公司在做？'), ('cn', '中国这本账怎么算？')],
+    cycle=[('step', 'demand', '需求有多大？'), ('step', 'supply', '产能有多少？'), ('arg', 1, '到底缺不缺？'),
+           ('step', 'balance', '缺口怎么算出来？'), ('step', 'neck', '卡在哪一环？'), ('arg', 3, '周期走到哪了？'),
+           ('step', 'hist', '以前的周期怎么走？'), ('step', 'lead', '先看哪个数据？')],
+    track=[('diff', '和市场差在哪？'), ('claims', '现在的判断是什么？'), ('watch', '我们重点盯什么？'), ('step', 'key', '哪个假设能翻盘？'),
+           ('step', 'debate', '三个争议是什么？'), ('wrong', '什么情况算我们错？'), ('pred', '预测写了什么？'), ('step', 'ledger', '台账怎么打分？')],
+))

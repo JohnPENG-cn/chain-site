@@ -1,4 +1,4 @@
-"""链条模板 v4（2026-10-27 起 PCB 用；HBM / CoWoS / 铜 以后照 docs/CHAIN_TEMPLATE.md 迁移）。
+"""链条模板 v4（2026-10-27 起 PCB 用；2026-10-28 起 HBM / CoWoS / 铜 也用，见 tpl/page_v4g.py 与 docs/CHAIN_TEMPLATE.md）。
 一条链 = 5 页，同一外壳：
   ① 总览（pcb.html）           主要矛盾、五句话、一张主图、三个信号红绿灯、什么会证明我们错
   ② 格局与钱在哪赚（pcb-pattern）  产业地图 → 利润池 → 议价力 → 打分卡 → 中国 vs 海外
@@ -22,18 +22,39 @@ SIG, stcls = V3.SIG, V3.stcls
 R0 = V3.R0
 
 # ---------------- 站点导航配置（以后加链条只改这里）
-CHAIN = 'PCB'
-PAGES = [  # (文件, 页名, 短名, 一句话)
-    ('pcb.html', '总览', '总览', '主要矛盾一页看懂'),
-    ('pcb-pattern.html', '格局与钱在哪赚', '格局', '地图、利润池、谁说了算'),
-    ('pcb-cycle.html', '周期与产能', '周期', '扩产潮、约束、需求'),
-    ('pcb-track.html', '主要矛盾追踪', '追踪', '判断、指标、待确认'),
-    ('pcb-data.html', '底稿与数据', '底稿', '给想核数的人'),
+PG5 = [('总览', '总览'), ('格局与钱在哪赚', '格局'), ('周期与产能', '周期'), ('主要矛盾追踪', '追踪'), ('底稿与数据', '底稿')]
+SUFFIX = ['', '-pattern', '-cycle', '-track', '-data']
+
+
+def _pages(key, ds):
+    return [(f'{key}{x}.html', t, s, d) for x, (t, s), d in zip(SUFFIX, PG5, ds)]
+
+
+CHAINS = [  # (键, 名称, 5 页 (文件, 页名, 短名, 一句话), 链内附加链接) —— 导航顺序 = 上下游顺序
+    ('hbm', 'HBM', _pages('hbm', ['主要矛盾一页看懂', '工序、利润池、谁说了算', '需求、供给、约束', '判断、信号、台账', '给想核数的人']),
+     [('原理图：HBM 怎么叠', 'explain-hbm.html')]),
+    ('cowos', 'CoWoS', _pages('cowos', ['主要矛盾一页看懂', '工序、利润池、谁说了算', '需求、产能、约束', '判断、信号、台账', '给想核数的人']),
+     [('原理图：CoWoS 怎么封', 'explain-cowos.html')]),
+    ('pcb', 'PCB', _pages('pcb', ['主要矛盾一页看懂', '地图、利润池、谁说了算', '扩产潮、约束、需求', '判断、指标、待确认', '给想核数的人']), []),
+    ('cu', '铜', _pages('cu', ['主要矛盾一页看懂', '环节、利润池、谁说了算', '需求、矿山、约束', '判断、信号、台账', '给想核数的人']), []),
 ]
-DATA_PAGE = 'pcb-data.html'
-OTHER = [('HBM', 'hbm.html'), ('CoWoS', 'cowos.html'), ('铜', 'cu.html')]   # 还在旧版式，导航里照列
+CFG = {c[0]: c for c in CHAINS}
 SITE = [('总账', 'ledger.html'), ('日报', 'daily/'), ('原理图', 'explain.html'), ('更新记录', 'changelog.html')]
-ALIAS = {'log': 'changelog.html', 'apxLog': 'changelog.html'}   # 旧锚点 → 现在没有同名块的去处
+KEY = CHAIN = PAGES = DATA_PAGE = ALIAS = None
+
+
+def use(key):
+    """切到某条链：导航、底稿页、旧锚点去处都按这条链来。"""
+    global KEY, CHAIN, PAGES, DATA_PAGE, ALIAS, SRC_NOTE
+    KEY, CHAIN, PAGES = key, CFG[key][1], CFG[key][2]
+    SRC_NOTE = 'pcb/page.py + pcb/research.py + pcb/map.py' if key == 'pcb' else f'{key}/page.py + tpl/page_v4g.py'
+    DATA_PAGE = PAGES[-1][0]
+    # 旧锚点 → 现在没有同名块的去处（值里带 # 就原样跳，不再拼 #id）
+    ALIAS = {'log': 'changelog.html', 'apxLog': 'changelog.html'} if key == 'pcb' else {'log': f'changelog.html#log-{key}', 'apxLog': f'changelog.html#log-{key}'}
+
+
+SRC_NOTE = None
+use('pcb')
 
 CSS4 = '''<style>
 .ov5{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}.ov5 li{background:var(--card);border-radius:var(--r-card);padding:12px 14px;font-size:16px;line-height:1.65}
@@ -50,6 +71,7 @@ CSS4 = '''<style>
 .ov-next{display:block;text-align:center;font-weight:600;margin:18px 0 0}
 .chsrc ol{margin:0;padding-left:0;list-style:none}.chsrc li{font-size:13.5px;line-height:1.55;margin:0 0 4px;overflow-wrap:anywhere}.chsrc li a{font-variant-numeric:tabular-nums;margin-right:6px}
 .forwho{display:inline-block;background:var(--hig-gray-fill);border-radius:6px;font-size:12.5px;font-weight:600;padding:3px 8px;margin:4px 0 8px}
+.sn a.pg-x{font-size:13px;padding:5px 8px;color:var(--mut)}.sn a.pg-x b{font-size:11px}
 .xr{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
 #ch-shadow{display:none!important}
 .cl-log td{font-size:14px;line-height:1.6;vertical-align:top}.cl-log td:first-child{white-space:nowrap}
@@ -112,7 +134,7 @@ def relink(m, pf, home):
     """页内锚点：家在别的页 → 那一页.html#id；来源号 srcN 的家是底稿页。"""
     i = m.group(1)
     h = DATA_PAGE if re.match(r'src\d+$', i) else home.get(i, pf)
-    return m.group(0) if h == pf else f'href="{h}#{i}"'
+    return m.group(0) if h == pf else (f'href="{h}"' if '#' in h else f'href="{h}#{i}"')
 
 
 def chsrc(refs, T, page):
@@ -124,22 +146,28 @@ def chsrc(refs, T, page):
             f'<div class="more-b"><ol>{lis}</ol><p class="note">完整列表与局限见<a href="{DATA_PAGE}#apx">底稿与数据 · 来源与注释</a>。</p></div></details>\n')
 
 
-def nav_html(cur, secs_here=True):
-    o = ['<nav class="rd-toc sn" id="rdToc" aria-label="站内导航"><div class="sn-h">链条</div>',
-         f'<div class="sn-chain on"><a class="sn-c" href="{PAGES[0][0]}"><b>{CHAIN}</b><span>{len(PAGES)} 页</span></a><ol class="sn-pg">']
-    for i, (f, t, s, d) in enumerate(PAGES, 1):
-        on = f == cur
-        o.append(f'<li{" class=\"cur\"" if on else ""}><a href="{f}"{" aria-current=\"page\" class=\"pg on\"" if on else " class=\"pg\""}><b>{i}</b><span>{t}</span></a>'
-                 + ('<div class="sn-here" id="snHere"></div>' if on and secs_here else '') + '</li>')
-    o.append('</ol></div>')
-    for n, f in OTHER:
-        o.append(f'<div class="sn-chain"><a class="sn-c" href="{f}"><b>{n}</b><span>旧版式</span></a></div>')
+def nav_html(cur, secs_here=True, key=None):
+    """固定导航树：四条链都是 5 页；当前链展开（含原理图），别的链收起。key=None（更新记录页）= 全部收起。"""
+    key = KEY if key is None else key
+    o = ['<nav class="rd-toc sn" id="rdToc" aria-label="站内导航"><div class="sn-h">链条</div>']
+    for k, name, pages, extra in CHAINS:
+        if k != key:
+            o.append(f'<div class="sn-chain"><a class="sn-c" href="{pages[0][0]}"><b>{name}</b><span>{len(pages)} 页</span></a></div>')
+            continue
+        o.append(f'<div class="sn-chain on"><a class="sn-c" href="{pages[0][0]}"><b>{name}</b><span>{len(pages)} 页</span></a><ol class="sn-pg">')
+        for i, (f, t, s, d) in enumerate(pages, 1):
+            on = f == cur
+            o.append(f'<li{" class=\"cur\"" if on else ""}><a href="{f}"{" aria-current=\"page\" class=\"pg on\"" if on else " class=\"pg\""}><b>{i}</b><span>{t}</span></a>'
+                     + ('<div class="sn-here" id="snHere"></div>' if on and secs_here else '') + '</li>')
+        for t, f in extra:
+            o.append(f'<li class="sn-x"><a class="pg-x" href="{f}"><b>↗</b><span>{t}</span></a></li>')
+        o.append('</ol></div>')
     o.append('<div class="sn-h">站内</div>' + ''.join(f'<a class="sn-s{" on" if f == cur else ""}" href="{f}">{n}</a>' for n, f in SITE) + '</nav>\n')
     return ''.join(o)
 
 
 def steps_strip(cur):
-    return ('<nav class="pg-steps" aria-label="PCB 五页">' + ''.join(f'<a href="{f}"{" class=\"on\" aria-current=\"page\"" if f == cur else ""}><b>{i}</b>{s}</a>' for i, (f, t, s, d) in enumerate(PAGES, 1)) + '</nav>\n')
+    return (f'<nav class="pg-steps" aria-label="{CHAIN} 五页">' + ''.join(f'<a href="{f}"{" class=\"on\" aria-current=\"page\"" if f == cur else ""}><b>{i}</b>{s}</a>' for i, (f, t, s, d) in enumerate(PAGES, 1)) + '</nav>\n')
 
 
 def prevnext(cur):
@@ -153,9 +181,10 @@ def prevnext(cur):
     return o + '</nav>\n'
 
 
+
 def head(title, desc, extra_css, home_js, page):
     return (f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<!-- 由 tpl/page_v4.py（链条 5 页模板，见 docs/CHAIN_TEMPLATE.md）根据 pcb/page.py + pcb/research.py + pcb/map.py 生成，不要手改；改内容请改这些文件后跑 ./build.sh -->
+<!-- 由 tpl/page_v4.py（链条 5 页模板，见 docs/CHAIN_TEMPLATE.md）根据 {SRC_NOTE} 生成，不要手改；改内容请改这些文件后跑 ./build.sh -->
 <title>{title} · 产业链情报研究中心</title><meta name="description" content="{desc}">{home_js}<link rel="stylesheet" href="assets.css"><script src="theme.js"></script>
 <script src="vendor/echarts.min.js"></script><script src="assets/hig-echarts.js"></script>{extra_css}<link rel="stylesheet" href="assets/hig.css"></head>''')
 
@@ -489,6 +518,22 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
     w(f'<details class="apx" id="apxSrc"><summary>来源列表与局限 <small>点任一上标会先弹出来源摘要</small></summary><div class="body" id="src">{S["src"].replace(MERGE, "第 81–92 条原在底图页，编号已改为全站统一（见<a href=\"changelog.html#merge\">更新记录</a>）；")}</div></details>\n')
 
     # ---------------- 组装
+    stub = '<div hidden id="ch-stub"><table id="pcb-logT"><tbody></tbody></table></div>'   # pcb.js 会往更新记录表里填；表本身在 changelog.html
+    out, STAT, home_js = assemble(SECS, T, H1, title0='PCB 总览：扩产潮能不能等到需求接住', desc0=nolink(R.BLUF[0]), stub=stub,
+                                  scripts=finjs + ''.join(f'<script src="{x}"></script>' for x in ['ledger_ids.js', 'chain.js'] + S['scripts'] + ['pcb_fin.js', 'assets/reading.js']),
+                                  tail='<script>document.getElementById("baseD").addEventListener("toggle",function(){if(this.open&&window.redraw)setTimeout(window.redraw,30)});</script>\n',
+                                  foot='<a href="cowos.html">CoWoS</a>')
+    render_v4.STAT = STAT
+    render_v4.CL = changelog_secs(S, J)
+    return out
+
+
+CSS_ALL = None
+
+
+def assemble(SECS, T, H1, title0, desc0, stub, scripts, tail, foot):
+    """SECS（每节 page/id/title/lead/body/cls）→ {文件名: html}。别的页的节放进隐藏的 #ch-shadow；返回 (out, STAT, home)。"""
+    global CSS_ALL
     for s in SECS:
         s['html'] = A.fnify(''.join(s['body']))
     home = {}
@@ -499,14 +544,14 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
     for k, v in ALIAS.items():
         home.setdefault(k, v)
     home_js = {k: v for k, v in home.items()}
-    stub = '<div hidden id="ch-stub"><table id="pcb-logT"><tbody></tbody></table></div>'   # pcb.js 会往更新记录表里填；表本身在 changelog.html
     STAT = {}
     out = {}
-    css = V3.CSS2 + PM.CSS + V3.CSS3 + CSS4
+    css = CSS_ALL = V3.CSS2 + PM.CSS + V3.CSS3 + CSS4
+    nolink = lambda t: re.sub(r'<a\b[^>]*>(.*?)</a>', r'\1', t)
     for pi, (pf, pt, ps, pd) in enumerate(PAGES):
         mine = [s for s in SECS if s['page'] == pf]
         rest = [s for s in SECS if s['page'] != pf]
-        vis, nfn, nlb, allrefs = [], 0, 0, []
+        vis, nlb, allrefs = [], 0, []
         for k, s in enumerate(mine, 1):
             body = s['html']
             body = re.sub(r'href="#([\w-]+)"', lambda m: relink(m, pf, home), body)
@@ -521,19 +566,19 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
             vis.append(v)
         main_html = ''.join(vis)
         if pi > 0:
-            main_html = f'<section id="pg-top" class="hero pg-h"><div class="kicker">{CHAIN} 研究 · 第 {pi+1} 页 / 共 {len(PAGES)} 页{" · 给想核数的人" if pf == DATA_PAGE else ""}</div><h1>{pt}</h1><p class="dek">{pd}。主线：{H1.split("：")[1]}。</p>{steps_strip(pf)}</section>\n' + main_html
+            main_html = f'<section id="pg-top" class="hero pg-h"><div class="kicker">{CHAIN} 研究 · 第 {pi+1} 页 / 共 {len(PAGES)} 页{" · 给想核数的人" if pf == DATA_PAGE else ""}</div><h1>{pt}</h1><p class="dek">{pd}。主线：{H1.split("：", 1)[1]}。</p>{steps_strip(pf)}</section>\n' + main_html
         main_html += prevnext(pf)
-        shadow = '<div id="ch-shadow" hidden inert aria-hidden="true">' + ''.join(f'<section id="{s["id"]}" class="ch">{s["html"]}</section>' for s in rest) + '</div>\n'
+        # 隐藏区：JS 照常画图填表；去掉 data-mirror，免得同一张源图的镜像被隐藏副本抢走（chain.js 一个源只认一个镜像）
+        shadow = '<div id="ch-shadow" hidden inert aria-hidden="true">' + ''.join(f'<section id="{s["id"]}" class="ch">{re.sub(r" data-mirror=\"[^\"]*\"", "", s["html"])}</section>' for s in rest) + '</div>\n'
         redirect = ('<script>window.CH_PAGE=' + json.dumps(pf) + ';window.CH_HOME=' + json.dumps(home_js, ensure_ascii=False, separators=(',', ':'))
-                    + ';(function(){var h=decodeURIComponent(location.hash.slice(1)),p=h&&(window.CH_HOME[h]||(/^src\\d+$/.test(h)?"'+DATA_PAGE+'":""));if(p&&p!==window.CH_PAGE)location.replace(p+"#"+h)})();</script>')
-        desc = nolink(R.BLUF[0]) if pi == 0 else f'PCB · {pt}：{pd}'
-        title = 'PCB 总览：扩产潮能不能等到需求接住' if pi == 0 else f'PCB · {pt}'
-        html = (head(title, desc, css, redirect, pf).replace('<body', '<body') + f'<body class="article chain" data-src-page="{DATA_PAGE}" data-fnmax="1" data-page="{ps}">\n'
+                    + ';(function(){var h=decodeURIComponent(location.hash.slice(1)),p=h&&(window.CH_HOME[h]||(/^src\\d+$/.test(h)?"'+DATA_PAGE+'":""));if(p&&p!==window.CH_PAGE)location.replace(p.indexOf("#")>-1?p:p+"#"+h)})();</script>')
+        desc = desc0 if pi == 0 else f'{CHAIN} · {pt}：{pd}'
+        title = title0 if pi == 0 else f'{CHAIN} · {pt}'
+        html = (head(title, desc, css, redirect, pf) + f'<body class="article chain" data-src-page="{DATA_PAGE}" data-fnmax="1" data-page="{ps}">\n'
                 + topbar(pt, CHAIN) + nav_html(pf) + '<main class="wrap">\n' + main_html + '</main>\n' + shadow + stub
-                + f'<footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="ledger.html">总账</a> · <a href="changelog.html">更新记录</a> · <a href="cowos.html">CoWoS</a></footer>\n'
+                + f'<footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="ledger.html">总账</a> · <a href="changelog.html">更新记录</a> · {foot}</footer>\n'
                 + '<div class="fn-sheet" id="fnSheet" role="dialog" aria-modal="true" aria-label="来源" hidden><div class="fn-bd" data-close></div><div class="fn-card"><button class="fn-x" data-close aria-label="关闭">×</button><div class="fn-body" id="fnBody"></div></div></div>\n'
-                + finjs + ''.join(f'<script src="{x}"></script>' for x in ['ledger_ids.js', 'chain.js'] + S['scripts'] + ['pcb_fin.js', 'assets/reading.js']) + '\n'
-                + '<script>document.getElementById("baseD").addEventListener("toggle",function(){if(this.open&&window.redraw)setTimeout(window.redraw,30)});</script>\n</body></html>\n')
+                + scripts + '\n' + tail + '</body></html>\n')
         assert 'class="tag t-src"' not in html.replace('<span class="tag t-src">源', ''), f'{pf}: 还有没转成脚注的行内来源'
         assert not re.search(r'<a\b(?:(?!</a>).)*<a\b', html, re.S), f'{pf}: 有嵌套 <a>'
         ids = re.findall(r'\bid="([^"]+)"', html)
@@ -547,34 +592,55 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
             tx = re.sub(r'<[^>]+>', '', main_html)
             for mm in re.finditer(r'(?<!页 )v0\.\d|旧版|并入', tx): print(pf, '…' + tx[max(0, mm.start()-60):mm.end()+40] + '…')
         assert not bad, f'{pf}: 内容页还有版本说明字样 {set(bad)}（应搬到 changelog.html）'
-        STAT[pf] = dict(fn=len(re.findall(r'class="fn-a"', main_html.split('class="more chsrc"')[0])) , fn_main=sum(len(re.findall(r'class="fn-a"', re.sub(r'<details class="more chsrc">.*?</details>', '', v, flags=re.S))) for v in vis), labels=nlb, refs=len(allrefs))
+        STAT[pf] = dict(fn_main=sum(len(re.findall(r'class="fn-a"', re.sub(r'<details class="more chsrc">.*?</details>', '', v, flags=re.S))) for v in vis), labels=nlb, refs=len(allrefs))
         out[pf] = html
-    out['changelog.html'] = changelog(S, J, css, home_js)
-    render_v4.STAT = STAT
-    return out
+    return out, STAT, home_js
 
 
-def changelog(S, J, css, home_js):
-    """更新记录页：版本说明、并入说明、旧版存档链接（内容页不留这些）。"""
-    rows = ''.join(f'<tr><td><b>{d}</b><br>{v}</td><td>{t}</td></tr>' for d, v, t in J['changelog'])
-    main = (f'<section id="top" class="hero" data-toc="01 PCB 更新记录"><div class="kicker">站内 · 更新记录</div><h1>更新记录</h1>'
-            f'<p class="dek">每次改版、改判断都记在这里。研究页只放内容，版本说明、并入说明、旧版链接都搬到本页。</p>'
-            f'<h3 class="sec-h">PCB 现在是哪一版？</h3><p>{S["pill"]} → 2026-10-27 拆成 5 页（总览 / 格局与钱在哪赚 / 周期与产能 / 主要矛盾追踪 / 底稿与数据）。'
-            f'原页眉：{S["kicker"].replace(" · 更新 <span id=\"pcb-upd\"></span>", "")}。</p><p>{S["vbar"].replace("#ch2", "pcb-pattern.html#ch2").replace("#ch3", "pcb-pattern.html#ch3")}</p></section>\n'
-            f'<section id="log" class="ch" data-toc="02 逐版记录"><header class="ch-h"><span class="ch-n">02</span><h2>逐版记录</h2></header>'
-            f'<div class="tbl"><table class="cl-log"><thead><tr><th>日期 · 版本</th><th>改了什么</th></tr></thead><tbody>{A.fnify(rows)}</tbody></table></div>'
-            '<p class="note">已入账判断、概率和模型数字只在 John 确认后改，每次改都在这里留一行。</p></section>\n'
-            '<section id="merge" class="ch" data-toc="03 并入与旧版"><header class="ch-h"><span class="ch-n">03</span><h2>并入与旧版</h2></header>'
-            '<ul><li>原“底图”页 <a href="pcb-map.html">pcb-map.html</a>（技术路线图、格局图、一线校验、缺口）2026-10-23 并入 PCB 页；旧链接自动跳转到新位置（现在在<a href="pcb-pattern.html#road">格局与钱在哪赚</a>、<a href="pcb-track.html#check">主要矛盾追踪</a>）。</li>'
-            '<li>来源第 81–92 条原在底图页，2026-10-23 并入时编号改为全站统一；第 93 条起接着编。</li>'
-            '<li>2026-10-27：一页九章拆成 5 页。旧网址 <code>pcb.html#锚点</code> 仍可用，会自动跳到新页的同一块。</li>'
-            '<li>“2026 年的现状”一段是 v0.2 起的结论，未改；“公开数据替代跟踪”是 v0.2 的四个问题；“读后五问”沿用 v0.2。</li>'
-            f'<li>版本对比：<a href="{S["archive"][0]}">旧版 v1 存档（2026-10-20）</a> ⇄ 现在的 5 页版。</li></ul></section>\n')
-    T = {SRCM.ID[k]: t for k, t, _ in SRCM.SRC}
-    main = re.sub(r'href="#(src\d+)"', rf'href="{DATA_PAGE}#\1"', main)
-    nav = nav_html('changelog.html', secs_here=False).replace('<div class="sn-h">站内</div>', '<div class="sn-h">站内</div><div class="sn-here" id="snHere"></div>', 1)
-    return (head('更新记录', '产业链情报研究中心：各研究页的版本说明、并入说明与旧版存档', css, '', 'changelog.html')
+def log_rows(J):
+    return A.fnify(''.join(f'<tr><td><b>{d}</b><br>{v}</td><td>{t}</td></tr>' for d, v, t in J['changelog']))
+
+
+def log_table(J):
+    return f'<div class="tbl"><table class="cl-log"><thead><tr><th>日期 · 版本</th><th>改了什么</th></tr></thead><tbody>{log_rows(J)}</tbody></table></div>'
+
+
+def changelog_secs(S, J):
+    """PCB 在更新记录页的几节：[(id, 标题, html)]。来源上标指到 PCB 底稿页。"""
+    secs = [
+        ('cl-pcb', 'PCB 现在是哪一版？',
+         f'<p>{S["pill"]} → 2026-10-27 拆成 5 页（总览 / 格局与钱在哪赚 / 周期与产能 / 主要矛盾追踪 / 底稿与数据）。'
+         f'原页眉：{S["kicker"].replace(" · 更新 <span id=\"pcb-upd\"></span>", "")}。</p><p>{S["vbar"].replace("#ch2", "pcb-pattern.html#ch2").replace("#ch3", "pcb-pattern.html#ch3")}</p>'),
+        ('log', 'PCB 逐版记录', log_table(J) + '<p class="note">已入账判断、概率和模型数字只在 John 确认后改，每次改都在这里留一行。</p>'),
+        ('merge', 'PCB 并入与旧版',
+         '<ul><li>原“底图”页 <a href="pcb-map.html">pcb-map.html</a>（技术路线图、格局图、一线校验、缺口）2026-10-23 并入 PCB 页；旧链接自动跳转到新位置（现在在<a href="pcb-pattern.html#road">格局与钱在哪赚</a>、<a href="pcb-track.html#check">主要矛盾追踪</a>）。</li>'
+         '<li>来源第 81–92 条原在底图页，2026-10-23 并入时编号改为全站统一；第 93 条起接着编。</li>'
+         '<li>2026-10-27：一页九章拆成 5 页。旧网址 <code>pcb.html#锚点</code> 仍可用，会自动跳到新页的同一块。</li>'
+         '<li>2026-10-28：格局页“打分定义”和中国账本的背景 / 冲突 / 问题收进展开细节，默认可见字数 4328 → 3929（不删内容）。</li>'
+         '<li>“2026 年的现状”一段是 v0.2 起的结论，未改；“公开数据替代跟踪”是 v0.2 的四个问题；“读后五问”沿用 v0.2。</li>'
+         f'<li>版本对比：<a href="{S["archive"][0]}">旧版 v1 存档（2026-10-20）</a> ⇄ 现在的 5 页版。</li></ul>'),
+    ]
+    return [(i, t, re.sub(r'href="#(src\d+)"', rf'href="{DATA_PAGE}#\1"', h)) for i, t, h in secs]
+
+
+def changelog_page(parts):
+    """更新记录页：parts = {链键: [(id, 标题, html)]}，按导航顺序分链成段。版本说明、并入说明、旧版存档链接（内容页不留这些）。"""
+    order = [c for c in CHAINS if c[0] in parts]
+    jump = ' · '.join(f'<a href="#{parts[k][0][0]}">{n}</a>' for k, n, _, _ in order)
+    main = [f'<section id="top" class="hero" data-toc="01 更新记录"><div class="kicker">站内 · 更新记录</div><h1>更新记录</h1>'
+            f'<p class="dek">每次改版、改判断都记在这里。研究页只放内容，版本说明、并入说明、旧版链接都搬到本页。</p><p>按链跳：{jump}</p></section>\n']
+    k = 1
+    for key, name, pages, _ in order:
+        for sid, t, h in parts[key]:
+            k += 1
+            assert len(t) <= 15, t
+            main.append(f'<section id="{sid}" class="ch" data-toc="{k:02d} {t}"><header class="ch-h"><span class="ch-n">{k:02d}</span><h2>{t}</h2></header>{h}</section>\n')
+    main = ''.join(main)
+    ids = re.findall(r'\bid="([^"]+)"', main)
+    assert len(ids) == len(set(ids)), '更新记录页 id 重复'
+    nav = nav_html('changelog.html', secs_here=False, key='').replace('<div class="sn-h">站内</div>', '<div class="sn-h">站内</div><div class="sn-here" id="snHere"></div>', 1)
+    return (head('更新记录', '产业链情报研究中心：各研究页的版本说明、并入说明与旧版存档', CSS_ALL, '', 'changelog.html')
             + '<body class="article chain" data-src-page="pcb-data.html" data-page="更新记录">\n' + topbar('更新记录', '更新记录') + nav
-            + '<main class="wrap">\n' + main + '</main>\n<footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="ledger.html">总账</a> · <a href="pcb.html">PCB</a></footer>\n'
+            + '<main class="wrap">\n' + main + '</main>\n<footer class="wrap">Kiko 产业笔记 · 公开数据整理，不构成投资建议 · <a href="./">链库</a> · <a href="ledger.html">总账</a> · ' + ' · '.join(f'<a href="{p[0][0]}">{n}</a>' for _, n, p, _ in order) + '</footer>\n'
             + '<div class="fn-sheet" id="fnSheet" role="dialog" aria-modal="true" aria-label="来源" hidden><div class="fn-bd" data-close></div><div class="fn-card"><button class="fn-x" data-close aria-label="关闭">×</button><div class="fn-body" id="fnBody"></div></div></div>\n'
             + '<script src="assets/reading.js"></script>\n</body></html>\n')

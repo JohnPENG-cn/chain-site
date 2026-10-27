@@ -83,7 +83,7 @@ CH.pyrNav=()=>{const nav=document.getElementById('nav');if(!nav||!nav.classList.
   const on=links.find(a=>a.classList.contains('on'));if(on){const box=on.parentElement;box.scrollTo({left:on.offsetLeft-box.clientWidth/2+on.clientWidth/2,behavior:'smooth'})}};
  addEventListener('scroll',upd,{passive:true});addEventListener('load',upd);upd()};
 /* 折叠块（只剩来源、更新记录）：点到里面的锚点（#srcN、#log）先展开。 */
-CH.autoOpen=()=>{const open=h=>{if(!h||h.length<2)return;let t;try{t=document.querySelector(h)}catch(e){return}const d=t&&(t.tagName=='DETAILS'?t:t.closest('details'));if(d&&!d.open)d.open=true};
+CH.autoOpen=()=>{const open=h=>{if(!h||h.length<2)return;let t;try{t=document.querySelector(h)}catch(e){return}let d=t&&(t.tagName=='DETAILS'?t:t.closest('details'));while(d){if(!d.open)d.open=true;d=d.parentElement&&d.parentElement.closest('details')}};
  document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a)open(a.getAttribute('href'))},true);
  addEventListener('load',()=>{if(location.hash){open(location.hash);const t=document.querySelector(location.hash);if(t)setTimeout(()=>t.scrollIntoView(),60)}});addEventListener('hashchange',()=>open(location.hash))};
 /* 需求的上一层：云厂商资本开支（柱）与积压订单（虚线）。srcHref 给出时，来源列链接到别的页面（如 HBM 页引用 CoWoS 页来源）。 */

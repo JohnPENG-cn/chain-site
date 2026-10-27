@@ -189,6 +189,7 @@ def load(chain):
 
 if __name__ == '__main__':
     idx = open(os.path.join(R0, 'index.html'), encoding='utf-8').read()
+    CL = {}
     for chain in ('hbm', 'cowos', 'pcb', 'cu'):   # cu = 大宗商品系列（铜），同一模板
         S = load(chain)
         if S.get('layout') == 'v2':   # 行业版结构（2026-10-21 起 pcb.html），见 tpl/page_v2.py
@@ -199,12 +200,20 @@ if __name__ == '__main__':
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
             from page_v3 import render_v3
             html = render_v3(S, STEPS, SID, MID, CIRC, CNC)
-        elif S.get('layout') == 'v4':   # 链条 5 页模板（2026-10-27 起 PCB），见 tpl/page_v4.py + docs/CHAIN_TEMPLATE.md
+        elif S.get('layout') == 'v4':   # 链条 5 页模板（2026-10-27 起 PCB，2026-10-28 起 HBM / CoWoS / 铜），见 tpl/page_v4.py + tpl/page_v4g.py + docs/CHAIN_TEMPLATE.md
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-            from page_v4 import render_v4
-            for fn, h in render_v4(S, STEPS, SID, MID, CIRC, CNC).items():
+            import page_v4
+            if chain == 'pcb':
+                page_v4.use('pcb')
+                pages = page_v4.render_v4(S, STEPS, SID, MID, CIRC, CNC)
+                st, CL[chain] = page_v4.render_v4.STAT, page_v4.render_v4.CL
+            else:
+                from page_v4g import render_v4g
+                pages = render_v4g(S, STEPS, SID, MID, CIRC, CNC, chain, flow)
+                st, CL[chain] = render_v4g.STAT, render_v4g.CL
+            for fn, h in pages.items():
                 open(os.path.join(R0, fn), 'w', encoding='utf-8').write(h)
-            print('  v4 页面：' + '；'.join(f'{k} 脚注 {v["fn_main"]}、标签 {v["labels"]}' for k, v in render_v4.STAT.items()))
+            print('  v4 页面：' + '；'.join(f'{k} 脚注 {v["fn_main"]}、标签 {v["labels"]}' for k, v in st.items()))
             html = None
         else:
             html = render(S)
@@ -215,3 +224,5 @@ if __name__ == '__main__':
         assert n == 1, f'index.html 缺 card:{chain} 标记'
         print(f'{S["file"]}{"（" + S["layout"] + "）" if S.get("layout") else ""}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿' + (f'；中国账本 {len(S["cn"]["args"])} 条论点、{sum(len(a["ev"]) for a in S["cn"]["args"])} 个证据块、{sum(1 for x in S["steps"] if x.get("cn"))} 个中国块' if S.get('cn') else ''))
     open(os.path.join(R0, 'index.html'), 'w', encoding='utf-8').write(idx)
+    if CL:   # 更新记录页：各链的版本说明、逐版记录、旧网址去处
+        open(os.path.join(R0, 'changelog.html'), 'w', encoding='utf-8').write(page_v4.changelog_page(CL))

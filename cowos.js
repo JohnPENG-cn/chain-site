@@ -61,7 +61,7 @@ function drawIf(r){const c=CH.C('cw-cIf'),ys=[2026,2027];if(!H){$('#cw-ifTxt').t
 function drawDrv(){CH.driver('cw-cDrv','#cw-drvT tbody',J.driver)}
 function render(){if(H&&T){if(tocDraw)tocDraw();else tocDraw=TOC.render('cw','#cw-toc',J,H,T,{ledger:'#cw-tpred'})}drawDrv();drawBal();drawCap();drawMix();drawInf();drawPool();drawMar();drawBt();drawXc();drawCl();CH.net('cw-cNet','#cw-nodeInfo',J.companies,mk)}
 window.redraw=render;
-let T,tocDraw=null;Promise.all([fetch('data/cowos.json?v=1f41496d73').then(r=>r.json()),fetch('data/hbm.json?v=8a4bbe97f9').then(r=>r.json()).catch(()=>null),fetch('data/toc.json?v=4dd7367735').then(r=>r.json())]).then(([j,h,t])=>{J=j;H=h;T=t;
+let T,tocDraw=null;Promise.all([fetch('data/cowos.json?v=1f41496d73').then(r=>r.json()),fetch('data/hbm.json?v=a4fc96910a').then(r=>r.json()).catch(()=>null),fetch('data/toc.json?v=4dd7367735').then(r=>r.json())]).then(([j,h,t])=>{J=j;H=h;T=t;
  $('#cw-upd').textContent=J.meta.updated;CH.stats('#cw-stats',J.judgment.stats);CH.debates('#cw-deb',J.debates);
  CH.table('#cw-varT tbody',J.variants,5);CH.table('#cw-procT tbody',J.process,3);CH.table('#cw-capT tbody',J.cap_src,5);CH.table('#cw-ppwT tbody',J.ppw,-1);
  CH.table('#cw-capexT tbody',J.profit.capex,2);CH.table('#cw-ucT tbody',J.profit.unit_cost,2);
