@@ -1,7 +1,7 @@
 # 链条 5 页模板（v4）
 
-2026-10-27 起 PCB 用这套；HBM、CoWoS、铜以后照本文迁移（**这次没迁**，导航里照列，标“旧版式”）。
-代码：`tpl/page_v4.py`（结构）、`assets/reading.js`（导航 / 脚注 / 改道）、`assets/hig.css` 末尾一节（导航树样式）。
+2026-10-27 起 PCB 用这套；2026-10-28 起 HBM、CoWoS、铜也迁完，四条链都是 5 页，导航里没有“旧版式”了。
+代码：`tpl/page_v4.py`（结构、导航、改道、PCB 渲染）、`tpl/page_v4g.py`（HBM / CoWoS / 铜共用的渲染：读 `<链>/page.py` 末尾的 `SPEC['v4']`——标题、一分钟看懂、五句话、主图、三个信号灯、②③④ 页摆哪些块、节标题问句）、`assets/reading.js`（导航 / 脚注 / 改道）、`assets/hig.css` 末尾一节（导航树样式）。
 写作规则仍以 `docs/PLAIN_LANGUAGE.md`（说人话）、`docs/READING_MODE.md`（阅读模式 §12）为准，本文只讲“页怎么拆、怎么连”。
 
 ## 1. 五页各管什么
@@ -72,3 +72,12 @@ python3 tools/page_stats.py <5 页> changelog.html   # 字数、390px 高度、�
 5. 版本说明、并入说明、旧版链接搬进 `changelog.html`（按链分段）。
 6. `OTHER` 里把该链改成 5 页子树；总账链接映射（`ledger/build.py` 的 `PAGE_MOVED`）指向追踪页。
 7. 跑第 7 节验收，截图 390 / 1280 存 `shots/`（不提交）。
+
+## 迁移一条链（2026-10-28 HBM / CoWoS / 铜的做法）
+
+1. 在 `<链>/page.py` 末尾加 `SPEC.update(layout='v4', v4=dict(...))`：`h1`、`title0`、`one_min`（是什么 / 钱在哪 / 最大风险 / 盯什么 / 什么算我们错）、`ov5`、`ov_fig=(论点号, 问句)`、`sig`（三个灯，按 `data/<链>.json` 现算，阈值原样取自 `LOGIC['watch']`）、`sig_note`、`pattern / cycle / track`（`('step', 步骤id, 问句)`、`('arg', 论点号, 问句)`、`('cn'|'diff'|'claims'|'watch'|'wrong'|'pred', 问句)`）。底稿每一步都必须摆进某一页，否则构建报错。
+2. 节标题 ≤ 15 字的问句（`sec()` 里 assert）；正文里的版本号（v0.x）、“旧版”“并入”字样会被 `assemble` 拦下，改成中性说法，版本细节写进 `<链>/build.py` 的 changelog。
+3. 只搬不删：内容仍是 `LOGIC / SPEC` 原文；判断、证伪条件、预测台账、模型数字不动。
+4. `ledger/build.py` 的 `PAGE_MOVED` 把旧页指到 `<链>-track.html`；旧网址 `<链>.html#锚点` 由 `CH_HOME` + `reading.js` 自动跳到新页。
+5. 检查：`tools/overflow_check.py --pages <5 页> --widths 390 1280`（含静态导航检查），`tools/page_stats.py` 看默认可见字数与手机高度。
+

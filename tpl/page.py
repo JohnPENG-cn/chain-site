@@ -8,7 +8,8 @@
      中心思想下加 ledgers 对照条；底稿 CN_REQ 6 步必须各有 steps[i]['cn'] 中国块（#cn-<步骤>），缺了构建报错。
 用法：python3 tpl/page.py（build.sh 最后一步）。spec 在 <链>/page.py。
 spec 带 layout='v2' 时改用 tpl/page_v2.py 的行业版结构；layout='v3' 用 tpl/page_v3.py 的九章研究版（2026-10-23 起 pcb.html）（目前只有 pcb.html；旧版 pcb_v1.html 是冻结存档，不由这里生成）。
-layout='v4' 用 tpl/page_v4.py 的链条 5 页模板（2026-10-27 起 PCB：pcb.html 总览 + pcb-pattern / cycle / track / data + changelog.html，见 docs/CHAIN_TEMPLATE.md）。"""
+layout='v4' 用链条 5 页模板（<链>.html 总览 + <链>-pattern / cycle / track / data + changelog.html，见 docs/CHAIN_TEMPLATE.md）：
+     2026-10-27 起 PCB（tpl/page_v4.py），2026-10-28 起 HBM / CoWoS / 铜（tpl/page_v4g.py，配置在 <链>/page.py 的 SPEC['v4']）。"""
 import importlib.util, os, re, sys
 R0 = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

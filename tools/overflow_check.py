@@ -10,6 +10,8 @@
   5. 链条 5 页模板的整站导航（nav.rd-toc.sn，docs/CHAIN_TEMPLATE.md）：<1200px 点顶栏打开抽屉，抽屉整块在视口内、
      里面没有横向滚动、本页小节已填进去，Esc 能关；≥1200px 常驻栏在视口内、不横向滚动；页内步骤条 / 上一页下一页不超宽。
      隐藏区 #ch-shadow（给页面脚本用的其他页副本）不参与任何检查。
+  6. 静态导航检查（不开浏览器，每次都跑）：所有带整站导航的页，导航链接目标都存在，四条链（HBM / CoWoS / PCB / 铜）都在且各有 5 页文件，
+     首页与导航里没有“旧版式”。
 用法：python3 tools/overflow_check.py [--base URL] [--pages pcb.html ...] [--shots DIR]
 不给 --base 时在仓库根目录起一个本地 http 服务。缺 playwright 时打印 SKIP 并返回 0。
 """
@@ -119,17 +121,53 @@ def article_pages():
     return sorted(os.path.basename(f) for f in glob.glob(os.path.join(ROOT, '*.html'))
                   if re.search(r'<body[^>]*class="[^"]*\barticle\b', open(f, encoding='utf-8').read()))
 
+CHAIN_KEYS = ('hbm', 'cowos', 'pcb', 'cu')   # 导航里必须都在、都是 5 页（tpl/page_v4.py CHAINS）
+
+
+def nav_static():
+    """6. 静态导航检查（不开浏览器）：带整站导航的页面里，每个链接的目标文件都存在；四条链都在、各 5 页文件都在；
+    首页和导航里不再出现“旧版式”。返回问题列表。"""
+    bad = []
+    for f in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        h = open(f, encoding='utf-8').read(); fn = os.path.basename(f)
+        if fn == 'index.html' and '旧版式' in re.sub(r'<[^>]+>', '', h):
+            bad.append(f'index.html 还有“旧版式”')
+        m = re.search(r'<nav class="rd-toc sn"[^>]*>(.*?)</nav>', h, re.S)
+        if not m:
+            continue
+        nav = m.group(1)
+        if '旧版式' in nav:
+            bad.append(f'{fn} 导航里还有“旧版式”')
+        for href in re.findall(r'href="([^"#]*)', nav):
+            if not href or href.startswith(('http:', 'https:', 'mailto:')):
+                continue
+            t = os.path.join(ROOT, href)
+            if not (os.path.isfile(t) or os.path.isfile(os.path.join(t, 'index.html'))):
+                bad.append(f'{fn} 导航链接目标不存在：{href}')
+        for k in CHAIN_KEYS:
+            if f'href="{k}.html"' not in nav:
+                bad.append(f'{fn} 导航里缺 {k}')
+    for k in CHAIN_KEYS:
+        for sfx in ('', '-pattern', '-cycle', '-track', '-data'):
+            if not os.path.isfile(os.path.join(ROOT, f'{k}{sfx}.html')):
+                bad.append(f'缺页面 {k}{sfx}.html')
+    return sorted(set(bad))
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--base'); ap.add_argument('--pages', nargs='*'); ap.add_argument('--shots')
     ap.add_argument('--widths', nargs='*', type=int); a = ap.parse_args()
+    nb = nav_static()
+    for x in nb: print(f'FAIL [nav-static] {x}')
+    if not nb: print('ok   导航静态检查：链接目标都在、四条链各 5 页、无“旧版式”')
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print('overflow_check: SKIP（没装 playwright）'); return 0
+        print('overflow_check: SKIP（没装 playwright）'); return 1 if nb else 0
     base = a.base or serve(); base = base if base.endswith('/') else base + '/'
     pages = a.pages or article_pages(); widths = a.widths or WIDTHS
     exe = next((p for p in ['/usr/bin/google-chrome', '/usr/bin/chromium'] if os.path.exists(p)), None)
-    fails = 0
+    fails = len(nb)
     with sync_playwright() as p:
         b = p.chromium.launch(executable_path=exe, args=['--no-sandbox']) if exe else p.chromium.launch()
         for pg_name in pages:
