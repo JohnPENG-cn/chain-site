@@ -35,7 +35,8 @@ CHAINS = [  # (键, 名称, 5 页 (文件, 页名, 短名, 一句话), 链内附
      [('原理图：HBM 怎么叠', 'explain-hbm.html')]),
     ('cowos', 'CoWoS', _pages('cowos', ['主要矛盾一页看懂', '工序、利润池、谁说了算', '需求、产能、约束', '判断、信号、台账', '给想核数的人']),
      [('原理图：CoWoS 怎么封', 'explain-cowos.html')]),
-    ('pcb', 'PCB', _pages('pcb', ['主要矛盾一页看懂', '地图、利润池、谁说了算', '扩产潮、约束、需求', '判断、指标、待确认', '给想核数的人']), []),
+    ('pcb', 'PCB', _pages('pcb', ['主要矛盾一页看懂', '地图、利润池、谁说了算', '扩产潮、约束、需求', '判断、指标、待确认', '给想核数的人']),
+     [('原理图：PCB 怎么做', 'explain-pcb.html')]),
     ('cu', '铜', _pages('cu', ['主要矛盾一页看懂', '环节、利润池、谁说了算', '需求、矿山、缺口与价格', '判断、信号、台账', '给想核数的人']), []),
 ]
 CFG = {c[0]: c for c in CHAINS}
@@ -256,6 +257,7 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
     w(f'<div class="kicker">{CHAIN} 研究 · 第 1 页 / 共 5 页 · 数据更新 <span id="pcb-upd"></span></div>\n<h1>{H1}</h1>\n')
     w(f'<p class="howto">怎么读：先看“一分钟看懂”，再看五句话和一张图；想知道怎么盯、什么算我们错，看下面的三个信号。小号上标数字是来源，点一下就能看。看不懂的词查<a href="{P5}#gloss">名词小白版</a>。公开数据整理，<b>不构成投资建议</b>。</p>\n')
     w(A.one_min(R.ONE_MIN))
+    w('<p class="note">先想知道一块 AI 服务器板是怎么做出来的（铜箔、玻纤布、树脂、层压、钻孔、HDI、M6→M9），看<a href="explain-pcb.html">PCB 原理图</a>：12 步，可点可拖。</p>\n')
     sec(P1, 'ov5', '五句话说清楚')
     g = lambda n, y, k: R.g(n, y, k)
     OV5 = [  # 每句只用页里已有的说法和代码现算的数（R.NUMS / R.T5），不新增判断；标签见 docs/CHAIN_TEMPLATE.md
@@ -471,6 +473,7 @@ def render_v4(S, STEPS, SID, MID, CIRC, CNC):
     # ======================= ⑤ 底稿与数据 =======================
     sec(P5, 'base', '底稿怎么算的？', 'SOP 13 步底稿：需求、供给、平衡、瓶颈、回测、对账；滑块能拖，图跟着重算。默认折叠，点开或点任一“底稿 ↓”链接自动展开。')
     w('<span class="forwho">给想核数的人</span>\n')
+    w('<p class="note">底稿里的层数、材料等级、HVLP、钻针寿命，在<a href="explain-pcb.html">PCB 原理图</a>里有图解（一步一张图）。</p>\n')
     o = [f'<details class="apx base2" id="baseD"><summary>{S["base_title"]} <small>{S["base_sub"]}</small></summary><div class="body"><ol class="stepix">']
     for s in STEPS:
         sup = ''.join(CIRC[i-1] for i in sorted({i for i, _ in back[s[0]]})) + (' <i class="cnm">中</i>' if cn and any(x['id'] == s[0] and x.get('cn') for x in S['steps']) else '')
