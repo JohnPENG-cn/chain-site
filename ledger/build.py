@@ -19,7 +19,7 @@ EV_W = ('支持', '削弱', '触发证伪', '待核')  # 周度跟踪的证据�
 
 
 # 链条拆页后判断 / 预测住在“主要矛盾追踪”页（ledger.json 里的 page 字段不改，只改链接）
-PAGE_MOVED = {'pcb.html': 'pcb-track.html'}
+PAGE_MOVED = {'pcb.html': 'pcb-track.html', 'hbm.html': 'hbm-track.html', 'cowos.html': 'cowos-track.html', 'cu.html': 'cu-track.html'}  # 链条 5 页版：判断与台账在各链“追踪”页
 
 def load():
     return json.load(open(os.path.join(ROOT, 'data', 'ledger.json'), encoding='utf-8'))
