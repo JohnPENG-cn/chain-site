@@ -121,6 +121,9 @@ def article_pages():
     return sorted(os.path.basename(f) for f in glob.glob(os.path.join(ROOT, '*.html'))
                   if re.search(r'<body[^>]*class="[^"]*\barticle\b', open(f, encoding='utf-8').read()))
 
+# 原理图页 body 不是 article，显式列进来（只列已经接入检查的；不用通配，免得新页一上线就卡构建）
+EXTRA = ['explain-hbm.html', 'explain-cowos.html', 'explain-pcb.html']
+
 CHAIN_KEYS = ('hbm', 'cowos', 'pcb', 'cu')   # 导航里必须都在、都是 5 页（tpl/page_v4.py CHAINS）
 
 
@@ -165,7 +168,7 @@ def main():
     except ImportError:
         print('overflow_check: SKIP（没装 playwright）'); return 1 if nb else 0
     base = a.base or serve(); base = base if base.endswith('/') else base + '/'
-    pages = a.pages or article_pages(); widths = a.widths or WIDTHS
+    pages = a.pages or (article_pages() + [x for x in EXTRA if os.path.isfile(os.path.join(ROOT, x))]); widths = a.widths or WIDTHS
     exe = next((p for p in ['/usr/bin/google-chrome', '/usr/bin/chromium'] if os.path.exists(p)), None)
     fails = len(nb)
     with sync_playwright() as p:
