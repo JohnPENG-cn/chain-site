@@ -14,9 +14,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
 # 目录：已发布的专题（spec 文件名）+ 规划中的专题
-REGISTRY = ['hbm', 'cowos']
+REGISTRY = ['hbm', 'cowos', 'pcb']
 PLANNED = [
-    ('一块 AI 服务器 PCB 是怎么做出来的', '覆铜板、铜箔、玻纤布、钻孔电镀、层压，HVLP 铜箔为什么难。'),
     ('铜从矿山到电线', '采矿、选矿、冶炼、电解，精矿 TC/RC 与冶炼利润，为什么约束在精矿。'),
 ]
 ANATOMY = ('Anatomy', 'https://github.com/wheresryan22/anatomy')
@@ -87,7 +86,7 @@ def render(name):
     spd = ('<div class="ex-spd" role="group" aria-label="速率口径"><button type="button" data-s="std" aria-pressed="false">标准</button><button type="button" data-s="prod" aria-pressed="true">量产最快</button></div>') if M['spd'] else ''
     srcs = ''.join(f'<li id="src{n}"><a href="{u}" rel="noopener">{html.escape(t)}</a></li>' for n, t, u in m.SOURCES)
     rel = ' · '.join(f'<a href="{h}">{t}</a>' for h, t in M['related'])
-    data = dict(gens=m.GENS, steps=steps, quiz=quiz)
+    data = dict(gens=m.GENS, steps=steps, quiz=quiz, **getattr(m, 'EXTRA', {}))
     js = json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     page = f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{M["title"]} · 万物原理图</title><meta name="description" content="{html.escape(M["card"])}">
