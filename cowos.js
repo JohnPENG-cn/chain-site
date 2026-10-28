@@ -50,7 +50,7 @@ function drawBt(){const S=J.bt.series,c=CH.C('cw-cBt'),L=(k,n,col,w)=>({name:n,t
 function drawXc(){const X=J.bt.xc,ks=Object.keys(X['设备→台积电']).map(Number).sort((a,b)=>a-b),c=CH.C('cw-cXc'),cl=['#ff9900','#5b8def','#26a69a'];
  c.setOption({...CH.base(),legend:{top:0,textStyle:{color:V('--fg'),fontSize:11}},grid:{left:40,right:10,top:CH.mob()?56:36,bottom:34},xAxis:{data:ks,name:'k(月)',nameLocation:'middle',nameGap:22},yAxis:{min:-.3,max:.8,...CH.ax()},
   series:Object.keys(X).map((k,i)=>({name:k,type:'bar',data:ks.map(l=>X[k][l][0]),color:cl[i]}))})}
-function drawCl(){const L=J.bt.cl,c=CH.C('cw-cCl');c.setOption({...CH.base(),legend:{top:0,textStyle:{color:V('--fg'),fontSize:11}},grid:{left:48,right:14,top:CH.mob()?56:40,bottom:30},xAxis:{data:L.q.map(q=>q.slice(0,4)+'Q'+Math.ceil(+q.slice(5,7)/3)),axisLabel:{interval:3}},yAxis:{name:'亿新台币',...CH.ax()},
+function drawCl(){const L=J.bt.cl,c=CH.C('cw-cCl');c.setOption({...CH.base(),legend:{top:0,textStyle:{color:V('--fg'),fontSize:11}},grid:{left:48,right:14,top:CH.mob()?56:40,bottom:30},xAxis:{data:L.q.map(q=>q.slice(0,4)+'Q'+Math.ceil(+q.slice(5,7)/3)),axisLabel:{interval:CH.mob()?7:3}},yAxis:{name:'亿新台币',...CH.ax()},
   tooltip:{trigger:'axis',confine:true},series:[{name:'合约负债（季末）',type:'bar',data:L.cl,itemStyle:{color:'#8a5cf6',opacity:.7}},{name:'当季营收',type:'line',data:L.rev,color:'#ff9900',symbolSize:5}]})}
 function drawIf(r){const c=CH.C('cw-cIf'),ys=[2026,2027];if(!H){$('#cw-ifTxt').textContent='HBM 数据未加载';return}
  const cov=ys.map(y=>({c:r[y].s/r[y].d,cu:r[y].s/r[y].du,h:r[y].hs/r[y].hbm,h2:r[y].hs*1.08/r[y].hbm}));
@@ -61,7 +61,7 @@ function drawIf(r){const c=CH.C('cw-cIf'),ys=[2026,2027];if(!H){$('#cw-ifTxt').t
 function drawDrv(){CH.driver('cw-cDrv','#cw-drvT tbody',J.driver)}
 function render(){if(H&&T){if(tocDraw)tocDraw();else tocDraw=TOC.render('cw','#cw-toc',J,H,T,{ledger:'#cw-tpred'})}drawDrv();drawBal();drawCap();drawMix();drawInf();drawPool();drawMar();drawBt();drawXc();drawCl();CH.net('cw-cNet','#cw-nodeInfo',J.companies,mk)}
 window.redraw=render;
-let T,tocDraw=null;Promise.all([fetch('data/cowos.json?v=1f41496d73').then(r=>r.json()),fetch('data/hbm.json?v=a4fc96910a').then(r=>r.json()).catch(()=>null),fetch('data/toc.json?v=4dd7367735').then(r=>r.json())]).then(([j,h,t])=>{J=j;H=h;T=t;
+let T,tocDraw=null;Promise.all([fetch('data/cowos.json?v=1f83339c33').then(r=>r.json()),fetch('data/hbm.json?v=a4fc96910a').then(r=>r.json()).catch(()=>null),fetch('data/toc.json?v=4dd7367735').then(r=>r.json())]).then(([j,h,t])=>{J=j;H=h;T=t;
  $('#cw-upd').textContent=J.meta.updated;CH.stats('#cw-stats',J.judgment.stats);CH.debates('#cw-deb',J.debates);
  CH.table('#cw-varT tbody',J.variants,5);CH.table('#cw-procT tbody',J.process,3);CH.table('#cw-capT tbody',J.cap_src,5);CH.table('#cw-ppwT tbody',J.ppw,-1);
  CH.table('#cw-capexT tbody',J.profit.capex,2);CH.table('#cw-ucT tbody',J.profit.unit_cost,2);

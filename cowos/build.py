@@ -318,6 +318,8 @@ if 'cn' in J and not any(r[0].startswith('硅中介层') for r in J['cn']['toc']
 J['meta']['version']='v0.4.3';J['meta']['updated']='2026-10-16'
 if not any(c[1]=='v0.4.3' for c in cl):cl.insert(0,['2026-10-16','v0.4.3',f"硅中介层单独成为约束推导的一环（John 批准）：1 片 CoWoS-S = 1 片良品中介层，L/EFB 只算硅桥；改正 2027 年 AMD MI450/455 为 CoWoS-L、Venice 为 EFB 硅桥（源66,74，不影响 CoWoS 片数）。结论：中介层 2026 年余量约 {g(2026,'gap'):+.0f}%，2027 年约 {g(2027,'gap'):+.0f}%，只卡谷歌 TPU 等 S 型、不改变总约束；2028 年格罗方德/世界先进放量后，需求涨 {IP['be28']:.0f}% 以内都不缺（估）。中国账本：中介层不是约束。新增来源 65–78、证伪 J6、预测 C9–C10。核心判断不变。"])
 for r in CN['bal']:print('中国 2.5D',r['y'],'供给 %.0f 千片 / 不缺货需求 %.0f / HBM 能配需求 %.0f，覆盖 %.0f%%（%.0f%%），能封 %.2fM 张 vs HBM 能配 %.2fM'%(r['s'],r['du'],r['dh'],r['cov']*100,r['covh']*100,r['cards'],r['hcards']))
+# ===== 2026-10-28 页面拆成 5 页（只是版式，模型和判断不变）=====
+if not any(c[0]=='2026-10-28' for c in cl):cl.insert(0,['2026-10-28','5 页版式','CoWoS 拆成和 PCB 同一套 5 页模板：总览（一分钟看懂 + 五句话 + 一张图 + 三个信号 + 三条证伪）、格局与钱在哪赚、周期与产能、主要矛盾追踪、底稿与数据；左侧整站导航（解释页并入导航树）、每页目录、上一页 / 下一页；节标题改成短问句；正文里的版本号说明（v0.4 / v0.4.3）改成中性说法，版本细节留在本表。只搬内容、不删数字；判断、证伪条件、预测台账、模型数字未改。旧网址 cowos.html#锚点 自动跳到新页。'])
 json.dump(J,open(P('data','cowos.json'),'w'),ensure_ascii=False,separators=(',',':'))
 # ---- 刷新 toc.json 中依赖数字的文字（用 toc.js 同一套算法）
 T=json.load(open(P('data','toc.json')))

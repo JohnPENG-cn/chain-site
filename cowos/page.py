@@ -64,7 +64,7 @@ _gp = lambda y: '—' if IPR[y].get('gap') is None else f"{IPR[y]['gap']:+.0f}%"
 _rows = ''.join(f"<tr><td>{y}</td><td>{_f(_r(y).get('sw'))}</td><td>{_f(_r(y).get('need'))}</td><td>{_f(_r(y)['cap'])}（{_f(_r(y)['ts'])} / {_r(y)['umc']} / {_r(y)['oth_s']}）</td><td>{_f(_r(y)['sup'])}</td><td><b>{_gp(y)}</b></td></tr>" for y in range(2024, 2029))
 _sens = ''.join(f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in IPM['sens'])
 _n26, _n27 = IPR[2026], IPR[2027]
-IPBLOCK = f"""<h3 id="ip">硅中介层：单独拆成一环（v0.4.3）</h3>
+IPBLOCK = f"""<h3 id="ip">硅中介层：单独拆成一环</h3>
 <p class="sub"><b>结论：</b>2026 年中介层有约 {IPG26:+d}% 余量；2027 年谷歌 TPU 把需求推高约 {(_n27['need']/_n26['need']-1)*100:.0f}%，中介层和需求<b>基本打平（约 {IPG27:+d}%，单项敏感度 −14% ～ +11%）</b>，但它只卡用整片中介层的 S 型（2027 年约三成颗数），换成封装颗数后不改变"2027 年最紧是载板"；2028 年格罗方德、世界先进放量，需求涨 {IPBE28:.0f}% 以内都不缺 {E}。中国账本里中介层不是约束。</p>
 <div class="card"><b>推导过程（每一步都可在 Excel「硅中介层」表复核）</b><ol style="font-size:14px;margin:8px 0 0 18px;line-height:1.7">
 <li><b>定单位</b>：CoWoS-S 是把芯片贴在一整片还没切割的硅中介层晶圆上（CoW），所以 1 片 CoWoS-S 晶圆 = 1 片良品中介层晶圆；中介层越做越大（3.3 倍光罩封顶 {S(73)}）已经体现在"每片颗数"里（TPU v7 约 20 颗 → v8 约 17 颗）{E}。CoWoS-L 和日月光 EFB 只用小块硅桥，按每片封装晶圆折 {IPM['br']} 片硅 {E}；CoWoS-R 不用硅。</li>
@@ -89,7 +89,7 @@ SPEC = dict(
  card=f'全球账本：2027 年 CoWoS 只略紧（缺约 {CGAP}%–{CGAPU}%），最紧的是载板，设备景气还没见顶。中国账本：台积电已不接国产 AI 芯片，2026 年国产 2.5D 封装和 HBM 一样紧{E}',
  scqa=[
   'AI 加速器要把 GPU 和 HBM 放在同一块硅中介层上（2.5D 封装），台积电 CoWoS 是主力。2023–24 年 H100 缺货，卡的就是 CoWoS。',
-  f'CoWoS 产能三年涨了约 9 倍，2027 年总产能还要再涨约七成（台积电年末 12 万 → 18.5 万片/月）{S(1)}；但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，片数涨得比颗数快得多。KGI 仍说对客户需求缺 15–20% {S(1)}；而 HBM 页 v0.4 上修供给后，HBM 也只是略紧。',
+  f'CoWoS 产能三年涨了约 9 倍，2027 年总产能还要再涨约七成（台积电年末 12 万 → 18.5 万片/月）{S(1)}；但封装越做越大，每片晶圆能封的芯片从 H100 的约 28 颗掉到 Rubin Ultra 的约 6 颗，片数涨得比颗数快得多。KGI 仍说对客户需求缺 15–20% {S(1)}；而 HBM 页上修供给后，HBM 也只是略紧。',
   '2027 年 CoWoS 还是 AI 芯片的头号瓶颈吗？如果不是，卡在哪、钱流向哪？封装设备的景气什么时候见顶？'],
  gov=GOV,
  mece='三条论点分别回答"量（卡在哪）""利润（钱去哪）""时点（何时见顶）"，互不重叠。中国的账另算（见<a href="#cn">中国账本</a>）：国产 AI 芯片用不了台积电 CoWoS，两本账不重复。',
@@ -183,7 +183,7 @@ SPEC = dict(
  steps=[
   dict(id='key', h='哪个假设能把结论翻过来', body='''<p class="note" id="cw-torNote"></p>
 <div class="grid g2"><div class="card"><b>2027 年 CoWoS 缺口对各假设的敏感度</b><div id="cw-cTorA" class="chart" style="height:300px"></div><div class="note">每一行：只把这个变量调到低端（蓝）/高端（红），其他不动，2027 年缺口变成多少。条越长越要害。虚线 = 缺口为 0。</div></div>
-<div class="card"><b>"HBM 比 CoWoS 更紧"这个结论有多稳</b><div id="cw-cTorB" class="chart" style="height:300px"></div><div class="note">指标 = CoWoS 满足率 − HBM 满足率（同一口径：KGI 可见出货，百分点），大于 0 表示 HBM 更紧。HBM 页 v0.4 上修供给后，基准只剩约 +3.5pp：HBM 可供量按 KGI 口径 ×1.08、台积电 2027 年末只有 155k、每片颗数 −20%、英伟达降规格，任何一项都会让短板换成 CoWoS。所以结论是<b>两者差不多紧</b>，不是"HBM 是短板"。<span class="tag t-est">估</span></div></div></div>'''),
+<div class="card"><b>"HBM 比 CoWoS 更紧"这个结论有多稳</b><div id="cw-cTorB" class="chart" style="height:300px"></div><div class="note">指标 = CoWoS 满足率 − HBM 满足率（同一口径：KGI 可见出货，百分点），大于 0 表示 HBM 更紧。HBM 页上修供给后，基准只剩约 +3.5pp：HBM 可供量按 KGI 口径 ×1.08、台积电 2027 年末只有 155k、每片颗数 −20%、英伟达降规格，任何一项都会让短板换成 CoWoS。所以结论是<b>两者差不多紧</b>，不是"HBM 是短板"。<span class="tag t-est">估</span></div></div></div>'''),
   dict(id='debate', h='三个可证伪的核心争议', ctx='对应结论层「可能错在哪」↑', body='<div class="grid g3" id="cw-deb"></div>'),
   dict(id='proc', h='先进封装有哪几种，CoWoS 是怎么做出来的', ctx='背景：定义单位与边界', sub='计量单位：需求和产能用 12 寸 CoWoS 晶圆（片/月、片/年），出货用颗（封装）。一片 CoWoS 晶圆能封几颗芯片，取决于中介层面积，这是整条链的第一性原理。',
    body='''<h3>技术路线对比</h3><div class="tbl"><table id="cw-varT"><thead><tr><th>方案</th><th>结构</th><th>尺寸</th><th>典型产品</th><th>现状</th><th>来源</th></tr></thead><tbody></tbody></table></div>
@@ -259,7 +259,7 @@ SPEC = dict(
 <div id="iface"><h3>对外接口：和 HBM 串起来，谁是木桶短板</h3>
 <p class="sub">本页直接读取 <a href="hbm.html#iface">HBM 小链</a>的供给模型，和本页"按出货算出的 HBM 需求"对账。拖动第 5 步的第 6 个滑块（每封装 HBM 容量），可以看英伟达"降规格"能缓解多少。</p>
 <div class="grid g2"><div class="card"><div id="cw-cIf" class="chart" style="height:300px"></div><div class="note" id="cw-ifTxt"></div></div>
-<div class="card"><b>反向对账（已在 HBM 页 v0.4 修正）</b><div class="note" style="font-size:13px">上一版发现：按 KGI 出货算，2026 年要 HBM 约 3.8 EB，比 HBM 页旧模型供给（2.9 EB）高约 30%。HBM 页 v0.4 改用券商产量校准（iM 证券：2025 年 26.3 亿 GB、2026 年 44.4 亿 GB）和 UBS 年末产能，2026 年供给约 4.4 EB，已高于出货所需；2027 年见左图。{S(33)}</div></div></div>
+<div class="card"><b>反向对账（HBM 页已修正）</b><div class="note" style="font-size:13px">上一版发现：按 KGI 出货算，2026 年要 HBM 约 3.8 EB，比 HBM 页旧模型供给（2.9 EB）高约 30%。HBM 页改用券商产量校准（iM 证券：2025 年 26.3 亿 GB、2026 年 44.4 亿 GB）和 UBS 年末产能，2026 年供给约 4.4 EB，已高于出货所需；2027 年见左图。{S(33)}</div></div></div>
 <div class="tbl" style="margin-top:14px"><table><thead><tr><th>输出</th><th>2026</th><th>2027</th><th>说明</th></tr></thead><tbody id="cw-ifT-b"></tbody></table></div>
 <p class="card" style="margin-top:12px"><b>约束公式</b><br><span id="cw-formula"></span></p></div>'''),
  ],
@@ -269,3 +269,51 @@ SPEC = dict(
  log='''<div class="tbl"><table id="cw-logT"><tbody></tbody></table></div>
 <p><a href="cowos/cowos_model.xlsx">下载模型 Excel</a> · <a href="cowos/cowos_chain.md">报告原文 (Markdown)</a> · <a href="SOP.md">小链研究 SOP</a> · 构建：<code>./build.sh</code>（页面 <code>tpl/page.py</code> + <code>cowos/page.py</code>）</p>''',
 )
+
+# ===== 链条 5 页模板（2026-10-28 起 layout='v4'，tpl/page_v4g.py，见 docs/CHAIN_TEMPLATE.md）=====
+# 只决定“哪一块放哪一页、节标题怎么问”；内容仍是上面的 LOGIC / SPEC，一个字不删。总览的三个信号灯按 data/cowos.json 现算。
+import json as _json
+_J = _json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'cowos.json'), encoding='utf-8'))
+_W = {w[0]: w for w in LOGIC['watch']}
+_eq = _J['bt']['series']['equip']
+_em, _ev = _eq[-1]
+_pk = max(v for _, v in _eq[-12:])
+_down3 = len(_eq) >= 4 and all(_eq[-i][1] < _eq[-i - 1][1] for i in (1, 2, 3))
+_mg = _J['profit']['margins']['3037']
+(_q0, _, _g0, _), (_q1, _, _g1, _) = _mg[-2], _mg[-1]
+_qn = lambda d: f'{d[:4]} 年 {(int(d[5:7]) + 2) // 3} 季'
+_SIG = [
+    ('r' if (_pk - _ev >= 20 and _down3) else 'g', '设备景气见顶了吗？',
+     f'弘塑 + 辛耘 + 万润 3 个月营收同比 {_em} +{_ev:g}%，近 12 个月峰值 +{_pk:g}% {S(31)}',
+     _W['封装设备景气见顶'][2],
+     '越线：已从峰值回落 ≥ 20 个百分点并连降 3 个月' if (_pk - _ev >= 20 and _down3) else
+     ('没触发：最新一个月就是峰值' if _ev >= _pk else f'没触发：比峰值低 {_pk - _ev:g} 个百分点')),
+    ('r' if (_g0 < 20 and _g1 < 20) else 'g', '载板利润守得住吗？',
+     f'欣兴（3037）毛利率 {_qn(_q1)} {_g1:g}%，上一季 {_g0:g}% {S(32)}',
+     _W['载板利润能否持续'][2],
+     '越线：连续两季低于 20%' if (_g0 < 20 and _g1 < 20) else f'没触发：最近一季 {_g1:g}%' + ('（上一季低于 20%，再看一季）' if _g0 < 20 else '')),
+    ('x', '云厂商还在加钱吗？', f'四大云厂商 2027 年首次资本开支指引还没出（{_W["需求上一层"][3]} 前）', _W['需求上一层'][2], '未到公布日'),
+]
+SPEC.update(layout='v4', v4=dict(
+    h1='CoWoS：还是 AI 芯片的头号瓶颈吗？',
+    title0='CoWoS 先进封装：缺不缺、利润往哪走、景气到哪 · 总览',
+    one_min=[
+        ('是什么', LOGIC['three'][0]),
+        ('钱在哪', '钱堆在台积电，但利润涨得最快的是扩得慢的载板：欣兴毛利率一年从 13.1% 升到 24.8%。'),
+        ('最大风险', '封装设备景气见顶：设备三家营收同比从峰值回落 ≥ 20 个百分点并连降 3 个月，约 4 个月后台积电营收同比见顶。'),
+        ('盯什么', '设备三家营收同比会不会从峰值回落；欣兴毛利率能否守住 20%；云厂商 2027 年资本开支指引。'),
+        ('什么算我们错', '券商 2027 年缺口口径 ≥ 25% 或台积电年末 < 16 万片/月；欣兴毛利率连续两季 < 20%。'),
+    ],
+    ov5=[('j', SPEC['gov'] + '。'), ('j', '<b>缺不缺：</b>' + LOGIC['qa'][0][0]), ('j', '<b>卡在哪：</b>' + LOGIC['qa'][1][0]),
+         ('j', '<b>和市场差在哪：</b>' + LOGIC['qa'][2][0]), ('j', '<b>中国：</b>' + LOGIC['qa'][0][1])],
+    ov_fig=(1, '到底缺多少？'),
+    sig=_SIG,
+    sig_note='另外两个信号（CoWoS 缺口与硅中介层、国产 2.5D 产能）要到 2027 年中和 2027-03-31 才能打分，在追踪页。',
+    pattern=[('step', 'proc', 'CoWoS 怎么做出来？'), ('step', 'profit', '钱在哪一层？'), ('arg', 2, '利润往哪走？'),
+             ('step', 'play', '谁说了算？'), ('step', 'map', '哪些公司在做？'), ('cn', '中国这本账怎么算？')],
+    cycle=[('step', 'demand', '需求有多大？'), ('step', 'supply', '产能有多少？'), ('arg', 1, '到底缺不缺？'),
+           ('step', 'balance', '缺口怎么算出来？'), ('step', 'neck', '卡在哪一环？'), ('arg', 3, '设备景气到哪了？'),
+           ('step', 'hist', '瓶颈怎么迁移？'), ('step', 'lead', '先看哪个数据？')],
+    track=[('diff', '和市场差在哪？'), ('claims', '现在的判断是什么？'), ('watch', '我们重点盯什么？'), ('step', 'key', '哪个假设能翻盘？'),
+           ('step', 'debate', '三个争议是什么？'), ('wrong', '什么情况算我们错？'), ('pred', '预测写了什么？'), ('step', 'ledger', '台账怎么打分？')],
+))
