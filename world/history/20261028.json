@@ -1,6 +1,6 @@
 {
  "date": "20261028",
- "generated": "2026-10-27 23:34",
+ "generated": "2026-10-28 13:10",
  "backfilled": false,
  "prev": "20261026",
  "composites": [
@@ -86,13 +86,13 @@
    "q": "钱是不是在变贵、变难借？",
    "light": "amber",
    "head": "由松转紧：价格和波动先动，水管未堵。",
-   "detail": "8项中 2红0黄；最紧：美债10Y实际利率 2.66%、关键名字 CDS CoreWeave 5年CDS 1,145bp。",
-   "score": 0.25,
+   "detail": "8项中 2红1黄；最紧：美债10Y实际利率 2.66%、关键名字 CDS CoreWeave 5年CDS 1,145bp、短端融资压力 SOFR−IORB 5bp。",
+   "score": 0.312,
    "n": 8,
    "red": 2,
-   "amber": 0,
-   "line": "由松转紧：价格和波动先动，水管未堵。8项中 2红0黄；最紧：美债10Y实际利率 2.66%、关键名字 CDS CoreWeave 5年CDS 1,145bp。",
-   "vs": "较 10-26：美国高收益债利差 HY OAS 🟡→🟢；MOVE 美债波动率 🟡→🟢",
+   "amber": 1,
+   "line": "由松转紧：价格和波动先动，水管未堵。8项中 2红1黄；最紧：美债10Y实际利率 2.66%、关键名字 CDS CoreWeave 5年CDS 1,145bp、短端融资压力 SOFR−IORB 5bp。",
+   "vs": "较 10-26：美国高收益债利差 HY OAS 🟡→🟢；MOVE 美债波动率 🟡→🟢；短端融资压力 SOFR−IORB 🟢→🟡",
    "members": [
     {
      "id": "hy_oas",
@@ -121,20 +121,20 @@
     {
      "id": "funding",
      "name": "短端融资压力 SOFR−IORB",
-     "status": "green",
-     "vtxt": "3bp"
+     "status": "amber",
+     "vtxt": "5bp"
     },
     {
      "id": "nfci",
      "name": "芝加哥联储金融条件 NFCI",
      "status": "green",
-     "vtxt": "-0.496"
+     "vtxt": "-0.487"
     },
     {
      "id": "vix_ts",
      "name": "VIX 期限结构（VIX/VIX3M）",
      "status": "green",
-     "vtxt": "0.92"
+     "vtxt": "0.90"
     },
     {
      "id": "key_cds",
@@ -192,13 +192,13 @@
      "id": "pc_equity",
      "name": "CBOE 个股 Put/Call（10日均）",
      "status": "green",
-     "vtxt": "0.60"
+     "vtxt": "0.61"
     },
     {
      "id": "vix_ts",
      "name": "VIX 期限结构（VIX/VIX3M）",
      "status": "green",
-     "vtxt": "0.92"
+     "vtxt": "0.90"
     }
    ]
   },
@@ -244,19 +244,19 @@
      "id": "cn_10y",
      "name": "中国10Y国债 与 中美利差",
      "status": "amber",
-     "vtxt": "1.626%"
+     "vtxt": "1.635%"
     },
     {
      "id": "csi300_erp",
      "name": "沪深300 股债性价比（3年滚动z）",
-     "status": "green",
-     "vtxt": "6.15%"
+     "status": "grey",
+     "vtxt": "6.13%"
     },
     {
      "id": "cn_margin",
      "name": "A股融资余额（20日变化）",
      "status": "amber",
-     "vtxt": "2.397万亿"
+     "vtxt": "2.381万亿"
     },
     {
      "id": "gscpi",
@@ -320,14 +320,15 @@
      "id": "cu_au",
      "name": "铜/金比（×1000）",
      "status": "green",
-     "vtxt": "1.635"
+     "vtxt": "1.639"
     }
    ]
   }
  ],
  "alerts": [
   "🟢 美国高收益债利差 HY OAS 改善为🟢：330bp（上期 340bp）。距危险线 170bp（危险线 >= 500bp）",
-  "🟢 MOVE 美债波动率 改善为🟢：97.9（上期 103.3）。距危险线 32（危险线 >= 130）"
+  "🟢 MOVE 美债波动率 改善为🟢：97.9（上期 103.3）。距危险线 32（危险线 >= 130）",
+  "🟡 短端融资压力 SOFR−IORB 越过警戒线：5bp（上期 2bp）。距危险线 5bp（危险线 >= 10bp）"
  ],
  "sources": [
   {
@@ -374,9 +375,9 @@
    "id": "tushare",
    "name": "Tushare Pro",
    "link": "https://tushare.pro/",
-   "ok": true,
-   "last": "2026-10-28",
-   "note": ""
+   "ok": false,
+   "last": "2026-10-23",
+   "note": "ts_csi300_pe: Exception 您的IP数量超限，最大数量为10个！"
   },
   {
    "id": "trendforce",
@@ -619,7 +620,7 @@
    "dist_txt": "距危险线 5.8%（危险线 >= 8.0%）",
    "extras": [
     "6个月 +2.2%",
-    "DXY 102.36"
+    "DXY 102.34"
    ],
    "spark_label": "广义美元指数",
    "err": null,
@@ -641,17 +642,17 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": 0.9223,
-   "vtxt": "0.92",
-   "obs": "2026-10-26",
-   "pct": 70.1,
+   "value": 0.8952,
+   "vtxt": "0.90",
+   "obs": "2026-10-27",
+   "pct": 56.5,
    "pct_label": "2009年以来",
    "danger": 1.0,
    "ddir": ">=",
-   "dist": 0.0777,
-   "dist_txt": "距危险线 0.08（危险线 >= 1.00）",
+   "dist": 0.1048,
+   "dist_txt": "距危险线 0.10（危险线 >= 1.00）",
    "extras": [
-    "VIX 18.39 / VIX3M 19.94",
+    "VIX 17.52 / VIX3M 19.57",
     "比值>1=近月保险更贵（风暴进行时）"
    ],
    "spark_label": "VIX",
@@ -718,7 +719,7 @@
    "dist_txt": "已越过危险线 35%（危险线 >= 50%）",
    "extras": [
     "现价 107.9美元/桶",
-    "Brent 期货 109.5（10-27）"
+    "Brent 期货 111.4（10-28）"
    ],
    "spark_label": "WTI 现货（美元）",
    "err": null,
@@ -741,17 +742,17 @@
    "grade": "中-强（危机时）",
    "why": "当准备金稀缺或对手方风险上升，回购利率会跳到美联储利率走廊上方（如2019年9月），这是'水管堵了'的直接信号",
    "ok": true,
-   "status": "green",
+   "status": "amber",
    "opp": false,
-   "value": 3,
-   "vtxt": "3bp",
-   "obs": "2026-10-26",
-   "pct": 95.6,
+   "value": 5,
+   "vtxt": "5bp",
+   "obs": "2026-10-27",
+   "pct": 97.0,
    "pct_label": "2021年以来",
    "danger": 10,
    "ddir": ">=",
-   "dist": 7,
-   "dist_txt": "距危险线 7bp（危险线 >= 10bp）",
+   "dist": 5,
+   "dist_txt": "距危险线 5bp（危险线 >= 10bp）",
    "extras": [
     "商业票据−国债 0.24pp"
    ],
@@ -776,8 +777,8 @@
    "status": "amber",
    "opp": false,
    "value": 336.42,
-   "vtxt": "1.626%",
-   "obs": "2026-10-27",
+   "vtxt": "1.635%",
+   "obs": "2026-10-28",
    "pct": 99.7,
    "pct_label": "2004年以来（利差）",
    "danger": 400,
@@ -806,27 +807,27 @@
    "layer": "中国",
    "grade": "强（中期择时，国内回测最充分）",
    "why": "当股票相对债券便宜到极端（恐慌、去杠杆），后续回报靠估值修复；昂贵到极端（泡沫）时相反",
-   "ok": true,
-   "status": "green",
+   "ok": false,
+   "status": "grey",
    "opp": false,
-   "value": 0.4584,
-   "vtxt": "6.15%",
-   "obs": "2026-10-27",
-   "pct": 47.1,
+   "value": 0.4302,
+   "vtxt": "6.13%",
+   "obs": "2026-10-23",
+   "pct": 46.8,
    "pct_label": "2009年以来（z值）",
    "danger": -1.5,
    "ddir": "<=",
-   "dist": 1.9584,
-   "dist_txt": "距危险线 1.96σ（危险线 <= -1.50σ）",
+   "dist": 1.9302,
+   "dist_txt": "距危险线 1.93σ（危险线 <= -1.50σ）",
    "extras": [
-    "3年滚动 z = +0.46（>+2 为历史强底部信号）",
-    "PE_TTM 12.87，10Y 1.626%",
-    "全样本分位 79%"
+    "3年滚动 z = +0.43（>+2 为历史强底部信号）",
+    "PE_TTM 12.87，10Y 1.640%",
+    "全样本分位 78%"
    ],
    "spark_label": "ERP（%）",
-   "err": null,
+   "err": "RuntimeError: 沪深300 PE 无数据（Exception: 您的IP数量超限，最大数量为10个！）",
    "manual": false,
-   "level": 6.1472
+   "level": 6.1309
   },
   {
    "id": "cn_margin",
@@ -844,18 +845,18 @@
    "ok": true,
    "status": "amber",
    "opp": false,
-   "value": -8.1,
-   "vtxt": "2.397万亿",
-   "obs": "2026-10-26",
-   "pct": 3.2,
+   "value": -9.2,
+   "vtxt": "2.381万亿",
+   "obs": "2026-10-27",
+   "pct": 2.8,
    "pct_label": "2014年以来（20日变化）",
    "danger": -10,
    "ddir": "<=",
-   "dist": 1.9,
-   "dist_txt": "距危险线 1.9%（危险线 <= -10.0%）",
+   "dist": 0.8,
+   "dist_txt": "距危险线 0.8%（危险线 <= -10.0%）",
    "extras": [
-    "20日 -8.1%",
-    "较一年内峰值 -20.4%（2026-06-25 3.01万亿）"
+    "20日 -9.2%",
+    "较一年内峰值 -20.9%（2026-06-25 3.01万亿）"
    ],
    "spark_label": "融资余额（万亿）",
    "err": null,
@@ -877,18 +878,18 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": 1.04,
+   "value": 0.77,
    "vtxt": "61.33美元",
-   "obs": "2026-10-27",
+   "obs": "2026-10-28",
    "pct": null,
    "pct_label": "历史不足（自建序列）",
    "danger": -3,
    "ddir": "<=",
-   "dist": 4.04,
-   "dist_txt": "距危险线 4.0%（危险线 <= -3.0%）",
+   "dist": 3.77,
+   "dist_txt": "距危险线 3.8%（危险线 <= -3.0%）",
    "extras": [
-    "5 个观测日 +1.0%（危险线：周跌>3%）",
-    "DDR4 16Gb 82.62"
+    "5 个观测日 +0.8%（危险线：周跌>3%）",
+    "DDR4 16Gb 82.92"
    ],
    "spark_label": "DDR5 16Gb 现货均价",
    "err": null,
@@ -911,9 +912,9 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": 1.6345,
-   "vtxt": "1.635",
-   "obs": "2026-10-27",
+   "value": 1.6391,
+   "vtxt": "1.639",
+   "obs": "2026-10-28",
    "pct": 12.3,
    "pct_label": "2000年以来（月度）",
    "danger": null,
@@ -921,7 +922,7 @@
    "dist": null,
    "dist_txt": "",
    "extras": [
-    "铜 6.659美元/磅，金 4,074美元/盎司",
+    "铜 6.663美元/磅，金 4,065美元/盎司",
     "分位<10%=增长预期弱（只作风向标，不预测利率）"
    ],
    "spark_label": "",
@@ -1004,15 +1005,15 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": -0.496,
-   "vtxt": "-0.496",
-   "obs": "2026-10-16",
-   "pct": 39.5,
+   "value": -0.487,
+   "vtxt": "-0.487",
+   "obs": "2026-10-23",
+   "pct": 41.0,
    "pct_label": "1971年以来",
    "danger": 0,
    "ddir": ">=",
-   "dist": 0.496,
-   "dist_txt": "距危险线 0.496（危险线 >= 0.000）",
+   "dist": 0.487,
+   "dist_txt": "距危险线 0.487（危险线 >= 0.000）",
    "extras": [],
    "spark_label": "",
    "err": null,
@@ -1347,17 +1348,17 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": 0.601,
-   "vtxt": "0.60",
-   "obs": "2026-10-26",
+   "value": 0.606,
+   "vtxt": "0.61",
+   "obs": "2026-10-27",
    "pct": null,
    "pct_label": "历史不足（自建序列）",
    "danger": 0.5,
    "ddir": "<=",
-   "dist": 0.101,
-   "dist_txt": "距危险线 0.10（危险线 <= 0.50）",
+   "dist": 0.106,
+   "dist_txt": "距危险线 0.11（危险线 <= 0.50）",
    "extras": [
-    "当日 0.60；低=过度乐观（反向指标），自建序列 19 天"
+    "当日 0.59；低=过度乐观（反向指标），自建序列 20 天"
    ],
    "spark_label": "当日个股 P/C",
    "err": null,
