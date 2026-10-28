@@ -283,3 +283,56 @@ SPEC = dict(
  log='''<div class="tbl"><table id="cu-logT"><tbody></tbody></table></div>
 <p><a href="cu/cu_model.xlsx">下载模型 Excel</a> · <a href="cu/cu_chain.md">报告原文 (Markdown)</a> · <a href="SOP.md">小链研究 SOP</a> · 构建：<code>./build.sh</code>（页面 <code>tpl/page.py</code> + <code>cu/page.py</code>，模型 <code>cu/model.py</code>，回测 <code>cu/backtest.py</code> 需联网单独跑）</p>''',
 )
+
+# ===== 链条 5 页模板（2026-10-28 起 layout='v4'，tpl/page_v4g.py，见 docs/CHAIN_TEMPLATE.md）=====
+# 只决定“哪一块放哪一页、节标题怎么问”；内容仍是上面的 LOGIC / SPEC，一个字不删。总览的三个信号灯按 data/cu.json 现算。
+import re as _re
+_J = json.load(open(os.path.join(R0, 'data', 'cu.json'), encoding='utf-8'))
+_W = {w[0]: w for w in LOGIC['watch']}
+_PR = {r[0]: r for r in _J['price']}
+_num = lambda s: float(s.replace('−', '-').replace(',', ''))
+_spr = _PR['COMEX 12 月 vs LME 三月']
+_sp = _num(_re.search(r'([+\-−]?\d[\d,]*) 美元/吨', _spr[1]).group(1))
+_tcr = _PR['精矿加工费 TC']
+_tc = _num(_re.search(r'现货 ([+\-−]?\d[\d,]*)', _tcr[1]).group(1))
+_vt = _J['vis']['tot']
+_IDR = {v: k for k, v in ID.items()}
+_Sn = lambda s: S(*[_IDR[int(x)] for x in s.split(',')])
+_sg = lambda v: f'{v:+,.0f}'.replace('-', '−')
+_SIG = [
+    ('r' if (_sp > 800 or _sp < 0) else 'g', '关税会落地吗？',
+     f'COMEX 12 月比 LME 三月高约 {_sg(_sp)} 美元/吨 {_Sn(_spr[2])}',
+     _W['关税决定'][2],
+     '越线：价差已出 0～800 美元区间（再看是否持续）' if (_sp > 800 or _sp < 0) else f'没触发：离 800 还差 {800 - _sp:,.0f} 美元，离 0 还有 {_sp:,.0f} 美元'),
+    ('r' if _vt > 500 else ('y' if _vt < 250 else 'g'), '美国以外库存够吗？',
+     f'LME + 上期所 + 保税 ≈ {_vt:,.0f} 千吨（约 {_J["vis"]["days"]} 天消费）{S("lme", "shfe", "bond")}',
+     _W['美国以外库存'][2],
+     '越线：> 500 千吨，基准错' if _vt > 500 else ('黄：< 250 千吨，上半年最紧' if _vt < 250 else f'没触发：在 250～500 千吨之间（离 500 还差 {500 - _vt:,.0f}）')),
+    ('r' if (_tc > -100 or _tc < -350) else 'g', '精矿松动了吗？',
+     f'现货加工费 TC {_sg(_tc)} 美元/吨（10-09，Fastmarkets）{_Sn(_tcr[2].split(",")[1])}',
+     _W['精矿'][2],
+     '越线：已出 −350～−100 区间' if (_tc > -100 or _tc < -350) else f'没触发：离 −100 还差 {-100 - _tc:,.0f} 美元'),
+]
+SPEC.update(layout='v4', v4=dict(
+    h1='铜：2027 年缺的是量，还是位置？',
+    title0='铜：缺不缺、钱在哪、价格到哪 · 总览',
+    one_min=[
+        ('是什么', LOGIC['three'][0]),
+        ('钱在哪', f'钱几乎全被矿山拿走：现价约 14,500 美元/吨，90 分位全成本只有 7.7–8.8 千美元 {_Sn("12")}；冶炼厂在倒贴，现货加工费 {_sg(_tc)} 美元，中国冶炼每吨亏 4,129 元。'),
+        ('最大风险', '美国精铜关税怎么定：价差 > 800 美元 = 最后一波铜进美国（偏牛）；价差连续 1 个月 < 0 = 熊市情景。'),
+        ('盯什么', f'COMEX−LME 价差（现在约 {_sg(_sp)}）、美国以外可见库存（约 {_vt:,.0f} 千吨）、现货加工费 TC（{_sg(_tc)}）。'),
+        ('什么算我们错', '关税未定时美国以外库存升破 50 万吨而价格不跌；或 2027-06 前现货 TC 回到 0 以上而冶炼没有大规模减产。'),
+    ],
+    ov5=[('j', SPEC['gov'] + '。'), ('j', '<b>缺不缺：</b>' + LOGIC['qa'][0][0]), ('j', '<b>卡在哪：</b>' + LOGIC['qa'][1][0]),
+         ('j', '<b>和市场差在哪：</b>' + LOGIC['qa'][2][0]), ('j', '<b>中国：</b>' + LOGIC['qa'][0][1])],
+    ov_fig=(1, '铜到底缺不缺？'),
+    sig=_SIG,
+    sig_note='另外两个信号（中国信贷与收储、大矿恢复）每月 / 每季更新，在追踪页。',
+    pattern=[('step', 'proc', '铜从矿到线怎么走？'), ('step', 'profit', '钱在哪一层？'), ('arg', 3, '为什么卡在精矿？'),
+             ('step', 'play', '谁说了算？'), ('step', 'map', '哪些公司在做？'), ('cn', '中国这本账怎么算？')],
+    cycle=[('step', 'demand', '需求有多大？'), ('arg', 2, 'AI 能撑起铜价吗？'), ('step', 'supply', '大矿何时恢复？'),
+           ('arg', 1, '到底缺不缺？'), ('step', 'balance', '缺口怎么算出来？'), ('step', 'neck', '卡在哪一环？'),
+           ('arg', 4, '价格会走到哪？'), ('step', 'hist', '价格周期怎么走？'), ('step', 'lead', '先看哪个数据？')],
+    track=[('diff', '和市场差在哪？'), ('claims', '现在的判断是什么？'), ('watch', '我们重点盯什么？'), ('step', 'key', '哪个假设能翻盘？'),
+           ('step', 'debate', '三个争议是什么？'), ('wrong', '什么情况算我们错？'), ('pred', '预测写了什么？'), ('step', 'ledger', '台账怎么打分？')],
+))

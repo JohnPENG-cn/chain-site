@@ -35,6 +35,6 @@ function once(){CH.timeline('#wn-tl',N.timeline);CH.players('#wnPl',N.players);C
  $('#wn-coT tbody').innerHTML=N.co.map(c=>`<tr><td>${c[0]}</td><td><b>${c[1]}</b></td><td style="white-space:nowrap">${c[2]}</td><td>${c[3]}</td><td><span class="pill" style="color:${/^强/.test(c[4])?'var(--ok)':/^中/.test(c[4])?'var(--warn)':'var(--mut)'}">${c[4]}</span></td><td>${CH.tag(c[5])}</td></tr>`).join('');
  ['wns1','wns2','wns3','wns4'].forEach(id=>document.getElementById(id).addEventListener('input',draw))}
 window.wnReset=()=>{wns1.value=S0.c26;wns2.value=S0.c27;wns3.value=S0.ai;wns4.value=S0.pk;draw()};
-Promise.all([fetch('data/cowos.json?v=1f83339c33').then(r=>r.json()),fetch('data/hbm.json?v=a4fc96910a').then(r=>r.json())]).then(([j,h])=>{N=j.cn;HB={};h.cn.bal.forEach(r=>HB[r.y]=r);once();draw()});
+Promise.all([fetch('data/cowos.json?v=ae78e22b59').then(r=>r.json()),fetch('data/hbm.json?v=a4fc96910a').then(r=>r.json())]).then(([j,h])=>{N=j.cn;HB={};h.cn.bal.forEach(r=>HB[r.y]=r);once();draw()});
 addEventListener('load',()=>setTimeout(()=>{const o=window.redraw;window.redraw=()=>{o&&o();draw()}},0));
 })();

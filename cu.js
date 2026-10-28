@@ -22,7 +22,7 @@ function drawBal(){setOut();const p=P(),r=calc(p),I=J.model.ICSG;
  $('#cu-balTxt').innerHTML=`2027：精炼 ${f0(r.ref27)} − 消费 ${f0(r.use27)}（其中数据中心 ${f0(r.dc27)}、每颗 ${r.kg27.toFixed(0)} kg）= 全球 <b>${sg(r.g27)}</b>；减美国净囤货 ${sg(p.us27)} → 美国以外 <b>${sg(r.x27)}</b> 千吨。消费增速 ${r.ug.toFixed(1)}%（ICSG 2.5%）。${E}`;
  const steps=[['ICSG 全球',I.bal['2027'],1],['矿山修正',p.mine27,0],['消费差（ICSG − 我们）',I.use['2027']-r.use27,0],['我们：全球',r.g27,1],['美国净囤货',-p.us27,0],['我们：美国以外',r.x27,1]];
  let run=0;const lo=[],val=[];steps.forEach(([n,v,tot])=>{if(tot){lo.push(Math.min(0,v));val.push({value:Math.abs(v),itemStyle:{color:v<0?'#d9534f':'#5b8def'},raw:v});run=v}else{const a=run,b=run+v;lo.push(Math.min(a,b));val.push({value:Math.abs(v),itemStyle:{color:v<0?'#e57373':'#66bb6a'},raw:v});run=b}});
- const c=CH.C('cu-cBal');c.setOption({...CH.base(),grid:{left:52,right:14,top:24,bottom:mob()?70:44},xAxis:{data:steps.map(s=>s[0]),axisLabel:{interval:0,fontSize:mob()?9:11,rotate:mob()?35:0,width:90,overflow:'break'}},yAxis:{name:'千吨',...ax()},
+ const c=CH.C('cu-cBal');c.setOption({...CH.base(),grid:{left:52,right:14,top:36,bottom:mob()?70:44},xAxis:{data:steps.map(s=>s[0]),axisLabel:{interval:0,fontSize:mob()?9:11,rotate:mob()?35:0,width:90,overflow:'break'}},yAxis:{name:'千吨',...ax()},
   tooltip:{trigger:'axis',confine:true,axisPointer:{type:'shadow'},formatter:q=>{const d=q.find(x=>x.seriesIndex==1);return d?`${d.name}：${sg(d.data.raw)} 千吨`:''}},
   series:[{type:'bar',stack:'w',stackStrategy:'all',silent:true,itemStyle:{color:'transparent'},data:lo},{type:'bar',stack:'w',stackStrategy:'all',barMaxWidth:46,data:val,label:{show:true,position:'top',fontSize:10,color:fg(),formatter:q=>sg(q.data.raw)}}]});
  drawDem(r);drawSup(p);drawToc(r);drawTor(p);drawEv();drawIf(r)}
@@ -35,7 +35,7 @@ function drawEv(){const pr=prob(),S=J.model.SCEN,avg=s=>s.px.reduce((a,b)=>a+b,0
  drawPath(pr)}
 function drawPath(pr){const Q=J.qa,S=J.model.SCEN,B=J.model.B,xs=Q.map(q=>q[0]+(q[2]<3?'*':'')).concat(['2027Q1','2027Q2','2027Q3','2027Q4']),n=Q.length,last=Q[n-1][1];
  const sc=s=>Array(n-1).fill(null).concat([last]).concat(s.px),evp=[0,1,2,3].map(i=>S.reduce((a,s)=>a+pr[s.k]*s.px[i],0));
- const c=CH.C('cu-cPath');c.setOption({...CH.base(),legend:{top:0,textStyle:{color:fg(),fontSize:10},itemWidth:14},grid:{left:52,right:14,top:mob()?86:52,bottom:mob()?56:34},xAxis:{type:'category',data:xs,axisLabel:{fontSize:10,rotate:mob()?45:30}},
+ const c=CH.C('cu-cPath');c.setOption({...CH.base(),legend:{top:0,textStyle:{color:fg(),fontSize:10},itemWidth:14},grid:{left:52,right:14,top:mob()?86:52,bottom:mob()?56:34},xAxis:{type:'category',data:xs,axisLabel:{fontSize:10,interval:mob()?3:1}},
   yAxis:{min:6000,max:19000,name:'美元/吨',...ax()},tooltip:{trigger:'axis',confine:true,valueFormatter:v=>v==null?'—':f0(v)},
   series:[{name:'LME 季度均价',type:'line',data:Q.map(q=>q[1]).concat([null,null,null,null]),color:fg(),lineStyle:{width:2.5},symbolSize:5,
     markArea:{silent:true,itemStyle:{color:'rgba(150,150,150,.18)'},label:{show:true,position:'insideBottomLeft',color:V('--mut'),fontSize:10,formatter:'90–95 分位全成本'},data:[[{yAxis:B.c90[0]},{yAxis:B.c90[1]}]]},
@@ -77,7 +77,7 @@ function drawToc(r){const T=J.toc,I=J.model.ICSG,t27={conc:r.ref27/I.ref_u['2027
   series:[{name:'2026',type:'bar',data:ks.map(k=>+T['2026'][k].toFixed(4)),color:'#8fa8d8',barMaxWidth:28,label:{show:!mob(),position:'top',fontSize:10,color:fg(),formatter:q=>pc(q.value)}},{name:'2027（我们）',type:'bar',color:'#e0a030',data:ks.map(k=>+t27[k].toFixed(4)),barMaxWidth:28,itemStyle:{color:q=>q.dataIndex==0?'#d9534f':'#e0a030'},label:{show:true,position:'top',fontSize:10,color:fg(),formatter:q=>pc(q.value)},
    markLine:{silent:true,symbol:'none',data:[{yAxis:1}],lineStyle:{type:'dashed',color:V('--mut')},label:{formatter:'100%',color:V('--mut')}}}]})}
 function drawTc(){const T=J.tc,c=CH.C('cu-cTc'),xs=T.map(t=>String(t[0])).concat(['2026 现货','2027 Pelambres']);
- c.setOption({...CH.base(),grid:{left:44,right:14,top:26,bottom:mob()?48:30},xAxis:{data:xs,axisLabel:{fontSize:10,rotate:mob()?40:0,interval:0}},yAxis:{name:'美元/吨',...ax()},tooltip:{trigger:'axis',confine:true},
+ c.setOption({...CH.base(),grid:{left:44,right:mob()?6:14,top:36,bottom:mob()?48:30},xAxis:{data:xs,axisLabel:{fontSize:mob()?8:9,lineHeight:12,interval:0,formatter:v=>v=='2026 现货'?'26\n现货':v=='2027 Pelambres'?'27\n长单':"'"+v.slice(2)}},yAxis:{name:'美元/吨',...ax()},tooltip:{trigger:'axis',confine:true},
   series:[{type:'bar',barMaxWidth:26,data:T.map(t=>({value:t[1],itemStyle:{color:'#5b8def'}})).concat([{value:-272.2,itemStyle:{color:'#d9534f'}},{value:-330,itemStyle:{color:'#d9534f',opacity:.6}}]),label:{show:!mob(),position:'top',fontSize:10,color:fg()},
    markLine:{silent:true,symbol:'none',data:[{yAxis:-75,name:'CRU 2027Q4'}],lineStyle:{type:'dashed',color:'#26a69a'},label:{formatter:'CRU：2027Q4 现货 −75',color:'#26a69a',fontSize:10,position:'insideStartTop'}}}]})}
 /* ---- 利润：价格档位 */
@@ -86,7 +86,7 @@ function drawBand(){const B=J.model.B,R=[['Kamoa C1（2027）',B.kk_c1],['90–9
   series:[{type:'bar',stack:'b',stackStrategy:'all',silent:true,itemStyle:{color:'transparent'},data:R.map(r=>r[1][0]==r[1][1]?0:r[1][0])},{type:'bar',stack:'b',stackStrategy:'all',data:R.map((r,i)=>({value:r[1][0]==r[1][1]?r[1][0]:r[1][1]-r[1][0],itemStyle:{color:i<2?'#9e9e9e':i<6?'#5b8def':i==6?'#d9534f':'#e0a030'}})),label:{show:true,position:'right',fontSize:10,color:fg(),formatter:q=>{const r=R[q.dataIndex];return r[1][0]==r[1][1]?f0(r[1][0]):f0(r[1][0])+'–'+f0(r[1][1])}}}]})}
 /* ---- 历史 */
 function drawLong(){const L=J.bt.long,B=J.model.B,c=CH.C('cu-cLong');
- c.setOption({...CH.base(),grid:{left:52,right:14,top:20,bottom:56},xAxis:{type:'time'},yAxis:{name:'2026 年美元/吨',...ax()},dataZoom:[{type:'slider',height:18,bottom:8},{type:'inside'}],tooltip:{trigger:'axis',confine:true,valueFormatter:v=>f0(v)},
+ c.setOption({...CH.base(),grid:{left:52,right:14,top:36,bottom:56},xAxis:{type:'time'},yAxis:{name:'2026 年美元/吨',...ax()},dataZoom:[{type:'slider',height:18,bottom:8},{type:'inside'}],tooltip:{trigger:'axis',confine:true,valueFormatter:v=>f0(v)},
   series:[{type:'line',showSymbol:false,data:L.map(x=>[x[0]+'-15',x[1]]),color:'#d9534f',lineStyle:{width:1.8},markArea:{silent:true,itemStyle:{color:'rgba(150,150,150,.18)'},data:[[{yAxis:B.c90[0]},{yAxis:B.c90[1]}]]},
    markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed',color:V('--mut')},label:{color:V('--mut'),fontSize:10,position:'insideStartTop'},data:[{yAxis:B.ubs,label:{formatter:'激励价（今天）'}}]}}]});
  $('#cu-rule').textContent=J.history.rule;CH.timeline('#cu-tl1',J.history.tl1,'');CH.timeline('#cu-tl2',J.history.tl2,'h')}
@@ -99,7 +99,7 @@ function drawLead(){const b=J.bt,sh=(m,k)=>{const d=new Date(m+'-15');d.setMonth
   series:[{name:'2008–2018（拟合）',type:'scatter',symbolSize:5,data:S.filter(x=>x[0]<='2018-12').map(pt),color:'#5b8def'},{name:'2019–2026（检验）',type:'scatter',symbolSize:5,data:S.filter(x=>x[0]>'2018-12').map(pt),color:'#d9534f'}]});
  const c3=CH.C('cu-cSpr');c3.setOption({...CH.base(),grid:{left:44,right:14,top:20,bottom:30},xAxis:{type:'time'},yAxis:{axisLabel:{formatter:'{value}%'},...ax()},tooltip:{trigger:'axis',confine:true,valueFormatter:v=>(+v).toFixed(1)+'%'},
   series:[{type:'bar',data:b.spread.map(x=>[x[0]+'-15',x[1]]),itemStyle:{color:q=>q.value[1]>=0?'#d9534f':'#5b8def'},barMaxWidth:4}]});
- const M=b.macro,c4=CH.C('cu-cMac');c4.setOption({...CH.base(),legend:{top:0,textStyle:{color:fg(),fontSize:11}},grid:{left:52,right:40,top:mob()?50:36,bottom:30},xAxis:{type:'time'},yAxis:[{name:'实际铜价',...ax()},{name:'TIPS %',inverse:true,splitLine:{show:false}}],tooltip:{trigger:'axis',confine:true},
+ const M=b.macro,c4=CH.C('cu-cMac');c4.setOption({...CH.base(),legend:{top:0,textStyle:{color:fg(),fontSize:11}},grid:{left:52,right:40,top:mob()?50:36,bottom:30},xAxis:{type:'time'},yAxis:[{name:'实际铜价',...ax()},{name:'TIPS %',nameLocation:'start',inverse:true,splitLine:{show:false}}],tooltip:{trigger:'axis',confine:true},
   series:[{name:'实际铜价（左）',type:'line',showSymbol:false,data:S.map(x=>[x[0]+'-15',x[2]]),color:'#d9534f'},{name:'10 年 TIPS（右，反向）',type:'line',yAxisIndex:1,showSymbol:false,data:M.filter(x=>x[1]!=null).map(x=>[x[0]+'-15',x[1]]),color:'#5b8def'}]});
  CH.leadCards('#cu-lead',J.lead)}
 /* ---- 中国 */
@@ -120,7 +120,7 @@ function drawIf(r){$('#cu-ifT').innerHTML=J.interface.rows.map(x=>`<tr><td><b>${
 window.cuNet=()=>CH.net('cu-cNet','#cu-nodeInfo',J.companies,mk);
 function render(){drawBal();drawCons();drawTc();drawBand();drawLong();drawLead();drawCn();window.cuNet()}
 window.redraw=render;
-fetch('data/cu.json?v=2637524f9e').then(r=>r.json()).then(j=>{J=j;
+fetch('data/cu.json?v=7a5bc35e3a').then(r=>r.json()).then(j=>{J=j;
  $('#cu-upd').textContent=J.meta.updated;CH.stats('#cu-stats',J.stats);
  $('#cu-deb').innerHTML=J.debates.map(x=>`<div class="card"><b>${x.q}</b><p style="margin:.4em 0;font-size:15px">观点：${CH.srcInline(x.view)}</p><div class="note">证伪：${x.falsify}</div></div>`).join('');
  CH.table('#cu-procT tbody',J.process,2);CH.table('#cu-prT tbody',J.price,2);
