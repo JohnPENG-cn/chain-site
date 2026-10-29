@@ -122,7 +122,7 @@ def article_pages():
                   if re.search(r'<body[^>]*class="[^"]*\barticle\b', open(f, encoding='utf-8').read()))
 
 # 原理图页 body 不是 article，显式列进来（只列已经接入检查的；不用通配，免得新页一上线就卡构建）
-EXTRA = ['explain-hbm.html', 'explain-cowos.html', 'explain-pcb.html', 'explain-hdd.html', 'hdd.html']
+EXTRA = ['explain-hbm.html', 'explain-cowos.html', 'explain-pcb.html', 'explain-hdd.html', 'hdd.html', 'ai-bubble.html']
 
 CHAIN_KEYS = ('hbm', 'cowos', 'pcb', 'cu')   # 导航里必须都在、都是 5 页（tpl/page_v4.py CHAINS）
 
