@@ -14,7 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
 # 目录：已发布的专题（spec 文件名）+ 规划中的专题
-REGISTRY = ['hbm', 'cowos', 'pcb']
+REGISTRY = ['hbm', 'cowos', 'pcb', 'hdd']
 PLANNED = [
     ('铜从矿山到电线', '采矿、选矿、冶炼、电解，精矿 TC/RC 与冶炼利润，为什么约束在精矿。'),
 ]

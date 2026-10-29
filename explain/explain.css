@@ -245,3 +245,48 @@ a.sr{font-size:11px;vertical-align:1px;margin:0 1px;text-decoration:none;white-s
 .ex-svg .resinf{fill:var(--est);fill-opacity:.24;stroke:var(--est);stroke-opacity:.6}
 .ex-svg .maskf{fill:var(--ok);fill-opacity:.7}.ex-svg .drl{fill:var(--fg);fill-opacity:.45}
 }
+/* ---------- HDD 篇（新增类名，不影响其他篇） ---------- */
+.ex-svg circle.gl{fill:none}
+.ex-svg .hcase{fill:color-mix(in srgb,var(--fg) 5%,var(--card));stroke:color-mix(in srgb,var(--fg) 40%,var(--card));stroke-width:.9}
+.ex-svg g.sel .hcase{stroke:var(--acc);stroke-width:1.6}
+.ex-svg .plat{fill:color-mix(in srgb,var(--acc2) 22%,var(--card));stroke:color-mix(in srgb,var(--acc2) 70%,var(--fg));stroke-width:.8}
+.ex-svg .plat.hot{fill:color-mix(in srgb,var(--acc) 22%,var(--card))}
+.ex-svg g.sel .plat{stroke:var(--acc);stroke-width:1.6}
+.ex-svg .spin{fill:color-mix(in srgb,var(--fg) 30%,var(--card));stroke:var(--fg);stroke-width:.6}
+.ex-svg .armf{fill:color-mix(in srgb,var(--fg) 40%,var(--card));stroke:var(--fg);stroke-width:.6}
+.ex-svg .vcmf{fill:color-mix(in srgb,var(--warn) 45%,var(--card));stroke:var(--warn);stroke-width:.8}
+.ex-svg g.sel .armf,.ex-svg g.sel .vcmf,.ex-svg g.sel .spin{stroke:var(--acc);stroke-width:1.6}
+.ex-svg .headr{fill:color-mix(in srgb,var(--warn) 75%,var(--card));stroke:var(--warn);stroke-width:.8}
+.ex-svg .readr{fill:color-mix(in srgb,var(--ok) 60%,var(--card));stroke:var(--ok);stroke-width:.8}
+.ex-svg .headr.dim,.ex-svg .readr.dim{opacity:.4}
+.ex-svg g.sel .headr,.ex-svg g.sel .readr{stroke:var(--acc);stroke-width:1.8}
+.ex-svg .headb{fill:color-mix(in srgb,var(--fg) 8%,var(--card));stroke:color-mix(in srgb,var(--fg) 35%,var(--card))}
+.ex-svg .grU{fill:color-mix(in srgb,var(--acc2) 55%,var(--card))}.ex-svg .grD,.ex-svg .grU.d{fill:color-mix(in srgb,var(--est) 50%,var(--card))}
+.ex-svg g.sel .grU,.ex-svg g.sel .grD{stroke:var(--acc);stroke-width:1}
+.ex-svg .trkb{fill:color-mix(in srgb,var(--fg) 6%,var(--card));stroke:var(--line)}
+.ex-svg .trkf{fill:color-mix(in srgb,var(--acc2) 40%,var(--card));stroke:color-mix(in srgb,var(--acc2) 70%,var(--card));stroke-width:.5}
+.ex-svg .trkf.alt{fill:color-mix(in srgb,var(--acc2) 60%,var(--card))}
+.ex-svg g.sel .trkf{stroke:var(--acc);stroke-width:1.2}
+.ex-svg .gapf2{fill:var(--bg);stroke:var(--line);stroke-dasharray:2 2}.ex-svg g.sel .gapf2{stroke:var(--acc)}
+.ex-svg .field{fill:none;stroke:var(--acc);stroke-width:1.2;stroke-dasharray:2 2}
+.ex-svg .gasd{fill:var(--mut)}.ex-svg .swirl{fill:none;stroke:var(--mut);stroke-width:.8}
+.ex-svg .dimg{opacity:.35}
+.ex-svg .lasr{fill:color-mix(in srgb,var(--acc) 25%,var(--card));stroke:var(--acc);stroke-width:.8}.ex-svg .lasr.on{fill:color-mix(in srgb,var(--acc) 70%,var(--card))}
+.ex-svg .wg{fill:none;stroke:var(--mut);stroke-width:1.2;stroke-dasharray:3 2}.ex-svg .wg.on{stroke:var(--acc);stroke-dasharray:none}
+.ex-svg .nftf{fill:color-mix(in srgb,var(--warn) 70%,var(--card));stroke:var(--warn)}
+.ex-svg g.sel .lasr,.ex-svg g.sel .nftf{stroke:var(--fg);stroke-width:1.6}
+.ex-svg .hotsp{fill:var(--acc);fill-opacity:.55}
+.ex-svg .glsr2{fill:color-mix(in srgb,var(--acc2) 14%,var(--card));stroke:color-mix(in srgb,var(--acc2) 50%,var(--card))}.ex-svg g.sel .glsr2{stroke:var(--acc);stroke-width:1.4}
+.ex-svg .rd{stroke:var(--card);stroke-width:1.2}.ex-svg .rd.stx{fill:var(--acc)}.ex-svg .rd.wdc{fill:var(--acc2)}.ex-svg .rd.tsb{fill:var(--ok)}
+.ex-svg .rd.tbd{fill:var(--card);stroke:var(--acc);stroke-dasharray:2 2}
+.ex-svg g.sel .rd{stroke:var(--fg);stroke-width:2}
+.ex-svg .nodef{fill:color-mix(in srgb,var(--fg) 5%,var(--card));stroke:var(--line)}.ex-svg g.sel .nodef{stroke:var(--acc);stroke-width:1.6}
+.ex-svg .arrw{fill:none;stroke:var(--mut);stroke-width:.8}
+.ex-seg.bt button{min-width:2.2em}
+@supports not (color:color-mix(in srgb,red 50%,blue)){
+.ex-svg .hcase,.ex-svg .headb,.ex-svg .nodef,.ex-svg .trkb{fill:var(--card);stroke:var(--line)}
+.ex-svg .plat,.ex-svg .trkf,.ex-svg .glsr2{fill:var(--acc2);fill-opacity:.3}.ex-svg .plat.hot{fill:var(--acc);fill-opacity:.25}
+.ex-svg .spin,.ex-svg .armf{fill:var(--fg);fill-opacity:.35}.ex-svg .vcmf,.ex-svg .headr,.ex-svg .nftf{fill:var(--warn);fill-opacity:.6}
+.ex-svg .readr{fill:var(--ok);fill-opacity:.6}.ex-svg .grU{fill:var(--acc2);fill-opacity:.55}.ex-svg .grD,.ex-svg .grU.d{fill:var(--est);fill-opacity:.5}
+.ex-svg .lasr{fill:var(--acc);fill-opacity:.3}.ex-svg .lasr.on{fill-opacity:.7}
+}
