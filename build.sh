@@ -12,6 +12,7 @@ python3 pcb/map.py       # PCB 底图层：技术路线图 + 格局图 → pcb-m
 python3 cu/build.py      # 大宗商品系列：铜（回测数据由 cu/backtest.py 单独联网生成）
 python3 tpl/page.py      # 三页同一模板（结论层 + 底稿 13 步），见 SOP 页面规范；pcb.html 用 tpl/page_v2.py 行业版。pcb_v1.html / pcb_v1.js / data/pcb_v1.json 是 v1 冻结存档，构建不重写
 python3 ledger/build.py  # 全局判断总账：data/ledger.json → ledger.html + ledger_ids.js；检查每条都对得上研究页条目（不过就停）
+python3 hdd/build.py     # HDD 链库页 v0.1：一页总览（读 explain/hdd.py 来源表 + data/chains.json 节点数字）
 python3 explain/build.py # 万物原理图：explain/<专题>.py 规格 + explain/<专题>.js 图形 + explain/engine.js 通用引擎 → explain-<专题>.html、explain.html、首页卡片
 python3 tools/hig_apply.py  # 全站接入统一设计系统 assets/hig.css（Apple HIG）；幂等，只动页面外壳
 python3 tools/cachebust.py # 全站静态资源加 ?v=内容哈希（防 iOS Safari / CDN 新旧混用）；必须最后跑
