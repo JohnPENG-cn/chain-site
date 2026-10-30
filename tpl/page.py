@@ -225,5 +225,9 @@ if __name__ == '__main__':
         assert n == 1, f'index.html 缺 card:{chain} 标记'
         print(f'{S["file"]}{"（" + S["layout"] + "）" if S.get("layout") else ""}: {len(S["args"])} 条论点、{sum(len(a["ev"]) for a in S["args"])} 个证据块、13 步底稿' + (f'；中国账本 {len(S["cn"]["args"])} 条论点、{sum(len(a["ev"]) for a in S["cn"]["args"])} 个证据块、{sum(1 for x in S["steps"] if x.get("cn"))} 个中国块' if S.get('cn') else ''))
     open(os.path.join(R0, 'index.html'), 'w', encoding='utf-8').write(idx)
+    # HDD（2026-10-30 起 5 页）不走 load()：正文在 hdd/content.py（hdd/build.py 生成页面），这里只取它的更新记录
+    sys.path.insert(0, os.path.join(R0, 'hdd'))
+    from content import CHANGELOG as _HDD_CL
+    CL['hdd'] = _HDD_CL
     if CL:   # 更新记录页：各链的版本说明、逐版记录、旧网址去处
         open(os.path.join(R0, 'changelog.html'), 'w', encoding='utf-8').write(page_v4.changelog_page(CL))

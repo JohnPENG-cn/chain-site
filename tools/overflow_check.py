@@ -10,7 +10,7 @@
   5. 链条 5 页模板的整站导航（nav.rd-toc.sn，docs/CHAIN_TEMPLATE.md）：<1200px 点顶栏打开抽屉，抽屉整块在视口内、
      里面没有横向滚动、本页小节已填进去，Esc 能关；≥1200px 常驻栏在视口内、不横向滚动；页内步骤条 / 上一页下一页不超宽。
      隐藏区 #ch-shadow（给页面脚本用的其他页副本）不参与任何检查。
-  6. 静态导航检查（不开浏览器，每次都跑）：所有带整站导航的页，导航链接目标都存在，四条链（HBM / CoWoS / PCB / 铜）都在且各有 5 页文件，
+  6. 静态导航检查（不开浏览器，每次都跑）：所有带整站导航的页，导航链接目标都存在，五条链（HBM / CoWoS / PCB / 铜 / HDD）都在且各有 5 页文件，
      首页与导航里没有“旧版式”。
 用法：python3 tools/overflow_check.py [--base URL] [--pages pcb.html ...] [--shots DIR]
 不给 --base 时在仓库根目录起一个本地 http 服务。缺 playwright 时打印 SKIP 并返回 0。
@@ -122,13 +122,13 @@ def article_pages():
                   if re.search(r'<body[^>]*class="[^"]*\barticle\b', open(f, encoding='utf-8').read()))
 
 # 原理图页 body 不是 article，显式列进来（只列已经接入检查的；不用通配，免得新页一上线就卡构建）
-EXTRA = ['explain-hbm.html', 'explain-cowos.html', 'explain-pcb.html', 'explain-hdd.html', 'hdd.html', 'ai-bubble.html']
+EXTRA = ['explain-hbm.html', 'explain-cowos.html', 'explain-pcb.html', 'explain-hdd.html', 'ai-bubble.html']
 
-CHAIN_KEYS = ('hbm', 'cowos', 'pcb', 'cu')   # 导航里必须都在、都是 5 页（tpl/page_v4.py CHAINS）
+CHAIN_KEYS = ('hbm', 'cowos', 'pcb', 'cu', 'hdd')   # 导航里必须都在、都是 5 页（tpl/page_v4.py CHAINS）
 
 
 def nav_static():
-    """6. 静态导航检查（不开浏览器）：带整站导航的页面里，每个链接的目标文件都存在；四条链都在、各 5 页文件都在；
+    """6. 静态导航检查（不开浏览器）：带整站导航的页面里，每个链接的目标文件都存在；五条链都在、各 5 页文件都在；
     首页和导航里不再出现“旧版式”。返回问题列表。"""
     bad = []
     for f in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
@@ -162,7 +162,7 @@ def main():
     ap.add_argument('--widths', nargs='*', type=int); a = ap.parse_args()
     nb = nav_static()
     for x in nb: print(f'FAIL [nav-static] {x}')
-    if not nb: print('ok   导航静态检查：链接目标都在、四条链各 5 页、无“旧版式”')
+    if not nb: print('ok   导航静态检查：链接目标都在、五条链各 5 页、无“旧版式”')
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
