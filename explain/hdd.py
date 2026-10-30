@@ -33,7 +33,11 @@ _ALL = {
     'nidec': ('StorageNewsletter：尼得科 2023 财年 Q4（HDD 主轴电机份额 >70%）', 'https://www.storagenewsletter.com/2024/05/13/nidec-fiscal-4q23-financial-results/'),
     'hoya': ('HOYA 投资者材料：10 分钟读懂 HOYA（玻璃基板）', 'https://www.hoya.com/ir/2025/en/common/files/10min_read.pdf'),
     'reso': ('Resonac 新闻稿：HDD 介质增产与价格调整（2026-07-28）', 'https://www.resonac.com/news/2026/07/28/3953.html'),
-    'x_hdd': ('本站 HDD 链库页（总览，待补较多）', 'hdd.html'),
+    'x_hdd': ('本站 HDD 5 页报告（格局、涨价、判断）', 'hdd.html'),
+    'bf14': ('Blocks & Files：WD 新技术到 14 张盘片（2026-02-18）', 'https://www.blocksandfiles.com/disk/2026/02/18/platters-wd-new-disk-drive-tech-hits-lucky-14/4091399'),
+    'wd_inno': ('WD 新闻稿：Innovation Day，40TB UltraSMR ePMR 与 HAMR 路线图（2026-02-03）', 'https://www.westerndigital.com/company/newsroom/press-releases/2026/2026-02-03-western-digital-accelerates-storage-innovation-for-ai-era'),
+    'tsb_m12': ('东芝新闻稿：M12 系列 30–34TB SMR 近线硬盘开始送样（2026-03-30）', 'https://news.toshiba.com/press-releases/press-release-details/2026/Toshiba-Begins-Sampling-of-30-34-TB-SMR-Nearline-Hard-Disk-Drives/default.aspx'),
+    'stx_blog': ('Seagate 博客：The nanomarvels enabling the AI era（2025-06-26，转述 2025 年投资者日）', 'https://www.seagate.com/blog/the-nanomarvels-enabling-the-ai-era/'),
     'x_hbm': ('本站 HBM 原理图（AI 用的另一种“存储”）', 'explain-hbm.html'),
 }
 _ORDER = []
@@ -86,17 +90,17 @@ GENS = [
          unlock='把磁粒“站起来”排（垂直记录），再充氦多塞几张盘片',
          neck='传统材料每碟过了约 2.4TB 就很难再密 ' + s('moz3'),
          note='年份为本站 {est}；希捷用它做功耗对比的基准：0.59 瓦 / TB ' + s('moz3')),
-    dict(name='ePMR · 40TB（WD）', year='2026–27', tb=None, nd=None, cap=40, heat=False, mamr=False,
-         srcs=[n('wdc_t')],
-         tech='加强版 PMR（ePMR），不用激光',
-         per='每碟容量、碟数：待补（WD 未公开）',
+    dict(name='ePMR · 40TB（WD）', year='2026 下半年量产', tb=3.6, nd=11, cap=40, heat=False, mamr=False,
+         srcs=[n('wdc_t'), n('wd_inno'), n('bf14')],
+         tech='加强版 PMR（ePMR，叠瓦 UltraSMR 口径），不用激光',
+         per='11 碟 ' + s('bf14') + '；每碟约 3.6TB（= 40 ÷ 11）{calc}',
          unlock='不换介质，靠更精细的写头和信号处理继续挤密度 {est}',
          neck='WD 自己也在准备 HAMR：认证 2027 年一季度、量产 2027 年上半年 ' + s('wdc_t'),
          note='WD 称 40TB ePMR 在 FQ2 占近线出货约 30%、FQ3 约 50% ' + s('wdc_t')),
     dict(name='MAMR · 12 碟（东芝）', year='2027（路线图）', tb=None, nd=12, cap=40, heat=False, mamr=True,
          srcs=[n('tsb12'), n('tsbr')],
          tech='微波辅助记录（MAMR）：写的时候加一点微波能量',
-         per='12 碟堆叠已验证 ' + s('tsb12') + '；每碟容量：待补',
+         per='12 碟堆叠已验证 ' + s('tsb12') + '；已送样的 M12 是 11 碟、30–34TB（SMR），首款玻璃基板 ' + s('tsb_m12') + '；12 碟时每碟容量：待补',
          unlock='盘片更薄、塞 11–12 张，配合 MAMR 做到 40TB 级 ' + s('tsbr'),
          neck='12 碟要更薄的玻璃基板；东芝下一步也转 HAMR（2028 年 45TB）' + s('tsbr'),
          note='东芝是三家里最小的一家 ' + s('cough')),
@@ -114,12 +118,12 @@ GENS = [
          unlock='同一套平台继续把每碟做密 ' + s('moz4'),
          neck='产能：希捷说 2026 年底 HAMR 约占近线出货 EB 的一半 ' + s('stx_t'),
          note='已在两家超大规模云厂通过认证 ' + s('moz4')),
-    dict(name='路线图 · 每碟 10TB', year='待补（希捷未给年份）', tb=10, nd=10, cap=100, heat=True, mamr=False,
-         srcs=[n('moz')],
+    dict(name='路线图 · 每碟 10TB', year='2028 实验室演示，约 2032 年 100TB+', tb=10, nd=10, cap=100, heat=True, mamr=False,
+         srcs=[n('moz'), n('stx_blog')],
          tech='HAMR 继续迭代',
          per='每碟 10TB 目标 ' + s('moz') + '；10 碟约 100TB {calc}',
          unlock='更小的磁粒、更准的加热点',
-         neck='年份没有公开来源：待补',
+         neck='希捷：2028 年实验室演示每碟 10TB，约 2032 年认证 100TB 以上 ' + s('stx_blog') + '；实验室到量产通常要好几年',
          note='东芝路线图：约 2030 年 55TB ' + s('tsbr')),
 ]
 
@@ -197,7 +201,7 @@ dict(id='road', scene='road', t='容量路线图：20 → 30 → 40+TB', hint='�
 <li><b>西部数据</b>：40TB ePMR 正在放量；HAMR 2027 年一季度认证、上半年量产 {s('wdc_t')}。</li>
 <li><b>东芝</b>：40TB 级 MAMR（11–12 碟）2027 年；HAMR 45TB 2028 年；约 2030 年 55TB {s('tsbr')}。</li>
 </ol>
-<p class="note">东芝节点来自媒体转述的幻灯片；希捷 100TB 没给年份，图上放在最右边并标“待补”。</p>'''),
+<p class="note">东芝节点来自媒体转述的幻灯片；希捷 100TB 的年份取自 2025 年投资者日转述（约 2032 年认证）。</p>'''),
 
 dict(id='why', scene='why', t='AI 为什么还要机械硬盘？', hint='拖容量滑块 · 看两种盘各要多少钱',
      parts=['b_hdd', 'b_ssd'], w='cost', body=f'''
@@ -227,7 +231,7 @@ dict(id='who', scene='who', t='谁在做？谁说了算？', hint='点环节看�
 <div class="ex-bd" data-m="media" hidden><p><b>盘片（介质）：</b>Resonac 是唯一对外卖介质的厂，产能从每年 1.6 亿片扩到 2.3 亿片，并和客户调了价 {s('reso')}。整机厂也自己做一部分。</p></div>
 <div class="ex-bd" data-m="sub" hidden><p><b>玻璃基板：</b>HOYA 自称是唯一的硬盘玻璃基板厂；近线盘约 40% 用玻璃，HAMR 必须用玻璃 {s('hoya')}。纪要称 HOYA 给西部数据的玻璃 2027 年小量、2028 年放量（弱）{s('jpm')}。</p></div>
 <div class="ex-bd" data-m="motor" hidden><p><b>主轴电机：</b>尼得科（Nidec）占 70% 以上 {s('nidec')}。</p></div>
-<div class="ex-bd" data-m="mag" hidden><p><b>音圈电机磁钢：</b>用钕铁硼永磁。A 股宁波韵升为 VCM 供应磁材，份额：待补。详见 <a href="hdd.html">HDD 链库页</a> {s('x_hdd')}。</p></div>
+<div class="ex-bd" data-m="mag" hidden><p><b>音圈电机磁钢：</b>用钕铁硼永磁。A 股宁波韵升为 VCM 供应磁材，份额：待补。详见 <a href="hdd-pattern.html#cn">HDD 报告 · 中国账本</a> {s('x_hdd')}。</p></div>
 <p>我们推断：定价权最强的是整机厂（三家、长约、价格已锁到 2027）和独家零件（玻璃基板、对外介质、主轴电机）。这是推断，不是判断，以链库页为准。</p>'''),
 
 dict(id='watch', scene='watch', t='接下来盯什么？', hint='三个信号',
