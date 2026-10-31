@@ -1,6 +1,6 @@
 {
  "schema": "ledger/v1",
- "updated": "2026-10-23",
+ "updated": "2026-10-30",
  "note": "全局判断总账（唯一来源）。判断原文与各研究页一致，不在这里改写；概率为 2026-10-22 初稿，待 John 确认。打分：到期后 outcome 填 命中/未中，build.py 自动算 Brier =（概率 − 结果）²，结果命中=1、未中=0。",
  "status_legend": {
   "有效": "页面上“未触发”",
@@ -24,7 +24,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-30",
+     "w": "削弱",
+     "t": "10-28 海力士称 DRAM/HBM 产能到 2029 年基本售罄、缺货或到 2030；10-29 三星称 2027 年 HBM 已售罄。离证伪条件（原厂称配额、大客户拿不到量）只差一步；改判待 John",
+     "src": "https://finance.sina.cn/7x24/2026-10-29/detail-iniwwawy6069806.d.html"
+    }
+   ]
   },
   {
    "gid": "G02",
@@ -228,7 +236,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-30",
+     "w": "待核",
+     "t": "10-27 传台积电先进封装最高涨价 20%，公司未证实",
+     "src": "https://finance.sina.cn/7x24/2026-10-27/detail-iniwruys2111034.d.html"
+    }
+   ]
   },
   {
    "gid": "G14",
@@ -421,6 +437,12 @@
      "w": "支持",
      "t": "生益科技预告前三季度归母净利 64.6–68.7 亿（+164%~+181%），Q3 单季环比约 +49%~+68%；原因是覆铜板量价齐升（含生益电子贡献）。正式三季报 10-30",
      "src": "http://static.cninfo.com.cn/finalpage/2026-10-17/1225608514.PDF"
+    },
+    {
+     "d": "2026-10-30",
+     "w": "支持",
+     "t": "10-29 生益科技三季报：Q3 归母净利 34.40 亿元，同比 +238.4%，环比 +61.6%；公司称覆铜板量价齐升",
+     "src": "https://www.nbd.com.cn/articles/2026-10-29/4627884.html"
     }
    ]
   },
@@ -503,6 +525,12 @@
      "w": "支持",
      "t": "10 月电子布再涨：7628 +1.5 元/米，2116、1080 各 +2.5 元/米；原因是织布机紧、下游超预期（证券日报引国金 10-09 研报）",
      "src": "http://www.ce.cn/cysc/newmain/yc/jsxw/202610/t20261016_3259796.shtml"
+    },
+    {
+     "d": "2026-10-30",
+     "w": "支持",
+     "t": "10-26 中国巨石 10 月上调电子布价格，库存低、新产能建设约 1.5 年（不改受挑战状态）",
+     "src": "https://finance.sina.cn/7x24/2026-10-26/detail-iniwpwiq2478979.d.html"
     }
    ]
   },
@@ -521,7 +549,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-30",
+     "w": "支持",
+     "t": "10-28 奥士康拟 60 亿元建南通 PCB 基地、一博拟 10 亿元扩 8 万㎡/月——板厂扩产继续集中（目前是投资协议，非投产）",
+     "src": "https://finance.sina.cn/7x24/2026-10-28/detail-iniwukpx9526489.d.html"
+    }
+   ]
   },
   {
    "gid": "G29",
@@ -794,7 +830,15 @@
    "reason": "海力士近两年都在 4Q 财报会说\"明年已签满\"，但措辞可能改成\"大部分\"",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-30",
+     "w": "支持",
+     "t": "10-28 海力士三季度营业利润 83.3 万亿韩元，称 DRAM/HBM 产能到 2029 年基本售罄（本预测看 4Q26 财报会，属提前出现的同向证据）",
+     "src": "https://finance.sina.cn/7x24/2026-10-28/detail-iniwtxxy6622800.d.html"
+    }
+   ]
   },
   {
    "gid": "P004",
@@ -1727,6 +1771,12 @@
      "w": "待核",
      "t": "精铜 232 关税仍无决定；9 月中旬起市场关税预期降温，COMEX−LME 价差收窄并在 10-22 转为贴水（市场定价方向与本预测一致，不是政策证据）",
      "src": "https://www.kitco.com/news/off-the-wire/2026-10-22/copper-price-falls-five-week-low-lme-inventory-build-continues"
+    },
+    {
+     "d": "2026-10-30",
+     "w": "待核",
+     "t": "精铜 232 关税本周仍无决定（最近实质报道为 9-10 搁置）；10-30 COMEX−LME 价差约 120 美元/吨，市场定价方向一致，不是政策证据",
+     "src": "https://finance.sina.com.cn/money/future/fmnews/2026-10-30/doc-iniwyncw5544433.shtml"
     }
    ]
   },
@@ -1764,7 +1814,15 @@
    "reason": "现货 TC −272、2027 年长单约 −330，8 个月内回到 −100 以上要精矿明显放松",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-30",
+     "w": "支持",
+     "t": "10-30 Mysteel：12 月船期现货铜精矿招标成交 TC −302 美元/干吨",
+     "src": "https://youse.mysteel.com/a/26103008/5725A0627DC4434D.html"
+    }
+   ]
   },
   {
    "gid": "P057",
@@ -1898,7 +1956,15 @@
    "reason": "国储很少官方公布收储",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-30",
+     "w": "支持",
+     "t": "截至 10-30 未检索到国储精铜收储公告；10-29 上期所暂停铜、铝期货保税交割（未说明原因）",
+     "src": "https://www.shfe.com.cn/publicnotice/notice/202610/t20261029_833879.html"
+    }
+   ]
   },
   {
    "gid": "P064",
