@@ -16,6 +16,8 @@ cowos_data/raw/
 
 # 日报栏目的图片需要入库
 !daily/img/*.png
+# 长期投资笔记的图片需要入库
+!invest/img/*.png
 pcb_data/raw/
 cu_data/raw/
 hdd_data/raw/
