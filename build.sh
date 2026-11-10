@@ -14,6 +14,7 @@ python3 tpl/page.py      # 三页同一模板（结论层 + 底稿 13 步），�
 python3 ledger/build.py  # 全局判断总账：data/ledger.json → ledger.html + ledger_ids.js；检查每条都对得上研究页条目（不过就停）
 python3 hdd/build.py     # HDD 5 页（hdd/content.py 正文 + hdd/sources.py 来源 + hdd_data/*.json 季度数），2026-10-30 起
 python3 bubble/build.py  # AI 泡沫监控页：读 world/ai_bubble.json（世界看板每日更新时现算）→ ai-bubble.html；json 缺失时整页显示待补
+python3 invest/build.py  # 长期投资笔记：invest/buffett_data.json → buffett-style.html（阅读模式；图片 invest/img/）
 python3 explain/build.py # 万物原理图：explain/<专题>.py 规格 + explain/<专题>.js 图形 + explain/engine.js 通用引擎 → explain-<专题>.html、explain.html、首页卡片
 python3 tools/hig_apply.py  # 全站接入统一设计系统 assets/hig.css（Apple HIG）；幂等，只动页面外壳
 python3 tools/cachebust.py # 全站静态资源加 ?v=内容哈希（防 iOS Safari / CDN 新旧混用）；必须最后跑
