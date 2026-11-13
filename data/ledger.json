@@ -1,6 +1,6 @@
 {
  "schema": "ledger/v1",
- "updated": "2026-11-11",
+ "updated": "2026-11-13",
  "note": "全局判断总账（唯一来源）。判断原文与各研究页一致，不在这里改写；概率为 2026-10-22 初稿，待 John 确认。打分：到期后 outcome 填 命中/未中，build.py 自动算 Brier =（概率 − 结果）²，结果命中=1、未中=0。",
  "status_legend": {
   "有效": "页面上“未触发”",
@@ -49,7 +49,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-13",
+     "w": "支持",
+     "t": "TrendForce现货板DDR5 16Gb均价60.233美元（11-13 14:40），较11-06的约60.17未跌破59.66的−3%线；11-11官方稿预测PC DRAM四季度合约价环比+13–18%，这是预测不是已结算均价。方向仍是涨价，未出现「DDR5先跌而HBM大涨」",
+     "src": "https://www.trendforce.com/price/dram/dram_spot"
+    }
+   ]
   },
   {
    "gid": "G03",
@@ -66,7 +74,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-11",
+     "w": "支持",
+     "t": "韩国关税厅：11月1–10日半导体出口166.32亿美元，同比+331.2%，占总出口49.7%；工作日7.5对7.0，出口日均仍+97.7%。比10月全月+259.4%更快，未见提前跌破+100%（不改受挑战状态）",
+     "src": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156788682"
+    }
+   ]
   },
   {
    "gid": "G04",
@@ -83,7 +99,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-12",
+     "w": "支持",
+     "t": "本周四大云厂商没有下修2027资本开支指引。应用材料法说称2027年晶圆设备需求同比或超+30%、先进封装「仍然非常强」；Nebius首次给出2027年资本开支400–450亿美元（上修）。这些都不是四家自己的正式2027指引",
+     "src": "https://www.appliedmaterials.com/us/en/newsroom/press-releases/111226-applied-materials-announces-fourth-qtr-fiscal-year-end-2026-results.html"
+    }
+   ]
   },
   {
    "gid": "G05",
@@ -202,7 +226,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-06",
+     "w": "支持",
+     "t": "欣兴10月合并营收189.86亿新台币，同比+67.62%，连续七个月刷新单月新高；工商时报称高阶ABF需求升、产品报价仍在调整，第四季营收可望延续成长",
+     "src": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AC%A3%E8%88%88-2026%E5%B9%B410%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6189-86%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E67-080328348.html"
+    }
+   ]
   },
   {
    "gid": "G12",
@@ -219,7 +251,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-10",
+     "w": "待核",
+     "t": "CoreWeave三季报营收36.61亿美元并上调2026年收入与资本开支（低端由350亿提到370–390亿）；财报前5年CDS约1,152bp（10-21为1,145bp），母公司无担保债市场仍紧。CFO称「若只交付已承诺订单，2027年资本开支或与2026持平」——不是正式指引，是否视为开支上限待John判断",
+     "src": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Third-Quarter-2026-Results/default.aspx"
+    }
+   ]
   },
   {
    "gid": "G13",
@@ -243,6 +283,12 @@
      "w": "待核",
      "t": "10-27 传台积电先进封装最高涨价 20%，公司未证实",
      "src": "https://finance.sina.cn/7x24/2026-10-27/detail-iniwruys2111034.d.html"
+    },
+    {
+     "d": "2026-11-13",
+     "w": "支持",
+     "t": "应用材料电话会：日历年2026先进封装营收约+90%，管理层称2027年仍将非常强；无人要求推迟设备交货（不改「封装周期还没见顶」）",
+     "src": "https://www.fool.com/earnings/call-transcripts/2026/11/13/applied-amat-q4-2026-earnings-call-transcript/"
     }
    ]
   },
@@ -443,6 +489,12 @@
      "w": "支持",
      "t": "10-29 生益科技三季报：Q3 归母净利 34.40 亿元，同比 +238.4%，环比 +61.6%；公司称覆铜板量价齐升",
      "src": "https://www.nbd.com.cn/articles/2026-10-29/4627884.html"
+    },
+    {
+     "d": "2026-11-05",
+     "w": "支持",
+     "t": "台光电10月合并营收244.73亿新台币，同比+203.08%、累计同比+114.06%；上游CCL增速仍明显快于多数板厂",
+     "src": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E5%8F%B0%E5%85%89%E9%9B%BB-2026%E5%B9%B410%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6244-73%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E203-062330507.html"
     }
    ]
   },
@@ -495,7 +547,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-09",
+     "w": "支持",
+     "t": "AI/高速板10月营收续强：台光电同比+203.08%，定颖投控37.87亿新台币、同比+121.47%；金像电同比+76.18%。双速行情的AI一侧仍在放量（A股普通板厂10月月报本周未出）",
+     "src": "https://www.ctee.com.tw/news/20261109700201-439901"
+    }
+   ]
   },
   {
    "gid": "G27",
@@ -531,6 +591,12 @@
      "w": "支持",
      "t": "10-26 中国巨石 10 月上调电子布价格，库存低、新产能建设约 1.5 年（不改受挑战状态）",
      "src": "https://finance.sina.cn/7x24/2026-10-26/detail-iniwpwiq2478979.d.html"
+    },
+    {
+     "d": "2026-11-06",
+     "w": "削弱",
+     "t": "欣兴执行总经理马光华（远见11-06，上周未录）：T-glass「材料差不多了」，瓶颈转到设备；部分设备交期最长三年，有设备商「2028年以前不接单」。削弱「最硬的是ABF/BT和电子布、然后才是设备」的排序，但未击中证伪线（无HVLP4加工费单季+15%，ABF交期也未回到6个月内）",
+     "src": "https://www.gvm.com.tw/article/134339"
     }
    ]
   },
@@ -675,7 +741,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-13",
+     "w": "支持",
+     "t": "进口精矿现货TC仍深度负值（SMM周指数−241.35美元/干吨），未回到0以上；亚洲铜周将谈2027长协。约束仍在精矿，证伪线未击中",
+     "src": "https://news.metal.com/newscontent/EALAW7OMN7SU2NGL7DT3GC5K3VZ3U6NIULC2GBI-smelter-purchase-willingness-continues-to-decline-imported-copper-concentrate-index-rebounds-slightly-smm-copper-concentrates-spot-weekly-review"
+    }
+   ]
   },
   {
    "gid": "G35",
@@ -726,7 +800,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-10",
+     "w": "待核",
+     "t": "海关10月「未锻轧铜及铜材」进口45.3万吨（宽口径，含铜材，不能直接当精炼铜）。G37证伪需要精炼铜单月>40万吨且洋山溢价>150美元；精炼铜分项本周未找到，不能宣布证伪",
+     "src": "http://english.customs.gov.cn/Statics/d0d30e32-ca04-4ba9-97e2-cb1c4e4567a9.html"
+    }
+   ]
   },
   {
    "gid": "G38",
@@ -1662,7 +1744,15 @@
    "reason": "4 个月内从约 70 吨翻一倍以上，认证节奏是瓶颈",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-01",
+     "w": "待核",
+     "t": "上证报转述德福调研（上周未录）：2026Q3 HVLP4出货约290吨（月均约97吨），新产能爬坡在2027Q2。12月≥150吨要靠现有产线继续陡爬，执行风险上升，尚未证伪",
+     "src": "https://finance.sina.com.cn/roll/2026-11-01/doc-inixfkxx1148586.shtml"
+    }
+   ]
   },
   {
    "gid": "P049",
@@ -1783,6 +1873,12 @@
      "w": "待核",
      "t": "精铜 232 关税本周仍无决定（最近实质报道为 9-10 搁置）；10-30 COMEX−LME 价差约 120 美元/吨，市场定价方向一致，不是政策证据",
      "src": "https://finance.sina.com.cn/money/future/fmnews/2026-10-30/doc-iniwyncw5544433.shtml"
+    },
+    {
+     "d": "2026-11-13",
+     "w": "待核",
+     "t": "窗口内未见白宫对精炼铜落地Section 232关税；COMEX–LME价差回到约0，关税溢价基本消失。政策仍可能突然落地，到期日2027-01-05，不改概率",
+     "src": "https://finance.sina.com.cn/money/future/fmnews/2026-11-13/doc-iniypzqc1091348.shtml"
     }
    ]
   },
@@ -1827,6 +1923,12 @@
      "w": "支持",
      "t": "10-30 Mysteel：12 月船期现货铜精矿招标成交 TC −302 美元/干吨",
      "src": "https://youse.mysteel.com/a/26103008/5725A0627DC4434D.html"
+    },
+    {
+     "d": "2026-11-13",
+     "w": "支持",
+     "t": "SMM进口铜精矿指数（周）−241.35美元/干吨，较上期−247.35回升5.6；12月船期有一笔固定价−240成交。仍远低于−100",
+     "src": "https://news.metal.com/newscontent/EALAW7OMN7SU2NGL7DT3GC5K3VZ3U6NIULC2GBI-smelter-purchase-willingness-continues-to-decline-imported-copper-concentrate-index-rebounds-slightly-smm-copper-concentrates-spot-weekly-review"
     }
    ]
   },
