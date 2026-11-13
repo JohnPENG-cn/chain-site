@@ -1,6 +1,6 @@
 {
  "date": "20261113",
- "generated": "2026-11-13 09:27",
+ "generated": "2026-11-13 12:13",
  "backfilled": false,
  "prev": "20261112",
  "composites": [
@@ -244,13 +244,13 @@
      "id": "cn_10y",
      "name": "中国10Y国债 与 中美利差",
      "status": "amber",
-     "vtxt": "1.603%"
+     "vtxt": "1.612%"
     },
     {
      "id": "csi300_erp",
      "name": "沪深300 股债性价比（3年滚动z）",
      "status": "green",
-     "vtxt": "5.82%"
+     "vtxt": "5.81%"
     },
     {
      "id": "cn_margin",
@@ -368,9 +368,9 @@
    "id": "eastmoney",
    "name": "东方财富 中美国债收益率",
    "link": "https://data.eastmoney.com/cjsj/zmgzsyl.html",
-   "ok": false,
-   "last": "2026-11-12",
-   "note": "eastmoney_yields: ChunkedEncodingError Response ended prematurely；eastmoney_yields: ChunkedEncodingError Response ended prematurely"
+   "ok": true,
+   "last": "2026-11-13",
+   "note": ""
   },
   {
    "id": "tushare",
@@ -777,18 +777,18 @@
    "ok": true,
    "status": "amber",
    "opp": false,
-   "value": 338.35,
-   "vtxt": "1.603%",
-   "obs": "2026-11-12",
-   "pct": 99.7,
+   "value": 349.68,
+   "vtxt": "1.612%",
+   "obs": "2026-11-13",
+   "pct": 99.8,
    "pct_label": "2004年以来（利差）",
    "danger": 400,
    "ddir": ">=",
-   "dist": 61.65,
-   "dist_txt": "距危险线 62bp（危险线 >= 400bp）",
+   "dist": 50.32,
+   "dist_txt": "距危险线 50bp（危险线 >= 400bp）",
    "extras": [
-    "中美利差 338bp（美高中低）",
-    "中国10Y 20日 -6bp（单月上行≥30bp=债市调整）"
+    "中美利差 350bp（美高中低）",
+    "中国10Y 20日 -4bp（单月上行≥30bp=债市调整）"
    ],
    "spark_label": "中国10Y（%）",
    "err": null,
@@ -811,24 +811,24 @@
    "ok": true,
    "status": "green",
    "opp": false,
-   "value": -0.1179,
-   "vtxt": "5.82%",
+   "value": -0.134,
+   "vtxt": "5.81%",
    "obs": "2026-11-13",
-   "pct": 37.4,
+   "pct": 37.0,
    "pct_label": "2009年以来（z值）",
    "danger": -1.5,
    "ddir": "<=",
-   "dist": 1.3821,
-   "dist_txt": "距危险线 1.38σ（危险线 <= -1.50σ）",
+   "dist": 1.366,
+   "dist_txt": "距危险线 1.37σ（危险线 <= -1.50σ）",
    "extras": [
-    "3年滚动 z = -0.12（>+2 为历史强底部信号）",
-    "PE_TTM 13.47，10Y 1.603%",
+    "3年滚动 z = -0.13（>+2 为历史强底部信号）",
+    "PE_TTM 13.47，10Y 1.612%",
     "全样本分位 71%"
    ],
    "spark_label": "ERP（%）",
    "err": null,
    "manual": false,
-   "level": 5.8202
+   "level": 5.8111
   },
   {
    "id": "cn_margin",
