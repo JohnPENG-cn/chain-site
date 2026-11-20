@@ -1,6 +1,6 @@
 {
  "schema": "ledger/v1",
- "updated": "2026-11-13",
+ "updated": "2026-11-20",
  "note": "全局判断总账（唯一来源）。判断原文与各研究页一致，不在这里改写；概率为 2026-10-22 初稿，待 John 确认。打分：到期后 outcome 填 命中/未中，build.py 自动算 Brier =（概率 − 结果）²，结果命中=1、未中=0。",
  "status_legend": {
   "有效": "页面上“未触发”",
@@ -106,6 +106,12 @@
      "w": "支持",
      "t": "本周四大云厂商没有下修2027资本开支指引。应用材料法说称2027年晶圆设备需求同比或超+30%、先进封装「仍然非常强」；Nebius首次给出2027年资本开支400–450亿美元（上修）。这些都不是四家自己的正式2027指引",
      "src": "https://www.appliedmaterials.com/us/en/newsroom/press-releases/111226-applied-materials-announces-fourth-qtr-fiscal-year-end-2026-results.html"
+    },
+    {
+     "d": "2026-11-18",
+     "w": "支持",
+     "t": "英伟达四季营收指引1,300亿美元±3%，采购承诺由2,790亿升到3,900亿美元（主要是多年期内存）；四大云本周无下修，仍无2027美元指引",
+     "src": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Third-Quarter-Fiscal-2027/default.aspx"
     }
    ]
   },
@@ -141,7 +147,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-19",
+     "w": "待核",
+     "t": "11-19 BIS规则让中国设计公司难以再去境外代工先进逻辑芯片，国内先进逻辑产能（中芯三季稼动率97.3%）可能和HBM一起成为门槛。「约束在HBM、不在逻辑芯片」受到挑战，但证伪条件（长鑫HBM放量而昇腾不跟）未出现；是否改写待John",
+     "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
+    }
+   ]
   },
   {
    "gid": "G07",
@@ -175,7 +189,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-19",
+     "w": "支持",
+     "t": "同一规则：新增印尼、马来西亚、新加坡、泰国、巴西为先进芯片需许可目的地，并堵远程租算力。方向是收紧不是放松，证伪线（HBM单卖获许可或H200大量进大陆）未触及",
+     "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
+    }
+   ]
   },
   {
    "gid": "G09",
@@ -258,6 +280,12 @@
      "w": "待核",
      "t": "CoreWeave三季报营收36.61亿美元并上调2026年收入与资本开支（低端由350亿提到370–390亿）；财报前5年CDS约1,152bp（10-21为1,145bp），母公司无担保债市场仍紧。CFO称「若只交付已承诺订单，2027年资本开支或与2026持平」——不是正式指引，是否视为开支上限待John判断",
      "src": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Third-Quarter-2026-Results/default.aspx"
+    },
+    {
+     "d": "2026-11-18",
+     "w": "待核",
+     "t": "英伟达三季营收1,158亿美元、四季指引1,300亿±3%（不含中国数据中心算力），需求没软；但财报脚注改为对neocloud的担保「对方拿到融资才生效、施工延误可减少或取消」，neocloud承诺由360亿降到320亿美元。CoreWeave 5年CDS 11-17约1,113.5bp，仍>1,000bp。四大云仍无2027美元指引，P023未触发",
+     "src": "https://www.cnbc.com/2026/11/18/nvidia-neocloud-financing.html"
     }
    ]
   },
@@ -349,7 +377,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-19",
+     "w": "支持",
+     "t": "BIS临时最终规则11-19生效（联邦公报2026-23529）：境外代工厂/封测厂给总部在中国等受限地区的设计公司做先进逻辑芯片，晶体管数自证途径不可用，原则上推定为3A090.a、需许可；海外数据中心向中国企业大量出租先进算力也需许可（已有业务90天过渡）。台积电这条路进一步收窄",
+     "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
+    }
+   ]
   },
   {
    "gid": "G17",
@@ -597,6 +633,12 @@
      "w": "削弱",
      "t": "欣兴执行总经理马光华（远见11-06，上周未录）：T-glass「材料差不多了」，瓶颈转到设备；部分设备交期最长三年，有设备商「2028年以前不接单」。削弱「最硬的是ABF/BT和电子布、然后才是设备」的排序，但未击中证伪线（无HVLP4加工费单季+15%，ABF交期也未回到6个月内）",
      "src": "https://www.gvm.com.tw/article/134339"
+    },
+    {
+     "d": "2026-11-16",
+     "w": "削弱",
+     "t": "工商时报引美系外资供应链调查：日本主要铜箔厂（三井金属）通知客户，12月起出货的电解铜箔全面涨价，含HVLP；9μm/12μm涨30%、其他厚度涨15%。金居10月已涨约10%。离证伪线「HVLP4加工费单季≥+15%（A/B级来源）」只差一步：涨的是售价不是单列加工费，三井原始涨价函未见，暂不算触发，改判待John",
+     "src": "https://www.ctee.com.tw/news/20261116701038-430201"
     }
    ]
   },
@@ -657,7 +699,15 @@
    "prob": null,
    "reason": "",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-10-08",
+     "w": "支持",
+     "t": "德福9月HVLP4出货187吨（公司问答），远高于阈值「2026-12 HVLP4 <100吨/月」，国产替代在推进",
+     "src": "https://yuanchuang.10jqka.com.cn/20261008/c680472175.shtml"
+    }
+   ]
   },
   {
    "gid": "G31",
@@ -748,6 +798,12 @@
      "w": "支持",
      "t": "进口精矿现货TC仍深度负值（SMM周指数−241.35美元/干吨），未回到0以上；亚洲铜周将谈2027长协。约束仍在精矿，证伪线未击中",
      "src": "https://news.metal.com/newscontent/EALAW7OMN7SU2NGL7DT3GC5K3VZ3U6NIULC2GBI-smelter-purchase-willingness-continues-to-decline-imported-copper-concentrate-index-rebounds-slightly-smm-copper-concentrates-spot-weekly-review"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "支持",
+     "t": "现货TC约−244.63美元/干吨；安托法加斯塔近期招标−310至−330美元/吨；亚洲铜业周（11-17至19）未落地2027长单基准，路透调查60%预计负值基准（−50至−150）。仍远在0以下",
+     "src": "https://news.mysteel.com/a/26111915/05223C2962BA335F.html"
     }
    ]
   },
@@ -807,6 +863,12 @@
      "w": "待核",
      "t": "海关10月「未锻轧铜及铜材」进口45.3万吨（宽口径，含铜材，不能直接当精炼铜）。G37证伪需要精炼铜单月>40万吨且洋山溢价>150美元；精炼铜分项本周未找到，不能宣布证伪",
      "src": "http://english.customs.gov.cn/Statics/d0d30e32-ca04-4ba9-97e2-cb1c4e4567a9.html"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "待核",
+     "t": "洋山铜仓单溢价升至约360美元/吨、创纪录，SHFE库存2.76万吨为近三年新低（Mysteel 11-20）。证伪条件的「溢价>150美元」一半已满足，另一半「10月精炼铜进口>40万吨」分项仍未找到（9月电解铜进口25.46万吨），不能宣布证伪",
+     "src": "https://news.mysteel.com/a/26111915/05223C2962BA335F.html"
     }
    ]
   },
@@ -1106,7 +1168,15 @@
    "reason": "管制方向稳定，但过去出现过 H20 类的阶段性放松",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-19",
+     "w": "支持",
+     "t": "11-19 BIS临时规则继续收紧先进芯片与代工途径，未见放松HBM单卖（3A090.c）的迹象",
+     "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
+    }
+   ]
   },
   {
    "gid": "P014",
@@ -1672,7 +1742,15 @@
    "reason": "玻纤布与 ABF 的涨幅已明显大于铜箔加工费",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-16",
+     "w": "削弱",
+     "t": "三井金属12月起电解铜箔（含HVLP）涨15–30%，金居10月已涨约10%；高阶铜箔涨幅开始追上电子布、ABF（ABF单季约+5–15%），「HVLP4涨幅低于二代布和ABF」的排序受压，不改概率",
+     "src": "https://www.ctee.com.tw/news/20261116701038-430201"
+    }
+   ]
   },
   {
    "gid": "P045",
@@ -1751,6 +1829,12 @@
      "w": "待核",
      "t": "上证报转述德福调研（上周未录）：2026Q3 HVLP4出货约290吨（月均约97吨），新产能爬坡在2027Q2。12月≥150吨要靠现有产线继续陡爬，执行风险上升，尚未证伪",
      "src": "https://finance.sina.com.cn/roll/2026-11-01/doc-inixfkxx1148586.shtml"
+    },
+    {
+     "d": "2026-10-08",
+     "w": "支持",
+     "t": "补录（上周漏看）：德福投资者问答称9月HVLP铜箔出货699.7吨，其中HVLP4 187吨；8月约70吨，推算7月约33吨，Q3合计约290吨。单月已超过150吨，上周「月均约97吨、执行风险上升」的读法不对。12月≥150吨仍要到期核实，概率0.35明显偏低，改概率待John",
+     "src": "https://yuanchuang.10jqka.com.cn/20261008/c680472175.shtml"
     }
    ]
   },
@@ -1929,6 +2013,12 @@
      "w": "支持",
      "t": "SMM进口铜精矿指数（周）−241.35美元/干吨，较上期−247.35回升5.6；12月船期有一笔固定价−240成交。仍远低于−100",
      "src": "https://news.metal.com/newscontent/EALAW7OMN7SU2NGL7DT3GC5K3VZ3U6NIULC2GBI-smelter-purchase-willingness-continues-to-decline-imported-copper-concentrate-index-rebounds-slightly-smm-copper-concentrates-spot-weekly-review"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "支持",
+     "t": "现货TC约−244.63美元/干吨，安托法加斯塔招标−310至−330美元/吨，仍远低于−100",
+     "src": "https://news.mysteel.com/a/26111915/05223C2962BA335F.html"
     }
    ]
   },
