@@ -509,6 +509,12 @@
      "w": "支持",
      "t": "英伟达出资帮矽品扩先进封装（2029 年中前），景硕把专供英伟达的 ABF 载板产能扩到 3.5 倍、2027 下半年投产、2028Q3 放量。被点名锁量扩产的是内存、封装和载板，不是 PCB / 覆铜板 / 铜箔，方向支持「PCB 链不卡加速器出货」。Kyber 良率先例仍在，状态维持受挑战。",
      "src": "https://finance.sina.cn/7x24/2026-11-18/detail-inizehkv0980524.d.html"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "支持",
+     "t": "GEA 11-18：超大云厂商在锁定现有供给，汽车、工业、医疗、国防客户排到队尾。短缺的成本落在非 AI 客户身上，方向支持「PCB 链不卡加速器出货」；协会称冲击可比 2021 年缺芯，故维持受挑战。",
+     "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
    ]
   },
@@ -622,6 +628,12 @@
      "w": "支持",
      "t": "AI/高速板10月营收续强：台光电同比+203.08%，定颖投控37.87亿新台币、同比+121.47%；金像电同比+76.18%。双速行情的AI一侧仍在放量（A股普通板厂10月月报本周未出）",
      "src": "https://www.ctee.com.tw/news/20261109700201-439901"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "削弱",
+     "t": "GEA 11-18 称汽车、工业等非 AI 客户「拿不到货、交期变长」，风险是「有没有货，不是价格」。11-20 A 股普通板厂领涨：超声电子 +9.98%、满坤科技 +20.00%（主力 +8.11 亿、+1.80 亿，Tushare），市场在押普通板也有议价权，与本判断「普通板成本推动、毛利被挤」相反。证伪看 2026Q4 毛利率（超声、崇达、满坤环比 ≥ +2pp），未到期，状态不改。",
+     "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
    ]
   },
@@ -677,6 +689,12 @@
      "w": "削弱",
      "t": "复核结论：不触发证伪，维持受挑战。工商时报转述美系外资供应链调查，不是 A/B 级原函；涨的是电解铜箔（含 HVLP）售价而非单列 HVLP4 加工费，铜价本身也在波动；未见交期 >3 个月并出现配额。离证伪线仍差一步。",
      "src": "https://www.ctee.com.tw/news/20261116701038-430201"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "支持",
+     "t": "全球电子协会（GEA）11-18 行业预警：新增板厂产线依赖的玻纤布、树脂、铜箔、覆铜板本身受限，「只加板厂产能解不开短缺」；高层板交期 16–20 周以上。支持「最硬的约束在材料与载板，不在板厂」。未单列 HVLP4 加工费或配额，不碰证伪线，维持受挑战。",
+     "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
    ]
   },
@@ -708,6 +726,12 @@
      "w": "支持",
      "t": "景硕专供英伟达的 ABF 载板扩到 3.5 倍，2027 下半年才投产、2028Q3 才放量；英伟达出资帮矽品扩封装到 2029 年中。支持「ABF 载板和设备交期到 2028 年仍紧」。",
      "src": "https://finance.sina.cn/7x24/2026-11-18/detail-inizehkv0980524.d.html"
+    },
+    {
+     "d": "2026-11-20",
+     "w": "支持",
+     "t": "GEA 11-18：截至 9 月订单同比 +56.1%、出货 +13.3%，协会自己提示「避免重复下单」「若提前采购回吐、2027 年需求回调」；短缺至少持续到 2027 上半年，实质缓解不早于 2028 年中。订单远快于出货是重复下单的特征【推断】，支持「2027 下半年扩产最集中的环节先松、整体到 2028 才缓」；时点风险：若协会口径成真，22–30 层先松可能晚于 2027 下半年。",
+     "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
    ]
   },
