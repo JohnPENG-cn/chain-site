@@ -56,4 +56,10 @@ def page_items():
     pred('PCB-中国', 'PCB', 'pcb.html', pc['cn']['preds'], '中国')
     pred('铜', '铜', 'cu.html', cu['predictions'])
     pred('铜-中国', '铜', 'cu.html', cu['cn']['preds'], '中国')
+    # 宏观本（2026-11-20 起）：世界页 world/backtest.json 的预测账本 L1–L6（判断）+ preds W1…（带日期预测）
+    bt = J('world/backtest.json')
+    for x in bt.get('ledger', []):
+        out[f'宏观-{x["id"]}'] = dict(kind='判断', chain='宏观', page='world/', book='全球', local=x['id'], text=x['claim'], short=x['claim'],
+                                    falsify=x.get('falsify', ''), th='', st='有效', due=x.get('deadline', ''))
+    pred('宏观', '宏观', 'world/', bt.get('preds', []))
     return out

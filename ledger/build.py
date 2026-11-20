@@ -58,6 +58,11 @@ def check(doc):
     texts = [x['text'] for x in items]
     if len(set(texts)) != len(texts):
         errs.append('有两条原文完全相同，标签会冲突')
+    known = set(gids)
+    for m in doc.get('lights', {}).get('map', []):
+        bad = [g for g in m.get('gids', []) if g not in known]
+        if bad:
+            errs.append(f'灯{m.get("no")} 挂了总账里没有的编号：' + ', '.join(bad))
     miss = sorted(set(it) - set(olds))
     if miss:
         errs.append('研究页上有、总账里没有：' + ', '.join(miss))
@@ -96,6 +101,9 @@ CSS = '''
 .ev-支持{background:var(--hig-ok-fill);color:var(--hig-tx-green)}.ev-削弱{background:var(--hig-warn-fill);color:var(--hig-tx-orange)}
 .ev-触发证伪{background:var(--hig-risk-fill);color:var(--hig-tx-red)}.ev-待核{background:var(--hig-gray-fill);color:var(--mut)}
 .lg-ev{list-style:none;padding:0;margin:0}.lg-ev li{margin:0 0 4px}
+.lg-tw{overflow-x:auto;-webkit-overflow-scrolling:touch}.lg-tb{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}
+.lg-tb th,.lg-tb td{border-bottom:1px solid var(--line,rgba(128,128,128,.25));padding:6px 8px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+@media (max-width:640px){.lg-tb thead{display:none}.lg-tb tr{display:block;padding:8px 0;border-bottom:1px solid var(--line,rgba(128,128,128,.25))}.lg-tb td{display:block;border:0;padding:2px 0}.lg-tb td::before{content:attr(data-l)"：";color:var(--mut);font-size:13px}}
 .lg-banner{background:var(--hig-est-fill);border-radius:var(--r-card,12px);padding:10px 14px;margin:10px 0;font-size:15px}
 '''
 
@@ -115,6 +123,20 @@ def week(items):
             f'<ul class="lg-ev">{"".join(rows)}</ul></section>')
 
 
+def lights(doc):
+    lt = doc.get('lights')
+    if not lt:
+        return ''
+    rows = ''.join(
+        f'<tr><td data-l="灯">{E(m["no"])} {E(m["q"])}</td><td data-l="测什么">{E(m["drivers"])}</td>'
+        f'<td data-l="挂的判断">{"<b>读法开关</b>：" if m.get("role") == "读法开关" else ""}{" ".join(f"<a href=\"#{g}\">{g}</a>" for g in m["gids"])}</td>'
+        f'<td data-l="变色时动作">{E(m["action"])}</td></tr>' for m in lt['map'])
+    gaps = ''.join(f'<li>{E(g)}</li>' for g in lt.get('gaps', []))
+    return (f'<section id="lights"><h2>五盏灯 → 判断</h2><p class="sub">{E(lt["note"])} 灯的读数见 <a href="world/">世界页</a>。</p>'
+            f'<div class="lg-tw"><table class="lg-tb"><thead><tr><th>灯</th><th>测什么（投票指标）</th><th>挂的判断</th><th>变色时动作</th></tr></thead><tbody>{rows}</tbody></table></div>'
+            + (f'<h3>覆盖缺口（建议，未实施）</h3><ul class="sub">{gaps}</ul>' if gaps else '') + '</section>')
+
+
 def render(doc):
     items = doc['items']
     J = [x for x in items if x['kind'] == '判断']
@@ -130,7 +152,7 @@ def render(doc):
     nxt = sorted((x for x in live if x['outcome'] == '待验证'), key=lambda x: x['due'])[:3]
     brier = f'{sum(x["brier"] for x in scored) / len(scored):.3f}' if scored else '—'
     hitr = f'{sum(x["outcome"] == "命中" for x in scored)}/{len(scored)}' if scored else '0/0'
-    chains = ['HBM', 'CoWoS', 'PCB', '铜', '跨链']
+    chains = ['宏观', 'HBM', 'CoWoS', 'PCB', '铜', '跨链']
     o = [f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!-- 由 ledger/build.py 从 data/ledger.json 生成，不要手改 -->
 <title>全局判断总账 · 产业链情报研究中心</title><meta name="description" content="所有产业链的核心判断与带日期预测：全局编号、证伪条件、到期日、概率与打分。">
@@ -138,7 +160,7 @@ def render(doc):
 <header class="top"><div class="wrap"><a class="brand back" href="./" aria-label="返回首页">首页</a><span class="sp"></span><a class="btn" href="daily/">日报</a><a class="btn" href="hbm.html">HBM</a><a class="btn" href="world/">世界</a><button class="btn" onclick="toggleTheme()" aria-label="切换深浅色">◐</button></div></header>
 <main class="wrap">
 <section><div class="kicker">全局判断总账 · 更新 {E(doc["updated"])}</div><h1>我们说过什么，到期对不对</h1>
-<p class="dek">四条链的核心判断（G 编号）和带日期的预测（P 编号）都在这一页。判断原文与各研究页一致；到期后按公开数据打分，只追加结果，不改原文。</p>
+<p class="dek">宏观本和四条链的核心判断（G 编号）和带日期的预测（P 编号）都在这一页。判断原文与各研究页一致；到期后按公开数据打分，只追加结果，不改原文。</p>
 <div class="lg-banner"><b>按证据更新</b>：{len(live)} 条预测的概率初稿于 2026-10-22 起草，此后按证据调整，每条附一句理由。John 可随时纠正。</div>
 <div class="lg-sum">
 <div class="card"><b>{len(J)}</b><span>核心判断 · 有效 {stc["有效"]} · 受挑战 {stc["受挑战"]} · 证伪 {stc["证伪"]} · 作废 {stc["作废"]}</span></div>
@@ -152,6 +174,7 @@ def render(doc):
 <p class="sub">最近到期：{"；".join(f'<a href="#{x["gid"]}">{x["gid"]}</a> {x["due"]}' for x in nxt)}。</p>
 </section>
 {week(items)}
+{lights(doc)}
 <section><h2>总账</h2>
 <div class="lg-f"><select id="fk" aria-label="类型"><option value="">判断 + 预测</option><option>判断</option><option>预测</option></select>
 <select id="fc" aria-label="链"><option value="">全部链</option>{"".join(f"<option>{c}</option>" for c in chains)}</select>
