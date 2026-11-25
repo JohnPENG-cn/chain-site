@@ -1,6 +1,6 @@
 {
  "schema": "ledger/v1",
- "updated": "2026-11-24",
+ "updated": "2026-11-25",
  "note": "全局判断总账（唯一来源）。判断原文与各研究页一致。概率初稿于 2026-10-22 起草；2026-11-20 起按证据入账（状态、概率、新预测），John 可随时纠正。打分：到期后 outcome 填 命中/未中，build.py 自动算 Brier =（概率 − 结果）²，结果命中=1、未中=0。2026-11-20 起并入「宏观」本：世界页预测账本 L1–L6 → G40–G45，新增 P070（W1）、P071（W2）；五盏灯 → 判断的挂钩见 lights。",
  "status_legend": {
   "有效": "页面上“未触发”",
@@ -21,8 +21,8 @@
    "falsify": "2027 年原厂称 HBM 要配额、大客户拿不到量；或 2026 年实际产量 < 40 亿 GB。",
    "th": "2026 年产量 < 40 亿 GB（预测 P7）",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.4,
+   "reason": "海力士称产能到 2029 年基本售罄、三星称 2027 年 HBM 已售罄，离证伪只差一步",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -38,7 +38,11 @@
      "t": "证伪复核结论：不判证伪，维持受挑战，也不改写「2027 年只略紧（约 −10%）」——该缺口仍是模型数字。海力士称产能到 2029 年基本售罄、三星称 2027 年 HBM 已卖光，离证伪原文「原厂称要配额、大客户拿不到量」仍差一步：「售罄」更常指长约签满，卖方也有把话说满的动机。等原厂明确说出配额或大客户拿不到量再判证伪。",
      "src": "https://finance.sina.cn/7x24/2026-10-29/detail-iniwwawy6069806.d.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "原厂说“售罄”后是否走到“配额、大客户拿不到量”；存储上行期常见先售罄后配额",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G02",
@@ -52,8 +56,8 @@
    "falsify": "2027 年 HBM 合约价涨幅很小；或 DDR5 先跌而 HBM 仍大涨（说明是 HBM 自身缺货，不是机会成本）。",
    "th": "均价同比 < +50%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "DDR5 现货稳在 60 美元附近，未见“DDR5 先跌、HBM 独涨”",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -63,7 +67,11 @@
      "t": "TrendForce现货板DDR5 16Gb均价60.233美元（11-13 14:40），较11-06的约60.17未跌破59.66的−3%线；11-11官方稿预测PC DRAM四季度合约价环比+13–18%，这是预测不是已结算均价。方向仍是涨价，未出现「DDR5先跌而HBM大涨」",
      "src": "https://www.trendforce.com/price/dram/dram_spot"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "HBM 与标准 DRAM 共用晶圆，机会成本定价是弱先验（约 50%）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G03",
@@ -77,8 +85,8 @@
    "falsify": "出口同比提前回落；或 2027Q1 前仍 > +100% 且加速。",
    "th": "首次跌破 +100%（预测 P6）",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.45,
+   "reason": "韩国半导体出口 11 月上旬同比 +331%，证伪线“2027Q1 前仍 >+100% 且加速”在靠近",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -88,7 +96,11 @@
      "t": "韩国关税厅：11月1–10日半导体出口166.32亿美元，同比+331.2%，占总出口49.7%；工作日7.5对7.0，出口日均仍+97.7%。比10月全月+259.4%更快，未见提前跌破+100%（不改受挑战状态）",
      "src": "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156788682"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "半导体周期谷底间隔 14–15 季（cycle_audit/report.md 复算四个半导体组）；按历史节奏顶部更可能早于 2027 年中",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G04",
@@ -102,8 +114,8 @@
    "falsify": "云厂商 2027 年资本开支指引持平或下降。",
    "th": "合计同比 < +10%，或任一家下降",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.65,
+   "reason": "本周四大云无下修，英伟达采购承诺升到 3,900 亿美元；但 2027 正式美元指引还没出",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -119,7 +131,11 @@
      "t": "英伟达四季营收指引1,300亿美元±3%，采购承诺由2,790亿升到3,900亿美元（主要是多年期内存）；四大云本周无下修，仍无2027美元指引",
      "src": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Third-Quarter-Fiscal-2027/default.aspx"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "四大云厂商资本开支指引（2023 年以来年度指引未见下修，属本轮上行期样本，样本少）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G05",
@@ -133,10 +149,14 @@
    "falsify": "国产卡降价、交期缩短；或寒武纪 690 顺利放量。",
    "th": "报价回落到 < 20 万元",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.7,
+   "reason": "没有国产卡降价、交期缩短的证据；长鑫投片口径 3–6 万片/月仍不够",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "受管制关键部件的国产替代：头两三年通常只补需求的一小部分（良率、设备受限）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G06",
@@ -150,8 +170,8 @@
    "falsify": "境外代工先进逻辑重新畅通（BIS 撤销或普遍许可），且国内先进逻辑稼动率明显回落、不再构成交期或配额瓶颈；或长鑫 HBM 放量而昇腾出货仍不跟（说明还有第三道门）。",
    "th": "境外代工许可恢复且中芯稼动率 < 85%；或 2027 年长鑫 HBM 投片 ≥ 5 万片/月而华为 2027 年出货 < 150 万颗",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "11-19 BIS 规则让国内先进代工成为第二道门；第三道门（如电力、软件）尚未排除",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -167,7 +187,11 @@
      "t": "入账：判断改为「HBM + 国内先进代工」两道门，状态改为受挑战。依据是 11-19 BIS 临时规则（境外代工先进逻辑原则上需许可）和中芯三季稼动率 97.3%。原证伪条件（长鑫放量而昇腾不跟）未出现，故不判证伪；新证伪线改为「境外代工恢复且国内稼动率回落，或仍出现第三道门」。",
      "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "多约束串联时，真实约束常比模型多一道（TOC）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G07",
@@ -181,10 +205,14 @@
    "falsify": "长鑫 HBM 投片 ≥ 6 万片/月，或 12 层良率 > 50%。",
    "th": "投片 ≥ 6 万片/月 或 良率 > 50%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "证伪线（投片 ≥6 万片/月或 12 层良率 >50%）与韩媒口径接近，口径分歧大",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "受管制关键部件的国产替代：头两三年通常只补需求的一小部分（良率、设备受限）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G08",
@@ -198,8 +226,8 @@
    "falsify": "BIS 允许 HBM 单卖或大幅放行含 HBM 的整卡。",
    "th": "HBM 单卖获许可，或 H200 进大陆 > 20 万颗/年",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.75,
+   "reason": "11-18 停发 Hopper、11-19 新规都在收紧；扣分项是中美休战（1/10/2027 到期）和稀土筹码",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -215,7 +243,11 @@
      "t": "英伟达停止对华发货已获许可的 Hopper 芯片，方向仍是收紧不是放松；证伪线（HBM单卖获许可或H200大量进大陆）未触及。",
      "src": "https://www.investing.com/news/stock-market-news/nvidia-stops-shipping-usapproved-ai-chips-to-china-5035204"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "2022-10 以来美国对华先进芯片/HBM 管制，方向以收紧为主，放松只出现在个别型号许可",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G09",
@@ -229,10 +261,14 @@
    "falsify": "2027 年 CoWoS 订单仍大量排不进，同时 HBM 和基板没有出现缺货迹象。",
    "th": "2027 年中缺口口径 ≥ 25%，或台积电 2027 年末产能 < 16 万片/月",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "入账后无新证据，维持接近五五开",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "扩产落地需 1–3 年（ai_capcycle/research/history_cycles.md：串联瓶颈每环扩产 2–3 年）；封装扩产快于 DRAM 晶圆",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G10",
@@ -246,10 +282,14 @@
    "falsify": "2027 年 HBM 合约价涨幅很小，或英伟达不降规格。",
    "th": "均价同比 < +30%，或 Rubin Ultra ≥ 512GB",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "入账后无新证据；与 G01 受挑战方向一致（HBM 更紧）",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "扩产落地需 1–3 年（ai_capcycle/research/history_cycles.md：串联瓶颈每环扩产 2–3 年）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G11",
@@ -263,8 +303,8 @@
    "falsify": "载板毛利率回落，而台积电/OSAT 毛利率继续上升。",
    "th": "连续两季 < 20%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "欣兴 10 月营收同比 +67.6%、连续七个月新高；还缺毛利率对比",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -274,7 +314,11 @@
      "t": "欣兴10月合并营收189.86亿新台币，同比+67.62%，连续七个月刷新单月新高；工商时报称高阶ABF需求升、产品报价仍在调整，第四季营收可望延续成长",
      "src": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AC%A3%E8%88%88-2026%E5%B9%B410%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6189-86%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E67-080328348.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "利润向瓶颈环节迁移（Christensen 吸引利润守恒、Bain 利润池）：方向常对，幅度和时点难",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G12",
@@ -288,8 +332,8 @@
    "falsify": "云厂商 2027 年资本开支指引持平或下降。",
    "th": "合计同比 < +10%，或任一家下降",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "英伟达指引强，但四大云 2027 美元指引未出",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -311,7 +355,11 @@
      "t": "复核英伟达 Q3：四季指引 1,300 亿美元，需求未软；四大云仍无 2027 正式美元指引，证伪线（任一家下修或合计同比 <+10%）未触发。但 neocloud 担保改为「对方先拿到融资才生效」，承诺 360→320 亿美元，CoreWeave CDS 仍 >1,000bp，融资约束还在，维持受挑战。此前两条待核到此关闭。",
      "src": "https://www.cnbc.com/2026/11/18/nvidia-neocloud-financing.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "四大云厂商资本开支指引（2023 年以来年度指引未见下修，属本轮上行期样本，样本少）；“继续上修”比“不下降”要求更高",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G13",
@@ -325,8 +373,8 @@
    "falsify": "设备三家营收同比见顶回落。",
    "th": "从峰值回落 ≥ 20 个百分点并连续 3 个月下行 → 按回测约 4 个月后台积电营收同比见顶",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.65,
+   "reason": "应用材料称 2026 先进封装营收约 +90%、2027 仍非常强",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -342,7 +390,11 @@
      "t": "应用材料电话会：日历年2026先进封装营收约+90%，管理层称2027年仍将非常强；无人要求推迟设备交货（不改「封装周期还没见顶」）",
      "src": "https://www.fool.com/earnings/call-transcripts/2026/11/13/applied-amat-q4-2026-earnings-call-transcript/"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "半导体周期谷底间隔 14–15 季（cycle_audit/report.md 复算四个半导体组）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G14",
@@ -356,8 +408,8 @@
    "falsify": "2027 年谷歌 TPU（CoWoS-S）出货被下修、原因指向中介层；或台积电/券商把中介层列为 CoWoS-S 的首要限制",
    "th": "① 下修 ≥ 10% 且归因中介层；② 新增 < 16 千片/月（盈亏平衡）；③ 2027 年内再出现一家新委外厂或联电扩到 ≥ 1 万片/月 → 都说明比我们算的紧",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "Amkor 中介层产能到 2028 年底扩 >300%，与“2028 转松”同向",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -367,7 +419,11 @@
      "t": "10-21 英伟达公告：Amkor 中介层晶圆产能到 2028 年底扩 >300%，与“2028 转松”同向（不改受挑战状态）",
      "src": "https://nvidianews.nvidia.com/news/nvidia-and-supply-chain-partners-expand-capacity-to-accelerate-ai-infrastructure-buildout"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "扩产落地需 1–3 年（ai_capcycle/research/history_cycles.md：串联瓶颈每环扩产 2–3 年）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G15",
@@ -381,10 +437,14 @@
    "falsify": "2027 年出现“有 HBM 没封装”的报道（长鑫 HBM 积压，国产卡仍出不来）；或 2026 年底国内产能 < 1.5 万片/月。",
    "th": "< 1.5 万片/月",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.45,
+   "reason": "入账后无新证据；国内 2.5D 产能口径不全",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "“某环节在某季度先松/见顶”这类定时判断：外部视角下命中率低，默认不高于 50%",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G16",
@@ -398,8 +458,8 @@
    "falsify": "在 2025 年后制造的国产 AI 卡里再次发现台积电 die 或台积电 CoWoS。",
    "th": "发现一例即触发",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.8,
+   "reason": "11-19 BIS 规则把境外代工先进逻辑堵上",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -409,7 +469,11 @@
      "t": "BIS临时最终规则11-19生效（联邦公报2026-23529）：境外代工厂/封测厂给总部在中国等受限地区的设计公司做先进逻辑芯片，晶体管数自证途径不可用，原则上推定为3A090.a、需许可；海外数据中心向中国企业大量出租先进算力也需许可（已有业务90天过渡）。台积电这条路进一步收窄",
      "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "2022-10 以来美国对华先进芯片/HBM 管制，方向以收紧为主，放松只出现在个别型号许可；拆解曾发现台积电 die（违规渠道存在过）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G17",
@@ -423,10 +487,14 @@
    "falsify": "味之素公开否认减供，且 2027 年国产卡没有因载板交付延迟的报道。",
    "th": "2027 年内没有",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.4,
+   "reason": "入账后无新证据，味之素未有减供公告",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "“某环节在某季度先松/见顶”这类定时判断：外部视角下命中率低，默认不高于 50%；单一材料“下一个卡点”判断",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G18",
@@ -440,10 +508,14 @@
    "falsify": "2027 年 HBM 原厂称需配额、无法满足客户，同时载板价格松动",
    "th": "HBM 2027 年产量增速 < +25%（见 T4）",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.4,
+   "reason": "原厂“售罄”口径削弱本条；载板价格未松",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "与 G01 同参考类",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G19",
@@ -457,8 +529,8 @@
    "falsify": "载板价格松动",
    "th": "欣兴毛利率连续两季 < 20%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "英伟达预付扩载板：3 年产能 2.5 倍，说明载板是被抢的环节",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -468,7 +540,11 @@
      "t": "10-21 英伟达公告预付款扩载板：3 年载板产能 2.5 倍（Ibiden 大野 2028Q1 投产、欣兴 2027Q2 起加产能、SEMCO 加入）；黄仁勋“产能就是约束”。买方出钱扩产也可能压住载板涨价（G11 方向待 John 判断）",
      "src": "https://nvidianews.nvidia.com/news/nvidia-and-supply-chain-partners-expand-capacity-to-accelerate-ai-infrastructure-buildout"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "利润向瓶颈环节迁移（Christensen 吸引利润守恒、Bain 利润池）：方向常对，幅度和时点难",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G20",
@@ -482,10 +558,14 @@
    "falsify": "北美空置率回升",
    "th": "空置率 > 5%，或拍卖低于价格上限",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "入账后无新证据；北美空置率仍低（未核本期读数）",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "扩产落地需 1–3 年（ai_capcycle/research/history_cycles.md：串联瓶颈每环扩产 2–3 年）；电力设备交期长",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G21",
@@ -499,8 +579,8 @@
    "falsify": "2027 年 Rubin / ASIC 机柜因 PCB、覆铜板或铜箔缺货而减产（不含 Kyber 这种新产品推迟）。",
    "th": "任一家明确把 PCB / CCL / 铜箔列为出货限制 ≥ 1 次",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "GEA 称短缺成本落在非 AI 客户身上，AI 优先拿货",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -516,7 +596,11 @@
      "t": "GEA 11-18：超大云厂商在锁定现有供给，汽车、工业、医疗、国防客户排到队尾。短缺的成本落在非 AI 客户身上，方向支持「PCB 链不卡加速器出货」；协会称冲击可比 2021 年缺芯，故维持受挑战。",
      "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "加速器出货因 PCB 减产的历史少见，约束多在芯片、封装",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G22",
@@ -530,10 +614,14 @@
    "falsify": "M9 2027 年渗透远超我们的区间上沿。",
    "th": "台光电 2027 年 M9 占比 ≥ 30%，或第三方 ≥ 35%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.55,
+   "reason": "入账后无新证据",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "新材料渗透率区间预测：常见偏差大，区间够宽时五五开略上",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G23",
@@ -547,8 +635,8 @@
    "falsify": "板厂毛利率涨幅追上并超过材料。",
    "th": "2027H1 胜宏毛利率 ≥ 36%，同时金居 < 25%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.65,
+   "reason": "生益 Q3 净利同比 +238%、台光电 10 月营收 +203%，快于多数板厂",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -570,7 +658,11 @@
      "t": "台光电10月合并营收244.73亿新台币，同比+203.08%、累计同比+114.06%；上游CCL增速仍明显快于多数板厂",
      "src": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E5%8F%B0%E5%85%89%E9%9B%BB-2026%E5%B9%B410%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6244-73%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E203-062330507.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "利润向瓶颈环节迁移（Christensen 吸引利润守恒、Bain 利润池）：方向常对，幅度和时点难",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G24",
@@ -584,10 +676,14 @@
    "falsify": "CCL 同比见顶后 12 个月内，金像电同比没有见顶。",
    "th": "CCL 峰值后 12 个月金像电同比仍创新高",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.5,
+   "reason": "入账后无新证据，样本外未验证",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "历史领先关系在样本外常衰减（拐点配对样本少），默认 50–55%",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G25",
@@ -601,10 +697,14 @@
    "falsify": "2027 年 AI 资本开支不增或下降，PCB 需求翻倍的前提不成立。",
    "th": "合计增速 < 10% 或任一家下降",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.7,
+   "reason": "同 G04",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "四大云厂商资本开支指引（2023 年以来年度指引未见下修，属本轮上行期样本，样本少）；只要求不下降",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G26",
@@ -618,9 +718,9 @@
    "falsify": "2026Q4 普通板厂（超声、崇达、满坤）毛利率环比回升 ≥ 2pp，且消费板面积同比转正",
    "th": "2026Q4 普通板厂（超声、崇达、满坤）毛利率环比回升 ≥ 2pp，且消费板面积同比转正",
    "due": "2027-04-30",
-   "prob": null,
-   "reason": "",
-   "outcome": "",
+   "prob": 0.65,
+   "reason": "AI 板营收续强；GEA 称非 AI 客户交期变长（风险在有没有货）",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -635,7 +735,11 @@
      "t": "GEA 11-18 称汽车、工业等非 AI 客户「拿不到货、交期变长」，风险是「有没有货，不是价格」。11-20 A 股普通板厂领涨：超声电子 +9.98%、满坤科技 +20.00%（主力 +8.11 亿、+1.80 亿，Tushare），市场在押普通板也有议价权，与本判断「普通板成本推动、毛利被挤」相反。证伪看 2026Q4 毛利率（超声、崇达、满坤环比 ≥ +2pp），未到期，状态不改。",
      "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "成本推动型涨价下普通板毛利被挤是常态",
+   "prob_state": "初稿",
+   "horizon": "2027-04-30"
   },
   {
    "gid": "G27",
@@ -649,9 +753,9 @@
    "falsify": "HVLP4 加工费单季 ≥ +15%，或交期 > 3 个月并出现配额（A/B 级来源）；或 ABF 停止涨价、交期回到 6 个月以内",
    "th": "HVLP4 加工费单季 ≥ +15%，或交期 > 3 个月并出现配额（A/B 级来源）；或 ABF 停止涨价、交期回到 6 个月以内",
    "due": "2027-06-30",
-   "prob": null,
-   "reason": "",
-   "outcome": "",
+   "prob": 0.5,
+   "reason": "复核未触发证伪；GEA 称玻纤布、树脂、铜箔、CCL 本身受限",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -696,7 +800,11 @@
      "t": "全球电子协会（GEA）11-18 行业预警：新增板厂产线依赖的玻纤布、树脂、铜箔、覆铜板本身受限，「只加板厂产能解不开短缺」；高层板交期 16–20 周以上。支持「最硬的约束在材料与载板，不在板厂」。未单列 HVLP4 加工费或配额，不碰证伪线，维持受挑战。",
      "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "多约束排序判断，排名第一第二互换常见",
+   "prob_state": "初稿",
+   "horizon": "2027-06-30"
   },
   {
    "gid": "G28",
@@ -710,9 +818,9 @@
    "falsify": "2027Q3 二代布价格仍按月上涨，或 22–30 层板报价继续上调",
    "th": "2027Q3 二代布价格仍按月上涨，或 22–30 层板报价继续上调",
    "due": "2027-12-31",
-   "prob": null,
-   "reason": "",
-   "outcome": "",
+   "prob": 0.45,
+   "reason": "景硕 ABF 2027H2 才投产、2028Q3 放量支持“载板到 2028 仍紧”；二代布先松的时点未验证",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -733,7 +841,11 @@
      "t": "GEA 11-18：截至 9 月订单同比 +56.1%、出货 +13.3%，协会自己提示「避免重复下单」「若提前采购回吐、2027 年需求回调」；短缺至少持续到 2027 上半年，实质缓解不早于 2028 年中。订单远快于出货是重复下单的特征【推断】，支持「2027 下半年扩产最集中的环节先松、整体到 2028 才缓」；时点风险：若协会口径成真，22–30 层先松可能晚于 2027 下半年。",
      "src": "https://www.electronics.org/news-release/global-electronics-association-growing-shortages-across-pcb-supply-chain-threaten-next"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "“某环节在某季度先松/见顶”这类定时判断：外部视角下命中率低，默认不高于 50%",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G29",
@@ -747,10 +859,14 @@
    "falsify": "国产卡因 PCB / CCL 交付延期。",
    "th": "≥ 1 次可信报道",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.7,
+   "reason": "入账后无新证据",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "国产卡约束在芯片与 HBM，PCB 有国内产能",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G30",
@@ -764,8 +880,8 @@
    "falsify": "德福 / 铜冠 HVLP4 良率停滞或客户退货。",
    "th": "2026-12 HVLP4 < 100 吨/月",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "德福 9 月 HVLP4 出货 187 吨，远高于 100 吨阈值",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -775,7 +891,11 @@
      "t": "德福9月HVLP4出货187吨（公司问答），远高于阈值「2026-12 HVLP4 <100吨/月」，国产替代在推进",
      "src": "https://yuanchuang.10jqka.com.cn/20261008/c680472175.shtml"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "受管制关键部件的国产替代：头两三年通常只补需求的一小部分（良率、设备受限）；铜箔认证难度低于 HBM",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G31",
@@ -789,8 +909,8 @@
    "falsify": "2027 年末二代布仍在涨价。",
    "th": "2027Q4 报价环比 ≥ +5%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.45,
+   "reason": "中材科技等大额扩产落地",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -800,7 +920,11 @@
      "t": "中材科技定增净额 44.62 亿，投年产 3,500 万米低介电布 + 2,400 万米超低损耗低介电布；平安电工拟募 ≤13 亿扩高性能电子布——二代布供给在加码",
      "src": "http://www.ce.cn/cysc/newmain/yc/jsxw/202610/t20261016_3259796.shtml"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "Marathon 资本周期：材料扩产潮后 2–3 年出现过剩常见；定时难",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G32",
@@ -814,8 +938,8 @@
    "falsify": "关税仍未决定时，美国以外可见库存升破 50 万吨且价格不跌",
    "th": "> 500 千吨",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "COMEX 转贴水、金属回流 LME",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -825,7 +949,11 @@
      "t": "10-22 COMEX 近月转为对 LME 贴水，金属回流 LME 仓库；LME 库存 27.3 万吨（7-24 以来最高，约 62% 在美国），LME 三月铜跌至五周低点",
      "src": "https://www.kitco.com/news/off-the-wire/2026-10-22/copper-price-falls-five-week-low-lme-inventory-build-continues"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "关税未决时价格跟 LME（美国以外）走",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G33",
@@ -839,10 +967,14 @@
    "falsify": "中国 2027 年表观消费 > +3%，或 ICSG 2027 消费增速上修 > 3.5%",
    "th": "> 3% / > 3.5%",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.6,
+   "reason": "入账后无新证据",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "新增需求占总消费比例小时难以单独造周期",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G34",
@@ -856,8 +988,8 @@
    "falsify": "2027-06 前现货 TC 回到 0 以上，而没有大规模冶炼减产",
    "th": "> 0 美元",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.7,
+   "reason": "现货 TC 约 −245 美元/干吨，长协招标 −310 到 −330",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -873,7 +1005,11 @@
      "t": "现货TC约−244.63美元/干吨；安托法加斯塔近期招标−310至−330美元/吨；亚洲铜业周（11-17至19）未落地2027长单基准，路透调查60%预计负值基准（−50至−150）。仍远在0以下",
      "src": "https://news.mysteel.com/a/26111915/05223C2962BA335F.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "精矿 TC 深度负值通常持续数季",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G35",
@@ -887,10 +1023,14 @@
    "falsify": "2027Q4 均价比 2027Q1 高 5% 以上；或精铜关税宣布（改用牛市情景）",
    "th": "Q4 ÷ Q1 > 1.05",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.35,
+   "reason": "入账后无新证据；关税变量未决",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "大宗商品价格路径点预测：外部视角命中率低",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G36",
@@ -904,10 +1044,14 @@
    "falsify": "白宫明确不征或推迟 ≥ 6 个月",
    "th": "连续 1 个月 < 0",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.5,
+   "reason": "入账后无新证据",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "大宗商品价格路径点预测：外部视角命中率低",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G37",
@@ -921,8 +1065,8 @@
    "falsify": "2026Q4 任一月精铜进口 > 40 万吨且洋山溢价 > 150 美元",
    "th": "> 400 千吨 / > 150 美元",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.45,
+   "reason": "洋山溢价约 360 美元（>150），10 月宽口径进口 45.3 万吨含铜材，精铜口径待核",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -938,7 +1082,11 @@
      "t": "洋山铜仓单溢价升至约360美元/吨、创纪录，SHFE库存2.76万吨为近三年新低（Mysteel 11-20）。证伪条件的「溢价>150美元」一半已满足，另一半「10月精炼铜进口>40万吨」分项仍未找到（9月电解铜进口25.46万吨），不能宣布证伪",
      "src": "https://news.mysteel.com/a/26111915/05223C2962BA335F.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "高价下中国让出金属是常见模式，但本条证伪两条件之一已满足",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G38",
@@ -952,8 +1100,8 @@
    "falsify": "2027 年上半年 SMM 月产量都 > 115 万吨",
    "th": "> 1,150 千吨/月",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.5,
+   "reason": "Mysteel 称 10 月检修增多，但 SMM 月产量未降到阈值",
    "outcome": "",
    "brier": null,
    "ev": [
@@ -963,7 +1111,11 @@
      "t": "Mysteel：10 月国内检修冶炼厂明显增多，原料难采、硫酸价跌导致部分减产；精铜出口预计降到 1.5–2 万吨",
      "src": "https://www.mysteel.net/analysis/5145863-sept-refined-copper-imports-rebound-mom-while-exports-shrink-in-china"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": "负 TC 下冶炼减产常被延迟（副产品硫酸、政策保产）",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "G39",
@@ -977,10 +1129,14 @@
    "falsify": "2027 年全年无收储且精铜进口继续下降 → 这个开关不重要",
    "th": "—",
    "due": "",
-   "prob": null,
-   "reason": "",
+   "prob": 0.45,
+   "reason": "入账后无新证据",
    "outcome": "",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": "收储时点与规模不透明，外部视角五五开以下",
+   "prob_state": "初稿",
+   "horizon": "2027-12-31"
   },
   {
    "gid": "P001",
@@ -1012,7 +1168,9 @@
      "t": "韩国 10 月全月半导体出口 564.4 亿美元，同比 +259.4%，超过 +150% 命中线",
      "src": "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/172360/view"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P002",
@@ -1030,7 +1188,9 @@
    "reason": "600 亿是指引下限；上行周期里美光多数季度落在指引中值附近或以上",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P003",
@@ -1062,7 +1222,9 @@
      "t": "入账：概率由 0.70 上调至 0.80。海力士 10-28 已提前说出 DRAM/HBM 产能到 2029 年基本售罄，同向证据较强；预测看的是 4Q26 财报会措辞，故不上到 0.90。",
      "src": "https://finance.sina.cn/7x24/2026-10-28/detail-iniwtxxy6622800.d.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P004",
@@ -1080,7 +1242,9 @@
    "reason": "TrendForce 预测 +121%，但三星低报价和 DDR5 回落是两个下行风险",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P005",
@@ -1098,7 +1262,9 @@
    "reason": "主流路线 HBM4/4E 仍用 TC-NCF/MR-MUF，混合键合多指向 HBM5 之后",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P006",
@@ -1116,7 +1282,9 @@
    "reason": "增速已在 +170% 以上，基数抬高会压增速，但 5 个月内跌破 +100% 仍要需求降温",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P007",
@@ -1134,7 +1302,9 @@
    "reason": "iM 证券预计 44.4 亿 GB，比阈值高约 11%；回看口径可能偏低",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P008",
@@ -1152,7 +1322,9 @@
    "reason": "Epoch 中位 150 万居中，但区间只有 ±30 万，口径差异大",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P009",
@@ -1170,7 +1342,9 @@
    "reason": "两个条件同时成立：按期开始交付 + 年内 < 40 万颗",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P010",
@@ -1188,7 +1362,9 @@
    "reason": "HBM 量产刚起步，年报单列且占比 ≥5% 的可能性小",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P011",
@@ -1206,7 +1382,9 @@
    "reason": "量产可能发生，但国产卡厂商很少公开确认存储供应商",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P012",
@@ -1224,7 +1402,9 @@
    "reason": "供给紧、HBM 短缺支撑价格，但渠道报价透明度低",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P013",
@@ -1250,7 +1430,9 @@
      "t": "11-19 BIS临时规则继续收紧先进芯片与代工途径，未见放松HBM单卖（3A090.c）的迹象",
      "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P014",
@@ -1268,7 +1450,9 @@
    "reason": "基准 0.09 EB，阈值留了约 70% 的余量",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P015",
@@ -1286,7 +1470,9 @@
    "reason": "要先出现第三方拆解，且拆解结论还得与我们一致",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P016",
@@ -1304,7 +1490,9 @@
    "reason": "\"低双位数\"通常指 10–13%，≥12% 落在区间偏上",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P017",
@@ -1322,7 +1510,9 @@
    "reason": "7–9 月 +43%，订单与交期仍长，但第四季基数更高",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P018",
@@ -1340,7 +1530,9 @@
    "reason": "日月光常超指引，\"再多数亿\"指向 37–38 亿附近，余量薄",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P019",
@@ -1358,7 +1550,9 @@
    "reason": "2Q26 只有 +10%，要再加速 5 个百分点，信息少",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P020",
@@ -1384,7 +1578,9 @@
      "t": "TrendForce 10-16 HBM 月报称 Rubin Ultra 改用 8-Hi（单 GPU HBM 容量约 −33%）；Digitimes 10-14 称 Rubin 主体仍是 12-Hi；英伟达未确认。若属实利于本预测（≤384GB），概率是否调整待 John",
      "src": "https://www.trendforce.com/news/2026/10/20/news-dram-prices-seen-rising-20-qoq-in-4q26-despite-slower-gains-ai-demand-tight-supply-support-outlook/"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P021",
@@ -1402,7 +1598,9 @@
    "reason": "外部客户导入到月产万颗通常要 1–2 年，时间偏紧",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P022",
@@ -1420,7 +1618,9 @@
    "reason": "模型 18.5 万、券商 18–20 万，扩产执行（如工安停工）有下行风险",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P023",
@@ -1446,7 +1646,9 @@
      "t": "复核英伟达 Q3：指引偏强，但四大云仍未给出 2027 年美元资本开支指引，预测未到期、未触发；不改概率 0.55。此前待核到此关闭。",
      "src": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-Financial-Results-for-Third-Quarter-Fiscal-2027/default.aspx"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P024",
@@ -1464,7 +1666,9 @@
    "reason": "中介层部分外包格罗方德，台积电与券商目前把载板和 HBM 列在前面",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P025",
@@ -1482,7 +1686,9 @@
    "reason": "新产线量产常延后一到两个季度，截止日就在新闻稿窗口末端",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P026",
@@ -1500,7 +1706,9 @@
    "reason": "公开数据少，三家合计 2 万片需要年内显著扩产",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P027",
@@ -1518,7 +1726,9 @@
    "reason": "国产 AI 芯片封装需求高增，+30% 门槛不高",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P028",
@@ -1536,7 +1746,9 @@
    "reason": "要先出现拆解；出现后不含台积电新 die 的可能性较大",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P029",
@@ -1554,7 +1766,9 @@
    "reason": "国产 ABF 膜仍在验证期，一年内自给率跳到 15% 以上不太可能",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P030",
@@ -1580,7 +1794,9 @@
      "t": "入账：概率由 0.65 下调至 0.55。BIS 11-19 规则让境外代工先进逻辑变难，国内逻辑产能也可能成为 2027 年国产卡受限的主因之一。这不是 2.5D 封装，但会让「主因仍是 HBM」更容易错。尚未看到 2027 年报道已改口，故只做小幅下调、不改状态。",
      "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P031",
@@ -1598,7 +1814,9 @@
    "reason": "2026-10-15 作废：HBM 页 v0.4 上修 HBM 供给约五成后，模型里 2027 年约束不再是 HBM（改为载板，HBM 次之），以 T4 替代。原文保留。",
    "prob_state": "",
    "outcome": "作废",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P032",
@@ -1624,7 +1842,9 @@
      "t": "景硕 ABF 扩产要到 2028Q3 才放量，方向支持 2027 年约束向载板迁移；但预测还要求 2027 年内味之素/日东纺/欣兴再次提价，且欣兴单季毛利率 ≥26%，这两条尚未发生，不改概率 0.45。",
      "src": "https://finance.sina.cn/7x24/2026-11-18/detail-inizehkv0980524.d.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P033",
@@ -1642,7 +1862,9 @@
    "reason": "空置率低大概率维持，但 PJM 价格上限安排在下一次拍卖可能变化",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P034",
@@ -1660,7 +1882,9 @@
    "reason": "模型 +37%、阈值 +35%，第三方口径分歧大",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P035",
@@ -1678,7 +1902,9 @@
    "reason": "要求主流券商在 8 个月内从 41% 下修到 ≤30%，下修幅度大",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P036",
@@ -1696,7 +1922,9 @@
    "reason": "与我们 7–24% 的判断一致，但台光电口径可能把相近等级算进 M9",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P037",
@@ -1714,7 +1942,9 @@
    "reason": "Kyber 已改用 Oberon 机柜过渡，正交背板良率未解决",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P038",
@@ -1740,7 +1970,9 @@
      "t": "英伟达目前锁的是内存、先进封装和 ABF 载板产能，未把 PCB / 覆铜板 / 铜箔列为扩产重点，方向支持 2027 年财报会不把这三项列为出货限制。这是 2026 年的行为证据，不是 2027 年财报会原文，不改概率 0.65。",
      "src": "https://finance.sina.cn/7x24/2026-11-18/detail-inizehkv0980524.d.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P039",
@@ -1758,7 +1990,9 @@
    "reason": "高端占比上升推毛利，扩产折旧和降价压毛利，两边力量相当",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P040",
@@ -1776,7 +2010,9 @@
    "reason": "需要比 2Q26 再高 7.6 个百分点，而复核后 HVLP 不算明显缺货",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P041",
@@ -1794,7 +2030,9 @@
    "reason": "条件式：先要 CCL 在 2027-06 前见顶，再要板厂在窗口内跟随",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P042",
@@ -1812,7 +2050,9 @@
    "reason": "扩产集中在 2027 下半年，但单期跌 ≥15% 的公开报道门槛高",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P043",
@@ -1830,7 +2070,9 @@
    "reason": "2026-10-21 作废（原文保留）：前提是把高盛 2026–28 年预测区间当成观测值；复核后市场信号显示玻纤布、ABF 涨幅远大于铜箔加工费。由 M3 取代。",
    "prob_state": "",
    "outcome": "作废",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P044",
@@ -1856,7 +2098,9 @@
      "t": "三井金属12月起电解铜箔（含HVLP）涨15–30%，金居10月已涨约10%；高阶铜箔涨幅开始追上电子布、ABF（ABF单季约+5–15%），「HVLP4涨幅低于二代布和ABF」的排序受压，不改概率",
      "src": "https://www.ctee.com.tw/news/20261116701038-430201"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P045",
@@ -1874,7 +2118,9 @@
    "reason": "取决于马来西亚厂认证进度，公开信息少",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P046",
@@ -1892,7 +2138,9 @@
    "reason": "两个条件同时成立，且要有公开报道",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P047",
@@ -1910,7 +2158,9 @@
    "reason": "先要 Kyber 2028 年量产，再要约束确实换位",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P048",
@@ -1948,7 +2198,9 @@
      "t": "入账：概率由 0.35 上调至 0.60。德福投资者问答称 9 月 HVLP4 出货 187 吨，已超过「12 月 ≥150 吨」的阈值；预测看的是 12 月单月，不是 9 月，故不上到 0.80 以上。",
      "src": "https://yuanchuang.10jqka.com.cn/20261008/c680472175.shtml"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P049",
@@ -1966,7 +2218,9 @@
    "reason": "1H26 29.16% 已接近阈值，高端占比在升",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P050",
@@ -1984,7 +2238,9 @@
    "reason": "产能从 >1.6 亿到 2.0 亿支，按扩产公告节奏可达",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P051",
@@ -2002,7 +2258,9 @@
    "reason": "国产卡的卡点在 HBM 和先进封装，PCB 不是短板",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P052",
@@ -2020,7 +2278,9 @@
    "reason": "与页面三情景一致：基准情景概率 50%",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P053",
@@ -2038,7 +2298,9 @@
    "reason": "Grasberg、Kamoa 和 TC 下半年都在回升，但价格季节性噪音大",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P054",
@@ -2076,7 +2338,9 @@
      "t": "窗口内未见白宫对精炼铜落地Section 232关税；COMEX–LME价差回到约0，关税溢价基本消失。政策仍可能突然落地，到期日2027-01-05，不改概率",
      "src": "https://finance.sina.com.cn/money/future/fmnews/2026-11-13/doc-iniypzqc1091348.shtml"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P055",
@@ -2094,7 +2358,9 @@
    "reason": "总统未授权谈判，但麦格理等假设 2027 年中复产",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P056",
@@ -2132,7 +2398,9 @@
      "t": "现货TC约−244.63美元/干吨，安托法加斯塔招标−310至−330美元/吨，仍远低于−100",
      "src": "https://news.mysteel.com/a/26111915/05223C2962BA335F.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P057",
@@ -2150,7 +2418,9 @@
    "reason": "ICSG 春季会议常因矿山干扰下修过剩",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P058",
@@ -2168,7 +2438,9 @@
    "reason": "先紧后松的基准指向下跌，但两年期方向判断噪音大",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P059",
@@ -2186,7 +2458,9 @@
    "reason": "需要 TC 在一年内回升 120 美元以上，偏乐观",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P060",
@@ -2204,7 +2478,9 @@
    "reason": "指引 2027 年中达 80%，矿山复产常有延误",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P061",
@@ -2222,7 +2498,9 @@
    "reason": "1–9 月 +3.54%，冶炼减产承诺过去常落空",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P062",
@@ -2248,7 +2526,9 @@
      "t": "海关：9 月精铜进口 25.34 万吨（同比 −24%），1–9 月 212.55 万吨（同比 −16.63%）",
      "src": "https://www.mysteel.net/analysis/5145863-sept-refined-copper-imports-rebound-mom-while-exports-shrink-in-china"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P063",
@@ -2274,7 +2554,9 @@
      "t": "截至 10-30 未检索到国储精铜收储公告；10-29 上期所暂停铜、铝期货保税交割（未说明原因）",
      "src": "https://www.shfe.com.cn/publicnotice/notice/202610/t20261029_833879.html"
     }
-   ]
+   ],
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P064",
@@ -2292,7 +2574,9 @@
    "reason": "2026 年已 120 万吨，公司规划 2028 年 150–160 万吨",
    "prob_state": "初稿",
    "outcome": "待验证",
-   "brier": null
+   "brier": null,
+   "since": "2026-10-22",
+   "ref": ""
   },
   {
    "gid": "P065",
@@ -2318,7 +2602,9 @@
      "t": "新预测入账。BIS 11-19 规则让中国设计公司去境外代工先进逻辑原则上需许可，国内代工已接近满产；但「因海外代工许可」这一表述不一定出现在公告里，故给 0.50 而不是更高。",
      "src": "https://www.federalregister.gov/documents/2026/11/19/2026-23529/addressing-remote-access-to-advanced-semiconductors"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
   },
   {
    "gid": "P066",
@@ -2344,7 +2630,9 @@
      "t": "新预测入账。CNBC 11-17：三项芯片法案拟写入 FY2027 NDAA，国会 12 月审议；众院 7 月通过的文本未包含它们，参院文本尚未上墙。到期日 12-31 偏紧，概率取 0.45。",
      "src": "https://www.cnbc.com/2026/11/17/congress-ai-china-jensen-huang-chips.html"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
   },
   {
    "gid": "P067",
@@ -2370,7 +2658,9 @@
      "t": "新预测入账。联邦公报 11-09 已将该规则暂停延至 2027-01-10。按时生效不是默认结果，故给 0.40。",
      "src": "https://www.federalregister.gov/documents/full_text/html/2026/11/09/2026-22793.html"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
   },
   {
    "gid": "P068",
@@ -2396,7 +2686,9 @@
      "t": "新预测入账。TrendForce 等报道美方寻求把设备管制延伸到维修；盟国态度不一，故给 0.40。",
      "src": "https://datatrack.trendforce.com/blog/content/61356/u-s-seeks-to-extend-chip-equipment-controls-to-maintenance-as-u-s-japanese-and-dutch-equipment-suppliers-reassess-china-exposure"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
   },
   {
    "gid": "P069",
@@ -2422,7 +2714,9 @@
      "t": "新预测入账。商务部发言人已表示强烈不满并将视情况反制；要算命中，须是针对本次新规的具体措施，口头警告不够，故给 0.45。",
      "src": "http://www.mofcom.gov.cn/xwfb/xwfyrth/art/2026/art_c9c0beb01b8640d3ba9160b73d315716.html"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
   },
   {
    "gid": "G40",
@@ -2436,9 +2730,9 @@
    "falsify": "萨姆规则 ≥ 0.5，或初请4周均值较52周低点 ≥ +15%",
    "th": "",
    "due": "2027-04-20",
-   "prob": null,
-   "reason": "2026-11-20 由世界页预测账本并入总账宏观本，原文与证伪线不改",
-   "outcome": "",
+   "prob": 0.8,
+   "reason": "萨姆规则 0.00pp，初请 4 周均值 19.77 万，远离证伪线",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -2446,8 +2740,24 @@
      "w": "支持",
      "t": "并入总账宏观本。萨姆规则 0.00pp（10 月数据），初请失业金 4 周均值 19.77 万（11-14），都远离证伪线（萨姆 ≥0.5、初请较 52 周低点 ≥+15%）。本周跨资产大跌不是衰退驱动。",
      "src": "https://fred.stlouisfed.org/series/ICSA"
+    },
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "美联储周期复盘：ISM 制造业 2026-10 为 55.5、生产分项 59.0（2021-11 以来最高），经济在加速，不是走向衰退。",
+     "src": "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/october/"
+    },
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "萨姆规则实时值 2026-10 为 0.00pp（FRED SAHMREALTIME），离证伪线 0.5 很远。",
+     "src": "https://fred.stlouisfed.org/series/SAHMREALTIME"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": "美国无衰退状态下，6 个月内进入衰退的无条件频率约一成多（NBER 1950 年以来约 11 次衰退）",
+   "prob_state": "初稿",
+   "horizon": "2027-04-20"
   },
   {
    "gid": "G41",
@@ -2461,9 +2771,9 @@
    "falsify": "SOFR−IORB ≥ +10bp，或 HY OAS ≥ 500bp",
    "th": "",
    "due": "2027-01-20",
-   "prob": null,
-   "reason": "2026-11-20 由世界页预测账本并入总账宏观本，原文与证伪线不改",
-   "outcome": "",
+   "prob": 0.75,
+   "reason": "HY OAS 347bp，SOFR−IORB 远离 +10bp",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -2471,8 +2781,18 @@
      "w": "支持",
      "t": "并入总账宏观本。本周跨资产大跌停在价格层：HY OAS 347bp（11-18，证伪线 500），SOFR−IORB 0bp（11-18，证伪线 +10），MOVE 96。和本条原话一致。",
      "src": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2"
+    },
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "HY OAS 11-23 为 363bp（FRED BAMLH0A0HYM2，11-20 曾到 376bp），仍远低于证伪线 500bp；压力停在价格层。",
+     "src": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": "非危机期 HY OAS 升破 500bp 的频率低",
+   "prob_state": "初稿",
+   "horizon": "2027-01-20"
   },
   {
    "gid": "G42",
@@ -2486,9 +2806,9 @@
    "falsify": "DDR5 16Gb 现货 5 个观测日跌幅 ≥ 3%",
    "th": "",
    "due": "2026-12-31",
-   "prob": null,
-   "reason": "2026-11-20 由世界页预测账本并入总账宏观本，原文与证伪线不改",
-   "outcome": "",
+   "prob": 0.65,
+   "reason": "11-24 现货 60.83 美元，5 日 +0.8%",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -2509,7 +2829,11 @@
      "t": "DDR5 16Gb 现货 11-24 为 60.83 美元，较 11-23 的 60.70 略升，5 个观测日 +0.8%，没有跌 ≥3%（TrendForce 现货，世界指标缓存）。黄仁勋复职带动美韩芯片股反弹时，实物价仍稳，证伪线未接近。状态不改。",
      "src": "https://www.trendforce.com/price/dram/dram_spot"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": "DDR5 现货 5 日跌 ≥3% 在上行期少见，但 11 月跨资产波动大",
+   "prob_state": "初稿",
+   "horizon": "2026-12-31"
   },
   {
    "gid": "G43",
@@ -2523,9 +2847,9 @@
    "falsify": "M1−M2 剪刀差 ≥ −1pp，或信贷脉冲转正",
    "th": "",
    "due": "2027-01-31",
-   "prob": null,
-   "reason": "2026-11-20 由世界页预测账本并入总账宏观本，原文与证伪线不改",
-   "outcome": "",
+   "prob": 0.55,
+   "reason": "M1−M2 由 −4.0pp 升到 −2.7pp，在向证伪线 −1pp 靠近",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -2534,7 +2858,11 @@
      "t": "并入总账宏观本。10 月数据：M1−M2 由 −4.0pp 升到 −2.7pp，信贷脉冲由 −2.58% 升到 −1.91%GDP，都在往证伪方向走；离证伪线（M1−M2 ≥ −1pp 或信贷脉冲转正）仍差 1.7pp / 1.9pp，状态不改。",
      "src": "https://tushare.pro/document/2?doc_id=242"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": "信用主动扩张需要政策和需求同时转向",
+   "prob_state": "初稿",
+   "horizon": "2027-01-31"
   },
   {
    "gid": "G44",
@@ -2548,9 +2876,9 @@
    "falsify": "融资余额 20 日增幅 ≥ +5%",
    "th": "",
    "due": "2026-12-31",
-   "prob": null,
-   "reason": "2026-11-20 由世界页预测账本并入总账宏观本，原文与证伪线不改",
-   "outcome": "",
+   "prob": 0.55,
+   "reason": "融资保证金下限调回 80%（11-30 起）削弱本条；融资余额 2.142 万亿仍在降",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -2571,7 +2899,11 @@
      "t": "融资余额 2.142 万亿（11-23，Tushare margin 汇总，世界指标），较 11-20 的 2.151 万亿续降，20 日 −10.6%（推算），仍在 −10% 危险线下方，离证伪线（20 日增幅 ≥+5%）很远。11/24 全 A 主力由 +268.6 亿转为 −36.1 亿，未连续流入，也未到 −200 亿踩踏线。保证金下调 11/30 才生效。读数继续支持「去杠杆尚未结束」，状态不改。",
      "src": "https://tushare.pro/document/2?doc_id=58"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": "去杠杆后再加杠杆通常要几个月",
+   "prob_state": "初稿",
+   "horizon": "2026-12-31"
   },
   {
    "gid": "G45",
@@ -2585,9 +2917,9 @@
    "falsify": "到期前 10Y 实际利率（TIPS）跌回 2.5% 以下并维持 4 周，或 WTI 同比重新升到 +50% 以上（油价重新主导）。原证伪线「WTI 同比 < +25%」改作路径转换的确认信号，不再算本条错",
    "th": "",
    "due": "2027-01-20",
-   "prob": null,
-   "reason": "2026-11-20 改写：衰退触发路径由油价转为实际利率；原文与原证伪线见证据记录",
-   "outcome": "",
+   "prob": 0.65,
+   "reason": "10Y 实际利率 2.88%（11-18），美联储 12 月预计再加 25bp",
+   "outcome": "待验证",
    "brier": null,
    "ev": [
     {
@@ -2601,8 +2933,18 @@
      "w": "支持",
      "t": "按证据改写为「实际利率」路径：10Y 实际利率 2.88%（11-18），过 2.5% 危险线；11 月中旬跨资产大跌的主驱动是加息和实际利率，不是油价（见 11-20 大跌分析）。原文和原证伪线保留在本条记录里，原证伪线改作路径转换的确认信号。",
      "src": "https://fred.stlouisfed.org/series/DFII10"
+    },
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "10Y 实际利率 11-23 为 2.79%（FRED DFII10），仍在 2.5% 以上；10Y−3M 约 +0.55pp，紧的是长端，与“钱变贵”路径一致。",
+     "src": "https://fred.stlouisfed.org/series/DFII10"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": "加息周期中实际利率回落到阈值以下需要降息预期",
+   "prob_state": "初稿",
+   "horizon": "2027-01-20"
   },
   {
    "gid": "P070",
@@ -2634,7 +2976,9 @@
      "t": "路透 11-20：SEC 执法人员在查英伟达的会计问题；市场担心的是「循环式 AI 融资」——芯片商投资客户、为数据中心项目提供担保，客户再买芯片。当日英伟达 −14.01%、费城半导体 −10.73%，CoreWeave 盘中跌破 2025 年 IPO 价。压力从小云厂的信用转到供应商的收入质量，路径在往上游走【推断】；但三个证伪条件仍未出现（四大云无下修、未见第二家 CDS >1,000bp、未见公开取消 GPU 订单），概率不动。",
      "src": "https://www.reuters.com/3fec1b0a85a0/world/us-secs-nvidia-probe-is-examining-potential-accounting-issues-sources-say-2026-11-20/"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
   },
   {
    "gid": "P071",
@@ -2659,8 +3003,109 @@
      "w": "支持",
      "t": "新预测入账（宏观本 W2）。CME FedWatch（截至 11-20）：加 25bp 96.4%、加 50bp 3.6%；纽约联储 Williams 称当前不需要大动作。",
      "src": "https://www.gate.com/zh-us/news/detail/cme-fed-watch-shows-964-probability-of-december-rate-hike-17933989"
+    },
+    {
+     "d": "2026-11-25",
+     "w": "待核",
+     "t": "Waller 11-18 主张 12 月加 50bp；10 月 PCE 于美东 11-25 公布（北京时间 11-25 晚），若核心 PCE 大超预期，50bp 尾部变厚。暂不改概率，PCE 出来后复核。",
+     "src": "https://www.cnbc.com/2026/11/18/federal-reserve-governor-christopher-waller.html"
+    },
+    {
+     "d": "2026-11-25",
+     "w": "待核",
+     "t": "10 月 PCE 物价指数发布页（BEA），本条 12 月复核用。",
+     "src": "https://www.bea.gov/data/personal-consumption-expenditures-price-index"
     }
-   ]
+   ],
+   "since": "2026-11-20",
+   "ref": ""
+  },
+  {
+   "gid": "P072",
+   "old": "宏观-W3",
+   "kind": "预测",
+   "chain": "宏观",
+   "book": "全球",
+   "page": "world/",
+   "text": "到 2027-06-30，联邦基金目标区间上限 ≥ 4.50%（现为 3.75–4.00%，即再加至少两次 25bp）",
+   "status": "有效",
+   "falsify": "2027-06-30 时目标区间上限 < 4.50% 即为错；验证来源：美联储 FOMC 声明",
+   "check": "美联储 FOMC 声明 / FRED DFEDTARU",
+   "th": "",
+   "due": "2027-06-30",
+   "prob": 0.6,
+   "reason": "美联储周期复盘情景 A（45%，12 月、1 月各加 25bp 到 4.25–4.50%）与 B（30%，加到 4.75–5.0% 以上）都满足本条，合计约 75%；10/28 暂停说明节奏可能放慢，打折取 0.60",
+   "prob_state": "初稿",
+   "outcome": "待验证",
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "新预测入账（美联储周期复盘）。美联储周期复盘情景 A（45%，12 月、1 月各加 25bp 到 4.25–4.50%）与 B（30%，加到 4.75",
+     "src": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm"
+    }
+   ],
+   "since": "2026-11-25",
+   "ref": "加息周期起步后的连续加息：1994、1999、2004、2022 年都在首次加息后 9 个月内再加了两次以上，2015 年是反例（隔一年才加第二次）；本轮 9/16 已加 25bp、10/28 暂停（2 票要求加息）"
+  },
+  {
+   "gid": "P073",
+   "old": "宏观-W4",
+   "kind": "预测",
+   "chain": "宏观",
+   "book": "全球",
+   "page": "world/",
+   "text": "2026-12 到 2027-06 每个月的 10Y−3M 月均值都保持为正（不倒挂）",
+   "status": "有效",
+   "falsify": "2026-12 至 2027-06 任一月 10Y−3M 月均值 ≤ 0 即为错；验证来源：FRED T10Y3M",
+   "check": "FRED T10Y3M 月均值",
+   "th": "",
+   "due": "2027-06-30",
+   "prob": 0.6,
+   "reason": "基准率约 69% 不倒挂；本轮短端还在加、长端实际利率已高，曲线继续变平的风险高于样本平均，取 0.60。11 月月均约 +0.69pp",
+   "prob_state": "初稿",
+   "outcome": "待验证",
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "新预测入账（美联储周期复盘）。基准率约 69% 不倒挂；本轮短端还在加、长端实际利率已高，曲线继续变平的风险高于样本平均，取 0.60。11 月月均约",
+     "src": "https://fred.stlouisfed.org/series/T10Y3M"
+    }
+   ],
+   "since": "2026-11-25",
+   "ref": "1982 年以来，联邦基金利率在加息且 10Y−3M 处于 +0.3 至 +0.8pp 的 29 个月里，有 9 个在之后 7 个月内出现月均倒挂（31%，research/fed_cycle 本地 FRED 数据计算）"
+  },
+  {
+   "gid": "P074",
+   "old": "宏观-W5",
+   "kind": "预测",
+   "chain": "宏观",
+   "book": "全球",
+   "page": "world/",
+   "text": "若美国走向衰退，先出问题的是信用端而不是就业：到 2027-12-31 不会出现萨姆规则 ≥ 0.5 而 HY OAS 仍 < 450bp 的情形",
+   "status": "有效",
+   "falsify": "到期前任一月萨姆规则 ≥ 0.5，且当月 HY OAS 月均 < 450bp 即为错；验证来源：FRED",
+   "check": "FRED SAHMREALTIME 与 BAMLH0A0HYM2",
+   "th": "",
+   "due": "2027-12-31",
+   "prob": 0.85,
+   "reason": "萨姆现为 0.00，到 2027 年底触发的概率估约两到三成；触发时利差仍低的条件概率参考 2024-07 反例约三到四成，相乘得本条被证伪约一成多，取 0.85。本条主要检验“信用先于就业”的顺序，不是衰退预测",
+   "prob_state": "初稿",
+   "outcome": "待验证",
+   "brier": null,
+   "ev": [
+    {
+     "d": "2026-11-25",
+     "w": "支持",
+     "t": "新预测入账（美联储周期复盘）。萨姆现为 0.00，到 2027 年底触发的概率估约两到三成；触发时利差仍低的条件概率参考 2024-07 反例约三到四",
+     "src": "https://fred.stlouisfed.org/series/SAHMREALTIME"
+    }
+   ],
+   "since": "2026-11-25",
+   "ref": "萨姆规则触发时的信用利差：2001、2008、2020 年触发时 HY OAS 都在 450bp 以上（公开记载，FRED 只提供近 3 年 ICE 序列，本地未复核）；2024-07 触发时 HY OAS 约 316bp（本地 FRED 数据），那次没有衰退，属于反例"
   }
  ],
  "lights": {
