@@ -70,6 +70,12 @@ SRC = [
  ('yh', 'Yahoo Finance：COMEX 铜近月 HG=F 月度收盘（2006 起）', 'https://finance.yahoo.com/quote/HG%3DF/history/'),
  ('wi', '本站"世界"仪表盘 2026-10-20：美债 10 年实际利率 2.74%（2003 年以来 99 分位）、广义美元 121.4、铜金比 1.572（2000 年以来 9 分位）、中国信贷脉冲 −2.58% GDP', 'world/'),
  ('pcb', '本站 PCB 页：每颗 AI 加速器的 HVLP 高端铜箔用量（全球口径，估）', 'pcb.html#neck'),
+ ('wm26', 'Westmetall（LME 官方结算价表）：铜现货 11-26 为 11,965、11-13 为 13,610 美元/吨；LME 库存 11-26 为 337,925 吨', 'https://www.westmetall.com/en/markdaten.php?action=table&field=LME_Cu_cash'),
+ ('el7', 'EL7 2026-11-22：COMEX 铜 11-20 收 5.485 美元/磅，较 9-9 纪录 −20.37%；COMEX 库存约 73 万吨；LME 库存较 8-14 低点 +62%，新增多来自美国港口；上期所 11-13 为 27,642 吨', 'https://el7.ai/en/research/copper-drawdown-stockpile-divergence-nov-2026'),
+ ('plt', 'S&P Global（Platts）2026-11-06：中国铜进口溢价 220 美元/吨创纪录；COMEX−LME 价差 11-04 约 −85 美元/吨（一个月前 +89）', 'https://www.spglobal.com/energy/en/news-research/latest-news/metals/110626-china-copper-premium-hits-record-as-market-weighs-us-stock-shift'),
+ ('lmei', 'LME Insight 2026-11-12：COMEX 对 LME 溢价 8 月超 700 美元，11 月初短暂转为贴水，11-09 回到约 +80；新到美国的铜更多进 LME 仓库', 'https://www.lmeinsight.com/copper-is-getting-cheaper-so-why-is-china-paying-record-premiums-to-secure-it/'),
+ ('nvx', 'Novaex 2026-11-27 周报（引 Fastmarkets、BMO、CRU）：洋山溢价上周纪录 500 美元后回到 450；BMO 估 3–10 万吨美国阴极铜订往中国；LME 三月 11-25 为 11,758', 'https://novaex.ai/blog/base-metals-weekly-summary-27-november-2026-copper-aluminium-zinc-and-nickel-against-your-book/'),
+ ('tc27', 'Mining Weekly 2026-11-24（彭博）：2027 铜精矿长单未谈成，Antofagasta 报约 −200 美元/吨，铜陵口头约 −80，部分中国冶炼厂现金盈亏平衡约 −90；CRU 预计 −50 至 −100；硫酸价格回落', 'https://www.miningweekly.com/article/copper-smelters-face-worsening-squeeze-as-negotiations-stall-2026-11-24'),
 ]
 ID = {k: i + 1 for i, (k, _, _) in enumerate(SRC)}
 assert len(ID) == len(SRC), '来源 key 重复'

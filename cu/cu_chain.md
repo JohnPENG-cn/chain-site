@@ -1,4 +1,4 @@
-# 铜 v0.1（2026-10-21）
+# 铜 v0.2（2026-11-27）
 
 > 由 cu/build.py 生成，不要手改。网页：cu.html。公开数据整理，不构成投资建议。
 
@@ -9,10 +9,10 @@
 
 ## 情景（2027 年均价，美元/吨）
 
-- 熊市：美国库存回流（30%）：11,600（10,500–12,500）；触发：美国明确不征精铜关税或正式推迟 ≥ 6 个月 → COMEX 升水消失、美国库存回流 LME；中国信贷脉冲继续 < −2%；Grasberg、Kamoa 按计划恢复
-- 基准：悬而未决、先紧后松（50%）：13,700（12,800–14,700）；触发：2027 年上半年仍无关税决定，美国库存留在原地；美国以外小幅缺口，上半年最紧；下半年 Grasberg 回到约 80%、Kamoa 380–420 千吨、TC 回升，价格回落
-- 牛市：最后一波进美国 / 供给再出事（20%）：16,375（15,000–18,000）；触发：精铜关税宣布（提前 6–8 周）→ 最后一波金属进美国；或智利 / Grasberg 再延误；或中国开始国储收储
-- 概率加权：13,605
+- 熊市：美国库存回流（40%）：11,600（10,500–12,500）；触发：美国明确不征精铜关税或正式推迟 ≥ 6 个月 → COMEX 升水消失、美国库存回流 LME；中国信贷脉冲继续 < −2%；Grasberg、Kamoa 按计划恢复
+- 基准：悬而未决、先紧后松（45%）：13,700（12,800–14,700）；触发：2027 年上半年仍无关税决定，美国库存留在原地；美国以外小幅缺口，上半年最紧；下半年 Grasberg 回到约 80%、Kamoa 380–420 千吨、TC 回升，价格回落
+- 牛市：最后一波进美国 / 供给再出事（15%）：16,375（15,000–18,000）；触发：精铜关税宣布（提前 6–8 周）→ 最后一波金属进美国；或智利 / Grasberg 再延误；或中国开始国储收储
+- 概率加权：13,261
 
 ## 一致预期
 
@@ -131,3 +131,9 @@
 61. Yahoo Finance：COMEX 铜近月 HG=F 月度收盘（2006 起） https://finance.yahoo.com/quote/HG%3DF/history/
 62. 本站"世界"仪表盘 2026-10-20：美债 10 年实际利率 2.74%（2003 年以来 99 分位）、广义美元 121.4、铜金比 1.572（2000 年以来 9 分位）、中国信贷脉冲 −2.58% GDP world/
 63. 本站 PCB 页：每颗 AI 加速器的 HVLP 高端铜箔用量（全球口径，估） pcb.html#neck
+64. Westmetall（LME 官方结算价表）：铜现货 11-26 为 11,965、11-13 为 13,610 美元/吨；LME 库存 11-26 为 337,925 吨 https://www.westmetall.com/en/markdaten.php?action=table&field=LME_Cu_cash
+65. EL7 2026-11-22：COMEX 铜 11-20 收 5.485 美元/磅，较 9-9 纪录 −20.37%；COMEX 库存约 73 万吨；LME 库存较 8-14 低点 +62%，新增多来自美国港口；上期所 11-13 为 27,642 吨 https://el7.ai/en/research/copper-drawdown-stockpile-divergence-nov-2026
+66. S&P Global（Platts）2026-11-06：中国铜进口溢价 220 美元/吨创纪录；COMEX−LME 价差 11-04 约 −85 美元/吨（一个月前 +89） https://www.spglobal.com/energy/en/news-research/latest-news/metals/110626-china-copper-premium-hits-record-as-market-weighs-us-stock-shift
+67. LME Insight 2026-11-12：COMEX 对 LME 溢价 8 月超 700 美元，11 月初短暂转为贴水，11-09 回到约 +80；新到美国的铜更多进 LME 仓库 https://www.lmeinsight.com/copper-is-getting-cheaper-so-why-is-china-paying-record-premiums-to-secure-it/
+68. Novaex 2026-11-27 周报（引 Fastmarkets、BMO、CRU）：洋山溢价上周纪录 500 美元后回到 450；BMO 估 3–10 万吨美国阴极铜订往中国；LME 三月 11-25 为 11,758 https://novaex.ai/blog/base-metals-weekly-summary-27-november-2026-copper-aluminium-zinc-and-nickel-against-your-book/
+69. Mining Weekly 2026-11-24（彭博）：2027 铜精矿长单未谈成，Antofagasta 报约 −200 美元/吨，铜陵口头约 −80，部分中国冶炼厂现金盈亏平衡约 −90；CRU 预计 −50 至 −100；硫酸价格回落 https://www.miningweekly.com/article/copper-smelters-face-worsening-squeeze-as-negotiations-stall-2026-11-24
